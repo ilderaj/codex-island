@@ -95,11 +95,9 @@ final class IslandWindowController {
         }
     }
 
-    /// Anchor to the notched display so the island always sits over the
-    /// physical notch — even when an external monitor is the active screen.
-    /// Falls back to `NSScreen.main` on Macs without a notch.
+    @MainActor
     private static func targetScreen() -> NSScreen? {
-        NSScreen.screens.first(where: { $0.safeAreaInsets.top > 0 }) ?? NSScreen.main
+        DisplayInfo.currentTarget()?.screen
     }
 
     private func observeScreenChanges() {
