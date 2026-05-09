@@ -385,19 +385,20 @@ struct IslandRootView: View {
 }
 
 /// Cobalt angular-gradient sweep that orbits the silhouette while data is
-/// fetching. Owns its own TimelineView so the parent (IslandRootView) doesn't
-/// re-render every overlay alongside the sweep — that was competing with the
-/// hover spring for main-thread budget.
+/// fetching. Renders the AngularGradient once at angle 0, then rotates the
+/// whole layer via `.rotationEffect` driven by `withAnimation(.linear.
+/// repeatForever)`. SwiftUI translates that into a CABasicAnimation on the
+/// layer's transform — rotation happens on the WindowServer compositor
+/// thread, off the main thread. The conic gradient texture is shaded ONCE
+/// when the view appears, not on every frame.
 ///
-/// Tick rate is 15Hz: a 3.6s revolution at 15Hz = ~6.7° per frame, which
-/// reads smooth for a slow continuous orbit (≈ second-hand-of-a-clock step
-/// size, where the eye doesn't perceive ticks). Cuts main-thread CPU 8× vs
-/// the original 120Hz pin. Earlier attempts to push the rotation into Core
-/// Animation via a CAGradientLayer gave up the soft "glow" feel of SwiftUI's
-/// AngularGradient — the renderers blend transparent→tint→white differently,
-/// and the CALayer result reads as a hard rotating bar instead of an
-/// atmospheric aura. Lowering the SwiftUI tick rate keeps the original look
-/// exactly while still cutting CPU substantially.
+/// Why this matters: profiling the previous TimelineView-driven implementation
+/// showed `rgba64_shade_conic_RGB → atan2f` dominating main-thread CPU.
+/// CoreGraphics re-shaded every pixel of the gradient per frame because the
+/// AngularGradient's `angle` parameter changed each tick. By moving rotation
+/// out of the gradient (fixed angle) and into a layer transform, we keep
+/// the same SwiftUI rendering quality while the per-frame work collapses
+/// to a transform multiplication.
 private struct LoadingSweep: View {
     let active: Bool
     /// Color of the orbiting trail. Cobalt by default; switches to amber
@@ -407,25 +408,43 @@ private struct LoadingSweep: View {
 
     var body: some View {
         if active {
-            TimelineView(.animation(minimumInterval: 1.0 / 15.0)) { context in
-                let t = context.date.timeIntervalSinceReferenceDate
-                let rotation = (t * 100).truncatingRemainder(dividingBy: 360)
-                IslandShape()
-                    .stroke(
-                        AngularGradient(
-                            gradient: Gradient(stops: [
-                                .init(color: .clear, location: 0.00),
-                                .init(color: tint.opacity(0.0), location: 0.55),
-                                .init(color: tint, location: 0.78),
-                                .init(color: .white.opacity(0.95), location: 0.92),
-                                .init(color: tint.opacity(0.0), location: 1.00),
-                            ]),
-                            center: .center,
-                            angle: .degrees(rotation)
-                        ),
-                        lineWidth: 4
-                    )
-                    .blur(radius: 3)
+            RotatingSweep(tint: tint)
+        }
+    }
+}
+
+private struct RotatingSweep: View {
+    let tint: Color
+    @State private var rotation: Double = 0
+
+    var body: some View {
+        AngularGradient(
+            gradient: Gradient(stops: [
+                .init(color: .clear, location: 0.00),
+                .init(color: tint.opacity(0.0), location: 0.55),
+                .init(color: tint, location: 0.78),
+                .init(color: .white.opacity(0.95), location: 0.92),
+                .init(color: tint.opacity(0.0), location: 1.00),
+            ]),
+            center: .center,
+            angle: .degrees(0)
+        )
+        // Mask to the same 4pt-wide IslandShape stroke as the original.
+        .mask(
+            IslandShape()
+                .stroke(Color.white, lineWidth: 4)
+        )
+        .blur(radius: 3)
+        .rotationEffect(.degrees(rotation))
+        .onAppear {
+            // Reset to 0 in case onAppear fires after a previous mount.
+            rotation = 0
+            withAnimation(.linear(duration: 3.6).repeatForever(autoreverses: false)) {
+                // Setting once with .repeatForever lets SwiftUI translate
+                // this into a CABasicAnimation on `transform.rotation.z`.
+                // 360° = full revolution; the value the body reads stays
+                // animatably interpolated by the system.
+                rotation = 360
             }
         }
     }
