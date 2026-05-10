@@ -7,8 +7,15 @@ enum GeminiLogReader {
         let cutoff = Date().addingTimeInterval(-Double(lookbackDays) * 86400)
         var out: [TokenEvent] = []
 
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        let geminiDir = home.appendingPathComponent(".gemini", isDirectory: true)
+        let roots = [
+            geminiDir.appendingPathComponent("tmp", isDirectory: true),
+            geminiDir.appendingPathComponent("history", isDirectory: true)
+        ].filter { FileManager.default.fileExists(atPath: $0.path) }
+
         LogParseCache.walk(
-            roots: [logsRoot()],
+            roots: roots,
             cutoff: cutoff,
             cacheFilename: "gemini-parse-cache.v1.json",
             cacheVersion: cacheVersion,
@@ -30,14 +37,6 @@ enum GeminiLogReader {
         return out
     }
 
-    private static func logsRoot() -> URL {
-        let home = FileManager.default.homeDirectoryForCurrentUser
-        if let geminiHome = ProcessInfo.processInfo.environment["GEMINI_HOME"], !geminiHome.isEmpty {
-            return URL(fileURLWithPath: geminiHome).appendingPathComponent("logs", isDirectory: true)
-        }
-        return home.appendingPathComponent(".gemini/logs", isDirectory: true)
-    }
-
     private static func parseFile(at url: URL) -> [CachedEvent] {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -47,8 +46,8 @@ enum GeminiLogReader {
         var out: [CachedEvent] = []
         LogParseCache.streamLines(at: url) { lineData in
             guard let raw = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
-                  let type = raw["type"] as? String, type == "usage",
-                  let usage = raw["usage"] as? [String: Any],
+                  let type = raw["type"] as? String, type == "gemini",
+                  let tokens = raw["tokens"] as? [String: Any],
                   let model = raw["model"] as? String else { return }
 
             let timestampString = raw["timestamp"] as? String ?? ""
@@ -56,20 +55,19 @@ enum GeminiLogReader {
                 ?? formatterNoFractional.date(from: timestampString)
                 ?? Date.distantPast
 
-            let input = (usage["input_tokens"] as? Int) ?? 0
-            let output = (usage["output_tokens"] as? Int) ?? 0
-            let cacheCreate = (usage["cache_creation_tokens"] as? Int) ?? 0
-            let cacheRead = (usage["cache_read_tokens"] as? Int) ?? 0
+            let input = (tokens["input"] as? Int) ?? 0
+            let output = (tokens["output"] as? Int) ?? 0
+            let cached = (tokens["cached"] as? Int) ?? 0
 
-            if input == 0 && output == 0 && cacheCreate == 0 && cacheRead == 0 { return }
+            if input == 0 && output == 0 && cached == 0 { return }
 
             out.append(CachedEvent(
                 timestamp: timestamp,
                 model: model,
                 inputTokens: input,
                 outputTokens: output,
-                cacheCreationTokens: cacheCreate,
-                cacheReadTokens: cacheRead
+                cacheCreationTokens: 0,
+                cacheReadTokens: cached
             ))
         }
         return out

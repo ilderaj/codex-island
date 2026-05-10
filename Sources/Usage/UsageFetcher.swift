@@ -343,15 +343,21 @@ enum UsageFetcher {
 
     // MARK: - Gemini
 
-    /// Gemini usage lives at api.gemini.google.com/v1/usage and accepts
-    /// the access_token from ~/.gemini/auth.json.
+    /// Gemini usage lives at cloudcode-pa.googleapis.com and accepts
+    /// the access_token from ~/.gemini/oauth_creds.json.
     static func fetchGemini() async -> AppUsage {
         guard let token = readGeminiAccessToken() else {
             return errorPair("auth required — run gemini")
         }
 
-        var req = URLRequest(url: URL(string: "https://api.gemini.google.com/v1/usage")!)
+        let url = URL(string: "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota")!
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
         req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = ["project": "-"]
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         do {
             let (data, response) = try await URLSession.shared.data(for: req)
@@ -364,36 +370,53 @@ enum UsageFetcher {
                 return errorPair("http \(status)")
             }
 
-            guard let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            guard let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let buckets = obj["buckets"] as? [[String: Any]] else {
                 return errorPair("parse error")
             }
+
+            // Find the most relevant model for the UI (Pro for 5h, Flash for weekly as proxy)
+            let proBucket = buckets.first { ($0["modelId"] as? String)?.contains("pro") == true }
+            let flashBucket = buckets.first { ($0["modelId"] as? String)?.contains("flash") == true }
+
             return AppUsage(
-                fiveHour: parseGeminiWindow(obj["five_hour"]),
-                weekly: parseGeminiWindow(obj["seven_day"]),
-                plan: obj["plan_type"] as? String
+                fiveHour: parseGeminiBucket(proBucket),
+                weekly: parseGeminiBucket(flashBucket),
+                plan: nil // The API doesn't seem to return plan_type here
             )
         } catch {
             return errorPair(error.localizedDescription)
         }
     }
 
+    private static func parseGeminiBucket(_ obj: [String: Any]?) -> WindowUsage {
+        guard let d = obj else { return .unknown }
+        // remainingFraction is in [0, 1]. usedPercent = 1 - remainingFraction.
+        let remaining = (d["remainingFraction"] as? Double) ?? 1.0
+        let used = 1.0 - remaining
+        
+        var resetAt: Date?
+        if let s = d["resetTime"] as? String {
+            let f = ISO8601DateFormatter()
+            f.formatOptions = [.withInternetDateTime]
+            resetAt = f.date(from: s)
+        }
+        return WindowUsage(usedPercent: min(1, max(0, used)), resetAt: resetAt, error: nil)
+    }
+
     private static func readGeminiAccessToken() -> String? {
-        let path = NSString("~/.gemini/auth.json").expandingTildeInPath
+        let path = NSString("~/.gemini/oauth_creds.json").expandingTildeInPath
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let token = json["access_token"] as? String else { return nil }
-        return token
-    }
 
-    private static func parseGeminiWindow(_ obj: Any?) -> WindowUsage {
-        guard let d = obj as? [String: Any] else { return .unknown }
-        let raw = (d["utilization"] as? Double) ?? (d["used_percent"] as? Double) ?? 0
-        let normalized = raw / 100.0
-        var resetAt: Date?
-        if let r = d["resets_at"] as? Double {
-            resetAt = Date(timeIntervalSince1970: r)
+        // Optional: check expiry_date (milliseconds since epoch)
+        if let expiry = json["expiry_date"] as? Double {
+            let now = Date().timeIntervalSince1970 * 1000
+            if now > expiry { return nil }
         }
-        return WindowUsage(usedPercent: min(1, max(0, normalized)), resetAt: resetAt, error: nil)
+
+        return token
     }
 
     private struct RefreshedTokens {
