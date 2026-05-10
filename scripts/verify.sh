@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 
 ./build.sh
 
-BIN="./build/CodexIslandGemini.app/Contents/MacOS/CodexIslandGemini"
+BIN="./build/CodexIsland.app/Contents/MacOS/CodexIsland"
 "$BIN" >/dev/null 2>&1 &
 PID=$!
 sleep 1

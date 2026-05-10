@@ -3,8 +3,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-APP_NAME="CodexIslandGemini"
-BUNDLE_ID="dev.codexisland.CodexIsland.gemini"
+APP_NAME="CodexIsland"
+BUNDLE_ID="dev.codexisland.CodexIsland"
 VERSION="$(cat VERSION)"
 if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "error: VERSION must be X.Y.Z (got '$VERSION')" >&2
