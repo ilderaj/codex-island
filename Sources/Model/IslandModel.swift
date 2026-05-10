@@ -31,7 +31,7 @@ final class IslandModel: ObservableObject {
     /// Visible expanded panel content height. The shape sits flush with the
     /// top of the screen, so we add notch.height of "filler" so visible
     /// content sits BELOW the notch line.
-    let expandedContentHeight: CGFloat = 172
+    let expandedContentHeight: CGFloat = 202
 
     /// Detection-pure notch from `NotchInfo.detect`. Kept separate from
     /// `notch` (which has the user's spacing override applied) so
