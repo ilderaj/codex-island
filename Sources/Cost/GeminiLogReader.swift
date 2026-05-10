@@ -5,6 +5,7 @@ import Foundation
 enum GeminiLogReader {
     static func scan(lookbackDays: Int = 30) -> [TokenEvent] {
         let cutoff = Date().addingTimeInterval(-Double(lookbackDays) * 86400)
+        var seen = Set<String>()
         var out: [TokenEvent] = []
 
         let home = FileManager.default.homeDirectoryForCurrentUser
@@ -23,6 +24,10 @@ enum GeminiLogReader {
             parse: parseFile(at:),
             emit: { (ev: CachedEvent) in
                 guard ev.timestamp >= cutoff else { return }
+                if !ev.dedupKey.isEmpty {
+                    if seen.contains(ev.dedupKey) { return }
+                    seen.insert(ev.dedupKey)
+                }
                 out.append(TokenEvent(
                     provider: .gemini,
                     timestamp: ev.timestamp,
@@ -50,6 +55,7 @@ enum GeminiLogReader {
                   let tokens = raw["tokens"] as? [String: Any],
                   let model = raw["model"] as? String else { return }
 
+            let id = raw["id"] as? String ?? ""
             let timestampString = raw["timestamp"] as? String ?? ""
             let timestamp = formatter.date(from: timestampString)
                 ?? formatterNoFractional.date(from: timestampString)
@@ -67,7 +73,8 @@ enum GeminiLogReader {
                 inputTokens: input,
                 outputTokens: output,
                 cacheCreationTokens: 0,
-                cacheReadTokens: cached
+                cacheReadTokens: cached,
+                dedupKey: id
             ))
         }
         return out
@@ -75,7 +82,7 @@ enum GeminiLogReader {
 
     // MARK: - Per-file cache
 
-    private static let cacheVersion = 2
+    private static let cacheVersion = 3
 
     private struct CachedEvent: Codable {
         let timestamp: Date
@@ -84,5 +91,6 @@ enum GeminiLogReader {
         let outputTokens: Int
         let cacheCreationTokens: Int
         let cacheReadTokens: Int
+        let dedupKey: String
     }
 }

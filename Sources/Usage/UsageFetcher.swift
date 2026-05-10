@@ -382,7 +382,7 @@ enum UsageFetcher {
             return AppUsage(
                 fiveHour: parseGeminiBucket(proBucket),
                 weekly: parseGeminiBucket(flashBucket),
-                plan: "advanced"
+                plan: "pro"
             )
         } catch {
             return errorPair(error.localizedDescription)
