@@ -75,7 +75,7 @@ enum GeminiLogReader {
 
     // MARK: - Per-file cache
 
-    private static let cacheVersion = 1
+    private static let cacheVersion = 2
 
     private struct CachedEvent: Codable {
         let timestamp: Date

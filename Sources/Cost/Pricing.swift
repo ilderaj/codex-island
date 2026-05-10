@@ -137,12 +137,24 @@ enum Pricing {
     }
 
     private static func canonicalModel(_ raw: String) -> String {
-        guard raw.count > 9 else { return raw }
-        let suffixStart = raw.index(raw.endIndex, offsetBy: -9)
-        let suffix = raw[suffixStart...]
-        guard suffix.first == "-",
-              suffix.dropFirst().allSatisfy({ $0.isNumber })
-        else { return raw }
-        return String(raw[..<suffixStart])
+        var base = raw
+        
+        // Strip Gemini-style textual suffixes
+        if base.hasSuffix("-preview") {
+            base = String(base.dropLast("-preview".count))
+        } else if base.hasSuffix("-latest") {
+            base = String(base.dropLast("-latest".count))
+        }
+        
+        // Strip Anthropic-style date suffixes (e.g. "-20251001")
+        if base.count > 9 {
+            let suffixStart = base.index(base.endIndex, offsetBy: -9)
+            let suffix = base[suffixStart...]
+            if suffix.first == "-", suffix.dropFirst().allSatisfy({ $0.isNumber }) {
+                base = String(base[..<suffixStart])
+            }
+        }
+        
+        return base
     }
 }
