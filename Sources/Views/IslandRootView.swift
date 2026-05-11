@@ -157,12 +157,6 @@ struct IslandRootView: View {
                     withAnimation(.easeOut(duration: 0.10)) {
                         contentVisible = false
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-                        guard !hovering else { return }
-                        withAnimation(.closeMorph) {
-                            model.setState(.compact)
-                        }
-                    }
                 }
             }
             
@@ -243,30 +237,6 @@ struct IslandRootView: View {
         case .peek:     return "Click to expand. Command-click to cycle visualization."
         case .expanded: return "Command-click to cycle visualization."
         }
-    }
-
-    private struct ProviderUnits {
-        var leading: [VisibleLogoProvider]
-        var trailing: [VisibleLogoProvider]
-    }
-
-    private func balancedDistribution(for visible: [VisibleLogoProvider]) -> ProviderUnits {
-        var units = ProviderUnits(leading: [], trailing: [])
-        let count = visible.count
-        
-        // For N=3: 1 leading, 2 trailing. [Claude] | [Notch] | [Codex, Gemini]
-        // This keeps Codex in the middle of the whole sequence.
-        let trailingCount = count / 2
-        let leadingCount = count - trailingCount
-        
-        for (idx, p) in visible.enumerated() {
-            if idx < leadingCount {
-                units.leading.append(p)
-            } else {
-                units.trailing.append(p)
-            }
-        }
-        return units
     }
 
     @ViewBuilder
@@ -406,63 +376,6 @@ private struct GlowLayer: View {
         case .warning:  return IslandColor.alertAmber
         case .critical: return IslandColor.alertRed
         }
-    }
-}
-
-/// Per-provider brand logo overlay.
-/// NOTE: This is now mostly deprecated by NotchPeekPill pairing,
-/// but kept for types/consistency until final cleanup.
-private struct LogoOverlay: View {
-    let image: NSImage?
-    let color: Color
-    let provider: AlertEngine.Provider
-    let edgePadding: CGFloat
-    let topPadding: CGFloat
-
-    @ObservedObject private var visibility = ProviderVisibilityStore.shared
-
-    var body: some View {
-        if let image {
-            Image(nsImage: image)
-                .resizable()
-                .renderingMode(.template)
-                .aspectRatio(contentMode: .fit)
-                .foregroundStyle(color)
-                .frame(width: 20, height: 20)
-                .padding(provider == .claude ? .leading : .trailing, edgePadding)
-                .padding(.top, topPadding)
-                .opacity(isVisible ? 1 : 0)
-                .animation(.openMorph, value: isVisible)
-                .accessibilityLabel(isVisible ? providerLabel : "\(providerLabel) (hidden)")
-                .accessibilityHidden(!isVisible)
-        }
-    }
-
-    private var isVisible: Bool {
-        visibility.effectiveVisible(provider: provider)
-    }
-
-    private var providerLabel: String {
-        switch provider {
-        case .claude: return "Claude"
-        case .codex:  return "OpenAI"
-        case .gemini: return "Gemini"
-        }
-    }
-}
-
-/// Percentage pill container — Logic moved into units loop.
-private struct PeekPillOverlay: View {
-    let provider: AlertEngine.Provider
-    let topPadding: CGFloat
-    let pillsVisible: Bool
-
-    @ObservedObject private var visibility = ProviderVisibilityStore.shared
-    @ObservedObject private var usageStore = UsageStore.shared
-    @ObservedObject private var alerts = AlertEngine.shared
-
-    var body: some View {
-        EmptyView() // Moved into responsive units loop
     }
 }
 

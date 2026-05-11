@@ -350,7 +350,9 @@ enum UsageFetcher {
             return errorPair("auth required — run gemini")
         }
 
-        let url = URL(string: "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota")!
+        guard let url = URL(string: "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota") else {
+            return errorPair("internal url error")
+        }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
         req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -397,9 +399,11 @@ enum UsageFetcher {
         
         var resetAt: Date?
         if let s = d["resetTime"] as? String {
-            let f = ISO8601DateFormatter()
-            f.formatOptions = [.withInternetDateTime]
-            resetAt = f.date(from: s)
+            let withFractional = ISO8601DateFormatter()
+            withFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            let noFractional = ISO8601DateFormatter()
+            noFractional.formatOptions = [.withInternetDateTime]
+            resetAt = withFractional.date(from: s) ?? noFractional.date(from: s)
         }
         return WindowUsage(usedPercent: min(1, max(0, used)), resetAt: resetAt, error: nil)
     }

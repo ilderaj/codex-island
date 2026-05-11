@@ -166,6 +166,21 @@ final class CostStore: ObservableObject {
                 label: "April", error: nil, unknownModels: []
             )
         )
+        // Gemini: steady daytime pattern with a midday peak — contrasts with
+        // Claude's multi-peak and Codex's late-night surge. Monthly is a
+        // gentle upward curve typical of quota-capped usage.
+        self.gemini = ProviderCost(
+            today: CostWindow(
+                dollars: 0.00, tokens: 48_320_000, billableTokens: 12_080_000,
+                series: [0, 0, 0, 0, 0, 0, 0, 0.2, 1.8, 4.3, 6.9, 8.7, 9.2, 9.4, 9.6, 9.7, 9.8, 9.9, 9.95, 9.98, 9.99, 10.00, 10.00, 10.00],
+                label: "Today", error: nil, unknownModels: []
+            ),
+            month: CostWindow(
+                dollars: 0.00, tokens: 1_020_000_000, billableTokens: 255_000_000,
+                series: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                label: "April", error: nil, unknownModels: []
+            )
+        )
         self.lastUpdated = Date()
     }
 
@@ -367,10 +382,14 @@ final class CostStore: ObservableObject {
             return canonical.prefix(1).uppercased() + canonical.dropFirst()
         }
         // Google: "gemini-3.1-pro" → "Gemini 3.1 Pro"
+        // Preserve "Flash-Lite" compound before replacing all remaining dashes with spaces.
         if canonical.hasPrefix("gemini-") {
-            return canonical.replacingOccurrences(of: "gemini-", with: "Gemini ")
-                .replacingOccurrences(of: "flash-lite", with: "Flash-Lite")
-                .capitalized
+            let trimmed = String(canonical.dropFirst("gemini-".count))
+            let normalized = trimmed
+                .replacingOccurrences(of: "flash-lite", with: "flash\u{2011}lite")
+                .replacingOccurrences(of: "-", with: " ")
+                .replacingOccurrences(of: "flash\u{2011}lite", with: "Flash-Lite")
+            return "Gemini " + normalized.capitalized
         }
         return canonical
     }

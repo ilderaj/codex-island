@@ -68,6 +68,19 @@ final class UsageStore: ObservableObject {
                 ),
                 plan: "pro"
             )
+            self.gemini = AppUsage(
+                fiveHour: WindowUsage(
+                    usedPercent: 0.58,
+                    resetAt: now.addingTimeInterval(1 * 3600 + 55 * 60),
+                    error: nil
+                ),
+                weekly: WindowUsage(
+                    usedPercent: 0.62,
+                    resetAt: now.addingTimeInterval(3 * 86400 + 20 * 3600),
+                    error: nil
+                ),
+                plan: "pro"
+            )
             self.lastUpdated = now
             return
         }

@@ -82,6 +82,7 @@ final class AlertEngine: ObservableObject {
         let triggers: [AnyPublisher<Void, Never>] = [
             UsageStore.shared.$claude.map { _ in () }.eraseToAnyPublisher(),
             UsageStore.shared.$codex.map { _ in () }.eraseToAnyPublisher(),
+            UsageStore.shared.$gemini.map { _ in () }.eraseToAnyPublisher(),
             AlertThresholdStore.shared.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
             ProviderVisibilityStore.shared.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         ]

@@ -34,9 +34,12 @@ enum GeminiLogReader {
                     cacheReadTokens: ev.cacheReadTokens
                 )
                 if !ev.dedupKey.isEmpty {
-                    // Overwrite earlier events for the same ID to capture the
-                    // final turn state (which has the complete output tokens).
-                    latestById[ev.dedupKey] = event
+                    // Keep the event with the latest timestamp per turn id —
+                    // captures the final streaming update regardless of file
+                    // enumeration order (FileManager doesn't sort by mtime).
+                    if (latestById[ev.dedupKey]?.timestamp ?? .distantPast) <= event.timestamp {
+                        latestById[ev.dedupKey] = event
+                    }
                 } else {
                     withoutId.append(event)
                 }
