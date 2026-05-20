@@ -3,7 +3,7 @@ import Foundation
 /// Time-window helpers for the cost screen. Calendar-local so "today" and
 /// "this month" line up with the wall clock the user is glancing at.
 ///
-/// Aggregation lives in `CostStore.summarize` (single-pass over all events).
+/// Aggregation lives in `CostSummary.summarize` (single-pass over all events).
 /// What's left here is the chrome the cell labels need: month name + reset
 /// countdowns.
 enum CostBucketing {
