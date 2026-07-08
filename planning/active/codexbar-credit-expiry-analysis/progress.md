@@ -109,3 +109,28 @@
   - 包含代码、资源、本地化、测试、脚本、docs/design、docs/superpowers/plans、planning/active。
   - 明确排除本地运行态 `.harness/`。
 - `git diff --check`: PASS。
+
+## 2026-07-08 10:27:02 UTC+8
+
+- 已提交 combined scope：
+  - Commit: `8bbfbdf3a3ddddd3b6aff1e556519c8a0398988e`
+  - Message: `feat: add Codex accounts and reset credits`
+- 已推送分支：
+  - Branch: `codex/combined-reset-credits-account-switcher`
+  - Remote: `origin`
+- 已创建 PR：
+  - URL: https://github.com/ilderaj/codex-island/pull/1
+  - Base: `dev`
+  - Head: `codex/combined-reset-credits-account-switcher`
+- PR assess:
+  - State: `OPEN`
+  - Mergeable: `MERGEABLE`
+  - Review decision: none observed
+  - Status checks: none reported
+- 已触发 review：
+  - Comment: `@codex review`
+  - Comment URL: https://github.com/ilderaj/codex-island/pull/1#issuecomment-4910835093
+  - `rereview_requested_at`: 2026-07-08 10:27:02 UTC+8
+  - `last_observed_review_at`: none observed
+  - `last_observed_gate_state`: PR mergeable; no status checks reported
+  - `next_reassess_due_at`: 2026-07-08 10:42:02 UTC+8

@@ -132,3 +132,16 @@
   - 把 account-switcher 作为前置/同 PR 纳入；
   - 或先落地 account-switcher，再基于其 commit 创建 reset credits branch；
   - 或重写 reset credits，使其暂时不依赖 account-switcher context。
+
+## 2026-07-08 10:27:02 UTC+8
+
+- 用户选择 combined branch/PR 后，当前 closure target 已从 blocked 转为 PR #1：
+  - https://github.com/ilderaj/codex-island/pull/1
+- PR #1 是 fork `ilderaj/codex-island` 内的 PR：
+  - base: `dev`
+  - head: `codex/combined-reset-credits-account-switcher`
+- 初次 PR assess 结果：
+  - mergeable: `MERGEABLE`
+  - review decision: none
+  - status checks: none
+- 已触发 `@codex review`；closure loop 当前处于 `ReReview` 等待状态。
