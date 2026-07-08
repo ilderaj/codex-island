@@ -60,6 +60,8 @@ Codex：
 
 - 先登录 Codex / ChatGPT CLI。
 - CodexIsland 读取 `~/.codex/auth.json`。
+- 你可以在设置 -> 服务中把当前认证导入为一个本地命名账号。导入后的快照保存在
+  `~/.codex/accounts/`；切换账号时会用所选快照替换 `~/.codex/auth.json`。
 - 如果文件或 access token 缺失，面板会显示 `no codex auth`。
 
 Claude：
@@ -79,7 +81,7 @@ Claude：
 - 在展开面板里 Cmd 点击，可切换当前页面的可视化样式。
 - 点击 `synced Xs ago` 状态可立即刷新。
 - 点击展开面板左下角的齿轮打开设置。
-- 在设置里可以开启登录启动、选择刷新间隔、切换低功耗模式、隐藏或显示 Claude / Codex、选择默认图表和成本视图、切换 token 统计口径、打开 GitHub / License，或退出应用。
+- 在设置里可以开启登录启动、选择刷新间隔、切换低功耗模式、隐藏或显示 Claude / Codex、选择默认图表和成本视图、导入并切换已保存的 Codex 账号、切换 token 统计口径、打开 GitHub / License，或退出应用。
 
 服务可见性只影响显示。隐藏某个服务会移除它的 logo 和列，但应用仍会把最新用量保存在内存里，重新显示时不需要重置。
 
