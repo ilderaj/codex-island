@@ -7,12 +7,18 @@ enum UsageFetcher {
     /// the access_token from ~/.codex/auth.json. The endpoint is reliable
     /// and rarely rate-limited, so this is the easy half of the integration.
     static func fetchCodex() async -> AppUsage {
-        guard let token = readCodexAccessToken() else {
+        guard let context = try? CodexAuthParser.readActiveContext() else {
             return errorPair("no codex auth")
         }
+        return await fetchCodex(context: context)
+    }
 
+    static func fetchCodex(context: CodexAuthContext) async -> AppUsage {
         var req = URLRequest(url: URL(string: "https://chatgpt.com/backend-api/wham/usage")!)
-        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.setValue("Bearer \(context.accessToken)", forHTTPHeaderField: "Authorization")
+        if let accountID = context.chatgptAccountId {
+            req.setValue(accountID, forHTTPHeaderField: "ChatGPT-Account-Id")
+        }
 
         do {
             let (data, response) = try await URLSession.shared.data(for: req)
@@ -42,20 +48,39 @@ enum UsageFetcher {
         }
     }
 
+    static func fetchCodexResetCredits(
+        context: CodexAuthContext,
+        timeout: TimeInterval = 3
+    ) async -> CodexResetCreditsSnapshot? {
+        guard let url = URL(string: "https://chatgpt.com/backend-api/codex/rate-limit-reset-credits") else {
+            return nil
+        }
+
+        var req = URLRequest(url: url)
+        req.timeoutInterval = timeout
+        req.setValue("Bearer \(context.accessToken)", forHTTPHeaderField: "Authorization")
+        req.setValue("application/json", forHTTPHeaderField: "Accept")
+        req.setValue("CodexIsland", forHTTPHeaderField: "User-Agent")
+        req.setValue("codex-1", forHTTPHeaderField: "OpenAI-Beta")
+        req.setValue("Codex Desktop", forHTTPHeaderField: "originator")
+        if let accountID = context.chatgptAccountId {
+            req.setValue(accountID, forHTTPHeaderField: "ChatGPT-Account-ID")
+        }
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: req)
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else { return nil }
+            return try CodexResetCreditsResponse.decode(data: data)
+        } catch {
+            return nil
+        }
+    }
+
     private static func errorPair(_ message: String) -> AppUsage {
         AppUsage(
             fiveHour: WindowUsage(usedPercent: 0, resetAt: nil, error: message),
             weekly: WindowUsage(usedPercent: 0, resetAt: nil, error: message)
         )
-    }
-
-    private static func readCodexAccessToken() -> String? {
-        let path = NSString("~/.codex/auth.json").expandingTildeInPath
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let tokens = json["tokens"] as? [String: Any],
-              let token = tokens["access_token"] as? String else { return nil }
-        return token
     }
 
     private static func parseCodexWindow(_ obj: Any?) -> WindowUsage {

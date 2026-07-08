@@ -121,6 +121,9 @@ For Codex:
 
 - Sign in to Codex / ChatGPT CLI first.
 - CodexIsland reads `~/.codex/auth.json`.
+- In Settings -> Providers, you can import the current auth as a local named
+  account. Imported snapshots live under `~/.codex/accounts/`; switching
+  accounts replaces `~/.codex/auth.json` with the selected snapshot.
 - If the file or access token is missing, the panel shows `no codex auth`.
 
 For Claude:
@@ -150,8 +153,8 @@ the first peek. Opening Settings also triggers a fresh fetch.
   Settings.
 - Use Settings to enable Launch at Login, pick a refresh interval, toggle Low
   Power Mode, hide/show Claude or Codex, choose the default chart and cost
-  styles, choose between all-tokens and billable-only token counting, open
-  GitHub / License, or quit the app.
+  styles, import and switch stored Codex accounts, choose between all-tokens
+  and billable-only token counting, open GitHub / License, or quit the app.
 
 Provider visibility is display-only. Hiding a provider removes that provider's
 logo and column from the island, but the app keeps the latest usage values in
@@ -256,8 +259,10 @@ Native app behavior:
 - No app analytics.
 - No crash reporting.
 - No proxy server.
-- No credentials are stored by CodexIsland.
-- Codex tokens are read locally from `~/.codex/auth.json`.
+- No cloud credential storage.
+- Codex tokens are read locally from `~/.codex/auth.json`. When you explicitly
+  import a Codex account, CodexIsland stores that auth snapshot locally under
+  `~/.codex/accounts/` so it can switch back later.
 - Claude tokens are read from `CLAUDE_CODE_OAUTH_TOKEN`, the macOS Keychain, or
   Anthropic's refresh endpoint.
 - Tokens leave the machine only as `Authorization` headers to `chatgpt.com` and
