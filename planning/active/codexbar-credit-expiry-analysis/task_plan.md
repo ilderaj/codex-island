@@ -27,7 +27,7 @@ Close Reason:
 | 5. Reviewed implementation plan | complete | 已产出并通过 read-only reviewer round 2；按用户要求停在 plan 审阅点 |
 | 6. Island states design update | complete | 已按用户要求只在 Pencil `.pen` 的 `Expanded Usage` 中增加 reset credits 有效期摘要，不新增 state |
 | 7. Implementation execution | complete | 已按更新后的 implementation plan 实现 reset credits 模型、best-effort fetch、UsageStore 补挂、expanded usage row 与 demo data，并完成测试/build 验证 |
-| 8. Finishing / release closure | in_progress | 用户已选择 combined branch/PR；已创建 `codex/combined-reset-credits-account-switcher` 并 staged combined scope，排除 `.harness/` |
+| 8. Finishing / release closure | blocked | 已创建 combined PR https://github.com/ilderaj/codex-island/pull/1；首个功能 commit 已在远端；follow-up planning commit 因 GitHub HTTPS push 传输错误 3 次失败，停止重试 |
 
 ## Companion Plan
 
@@ -36,7 +36,12 @@ Close Reason:
 - Review verdict: approved after read-only reviewer round 2
 - Sync-back status: synced 2026-07-07 21:57:03 UTC+8
 - Stop point: implementation executed and verified; live endpoint check remains optional and was not forced.
-- Closure state: combined branch/PR selected; branch `codex/combined-reset-credits-account-switcher` in progress.
+- Closure state: partial-success / blocked-with-evidence. PR open at https://github.com/ilderaj/codex-island/pull/1; functional combined commit pushed; local branch has unpushed planning-only commits due GitHub HTTPS transport errors.
+- Rereview requested at: 2026-07-08 10:27:02 UTC+8
+- Last observed review state: no review decision
+- Last observed gate state: PR mergeable; no status checks reported
+- Next reassess due at: 2026-07-08 10:42:02 UTC+8
+- Push blocker: `git push` failed twice with `Error in the HTTP2 framing layer`; `git -c http.version=HTTP/1.1 push` failed with `Empty reply from server`.
 
 ## Mode-Aware Verification Contract
 
