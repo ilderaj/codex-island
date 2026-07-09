@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "name": "CodexIsland",
+    "source_of_truth": "SwiftUI implementation",
+    "design_file": "docs/design/Codex_Island_Design.pen",
+    "notes": [
+      "Inter approximates SF Pro in Pencil.",
+      "IBM Plex Mono approximates SF Mono in Pencil."
+    ]
+  },
+  "color": {
+    "brand": {
+      "claude": "#CC785C",
+      "codex": "#5AA8F0",
+      "cobalt": "#0047AB",
+      "liveTeal": "#3DD68C",
+      "alertAmber": "#F5A524",
+      "alertRed": "#E5484D"
+    },
+    "product": {
+      "background": "#050507",
+      "surface1": "#FFFFFF06",
+      "surface2": "#FFFFFF0A",
+      "surface3": "#FFFFFF14",
+      "surface4": "#FFFFFF1A",
+      "hairline": "#FFFFFF0F"
+    },
+    "text": {
+      "primary": "#FFFFFFEB",
+      "strong": "#FFFFFFC7",
+      "body": "#FFFFFF8C",
+      "muted": "#FFFFFF66",
+      "faint": "#FFFFFF57",
+      "hint": "#FFFFFF2E"
+    },
+    "board": {
+      "canvasBackground": "#F4F4EF",
+      "canvasCard": "#FFFFFF",
+      "canvasInk": "#131418",
+      "canvasMuted": "#5C616B",
+      "canvasHairline": "#D6D9DF",
+      "stageBackground": "#2A2E35",
+      "stageTopBar": "#3A404A"
+    }
+  },
+  "typography": {
+    "families": {
+      "ui": "Inter",
+      "mono": "IBM Plex Mono"
+    },
+    "tokens": {
+      "bigNumber": {
+        "family": "mono",
+        "size": 38,
+        "weight": 600
+      },
+      "chartValue": {
+        "family": "mono",
+        "size": 18,
+        "weight": 600
+      },
+      "previewNumber": {
+        "family": "mono",
+        "size": 15,
+        "weight": 600
+      },
+      "brand": {
+        "family": "ui",
+        "size": 14,
+        "weight": 600
+      },
+      "unit": {
+        "family": "ui",
+        "size": 15,
+        "weight": 500
+      },
+      "providerTitle": {
+        "family": "ui",
+        "size": 13,
+        "weight": 600
+      },
+      "rowTitle": {
+        "family": "ui",
+        "size": 13,
+        "weight": 500
+      },
+      "tabLabel": {
+        "family": "ui",
+        "size": 12,
+        "weight": 500
+      },
+      "label": {
+        "family": "ui",
+        "size": 11,
+        "weight": 500
+      },
+      "button": {
+        "family": "ui",
+        "size": 11,
+        "weight": 600
+      },
+      "micro": {
+        "family": "ui",
+        "size": 10,
+        "weight": 500
+      },
+      "sectionLabel": {
+        "family": "ui",
+        "size": 10,
+        "weight": 600
+      },
+      "caption": {
+        "family": "mono",
+        "size": 10,
+        "weight": 400
+      },
+      "chip": {
+        "family": "mono",
+        "size": 9,
+        "weight": 700
+      }
+    }
+  },
+  "spacing": {
+    "4": 4,
+    "6": 6,
+    "8": 8,
+    "10": 10,
+    "12": 12,
+    "14": 14,
+    "16": 16,
+    "18": 18,
+    "22": 22,
+    "24": 24
+  },
+  "radius": {
+    "4": 4,
+    "6": 6,
+    "8": 8,
+    "9": 9,
+    "14": 14,
+    "pill": 999
+  },
+  "layout": {
+    "compactTabWidth": 38,
+    "peekPillSlotWidth": 78,
+    "expandedPanelWidth": 800,
+    "expandedBaseContentHeight": 188,
+    "overviewBaseContentHeight": 244,
+    "overviewDetailContentHeight": 52,
+    "chartTileHeight": 96,
+    "settingsToggle": {
+      "width": 30,
+      "height": 17,
+      "thumb": 13
+    }
+  },
+  "motion": {
+    "strongEaseOut": "cubic-bezier(0.23, 1, 0.32, 1), 280ms",
+    "chartSwap": "cubic-bezier(0.23, 1, 0.32, 1), 220ms",
+    "pageSwipe": "cubic-bezier(0.25, 0.82, 0.25, 1), 360ms",
+    "openMorph": "spring(response: 0.42, dampingFraction: 0.82)",
+    "closeMorph": "spring(response: 0.30, dampingFraction: 0.88)",
+    "detailExpand": "spring(response: 0.36, dampingFraction: 0.94)",
+    "detailCollapse": "cubic-bezier(0.23, 1, 0.32, 1), 200ms"
+  }
+}

@@ -19,6 +19,7 @@ final class UsageStore: ObservableObject {
     @Published var claudeReauthInProgress = false
 
     private var refreshTask: Task<Void, Never>?
+    private var codexResetCreditsTask: Task<Void, Never>?
     private var reauthPollTask: Task<Void, Never>?
     private var pollTimer: Timer?
     private var intervalCancellable: AnyCancellable?
@@ -73,7 +74,25 @@ final class UsageStore: ObservableObject {
                     resetAt: now.addingTimeInterval(4 * 86400 + 18 * 3600),
                     error: nil
                 ),
-                plan: "pro"
+                plan: "pro",
+                codexResetCredits: CodexResetCreditsSnapshot(
+                    credits: [
+                        CodexResetCredit(
+                            status: "available",
+                            title: "Reset",
+                            grantedAt: now.addingTimeInterval(-86_400),
+                            expiresAt: now.addingTimeInterval(3 * 3_600 + 20 * 60)
+                        ),
+                        CodexResetCredit(
+                            status: "available",
+                            title: "Reset",
+                            grantedAt: now.addingTimeInterval(-86_400),
+                            expiresAt: nil
+                        ),
+                    ],
+                    availableCount: 2,
+                    updatedAt: now
+                )
             )
             self.lastUpdated = now
             return
@@ -81,8 +100,10 @@ final class UsageStore: ObservableObject {
 
         loading = true
         refreshTask?.cancel()
+        codexResetCreditsTask?.cancel()
+        let codexContext = try? CodexAuthParser.readActiveContext()
         refreshTask = Task {
-            async let codexResult = UsageFetcher.fetchCodex()
+            async let codexResult = UsageStore.fetchCodexForRefresh(context: codexContext)
             let coolingDown = claudeCooldownUntil.map { Date() < $0 } ?? false
             var cl: AppUsage?
             if !coolingDown {
@@ -109,6 +130,23 @@ final class UsageStore: ObservableObject {
             if !UsageStore.isErrorOnly(c) || UsageStore.isErrorOnly(self.codex) {
                 self.codex = c
             }
+            if !UsageStore.isErrorOnly(c), let codexContext {
+                let expectedAccountKey = codexContext.accountKey
+                codexResetCreditsTask = Task { [weak self] in
+                    let resetCredits = await UsageFetcher.fetchCodexResetCredits(context: codexContext)
+                    if Task.isCancelled { return }
+                    await MainActor.run {
+                        guard let self else { return }
+                        guard (try? CodexAuthParser.readActiveContext().accountKey) == expectedAccountKey else {
+                            return
+                        }
+                        var updated = self.codex
+                        updated.codexResetCredits = resetCredits
+                        self.codex = updated
+                    }
+                }
+            }
+            CodexAccountStore.shared.updateActiveUsage(c)
             if let cl {
                 if UsageStore.isRateLimited(cl) {
                     self.claudeCooldownUntil = Date().addingTimeInterval(UsageStore.rateLimitCooldown)
@@ -137,6 +175,13 @@ final class UsageStore: ObservableObject {
     private static func isErrorOnly(_ u: AppUsage) -> Bool {
         u.fiveHour.error != nil && u.weekly.error != nil
             && u.fiveHour.usedPercent == 0 && u.weekly.usedPercent == 0
+    }
+
+    private static func fetchCodexForRefresh(context: CodexAuthContext?) async -> AppUsage {
+        if let context {
+            return await UsageFetcher.fetchCodex(context: context)
+        }
+        return await UsageFetcher.fetchCodex()
     }
 
     /// True when the fetch resolved to the rate-limited error (both windows
@@ -235,6 +280,8 @@ final class UsageStore: ObservableObject {
     }
 
     func stopAutoRefresh() {
+        codexResetCreditsTask?.cancel()
+        codexResetCreditsTask = nil
         pollTimer?.invalidate()
         pollTimer = nil
         intervalCancellable?.cancel()

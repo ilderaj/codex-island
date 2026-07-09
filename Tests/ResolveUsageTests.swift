@@ -33,6 +33,59 @@ struct ResolveUsageTests {
         }
     }
 
+    static func runCodexResetCreditTests() {
+        let formatter = ISO8601DateFormatter()
+        let now = formatter.date(from: "2026-07-07T06:00:00Z")!
+        let expiringSoon = CodexResetCredit(
+            status: "available",
+            title: "Reset",
+            grantedAt: formatter.date(from: "2026-07-06T06:00:00Z"),
+            expiresAt: formatter.date(from: "2026-07-07T09:30:00Z")
+        )
+        let nonExpiring = CodexResetCredit(
+            status: "available",
+            title: "Reset",
+            grantedAt: formatter.date(from: "2026-07-06T06:00:00Z"),
+            expiresAt: nil
+        )
+        let redeemed = CodexResetCredit(status: "redeemed", title: "Used", grantedAt: nil, expiresAt: nil)
+        let snapshot = CodexResetCreditsSnapshot(
+            credits: [nonExpiring, redeemed, expiringSoon],
+            availableCount: 2,
+            updatedAt: now
+        )
+
+        let inventory = snapshot.availableInventory(now: now)
+        expect(inventory.credits.count == 2, "Reset credits inventory keeps available credits only")
+        expect(inventory.credits.first?.expiresAt == expiringSoon.expiresAt, "Reset credits inventory sorts expiring credits first")
+        expect(inventory.credits.last?.expiresAt == nil, "Reset credits inventory keeps non-expiring credits last")
+        expect(snapshot.presentation(now: now)?.summary == "2 available · 3h · No expiry", "Reset credits presentation is compact")
+
+        let json = """
+        {
+          "available_count": 2,
+          "credits": [
+            {
+              "status": "available",
+              "title": "Reset",
+              "granted_at": "2026-07-06T06:00:00Z",
+              "expires_at": "2026-07-07T09:30:00Z"
+            },
+            {
+              "status": "available",
+              "title": "Reset",
+              "granted_at": "2026-07-06T06:00:00Z",
+              "expires_at": null
+            }
+          ]
+        }
+        """.data(using: .utf8)!
+        let decoded = try! CodexResetCreditsResponse.decode(data: json, updatedAt: now)
+        expect(decoded.availableCount == 2, "Reset credits response decodes available_count")
+        expect(decoded.credits.count == 2, "Reset credits response decodes credits")
+        expect(decoded.credits.last?.expiresAt == nil, "Reset credits response decodes null expiry")
+    }
+
     static func main() async {
         guard ProcessInfo.processInfo.environment["CLAUDE_CODE_OAUTH_TOKEN"] == "test-stub-token" else {
             print("FAIL harness must run via scripts/run-tests.sh (env token stub missing)")
@@ -106,6 +159,10 @@ struct ResolveUsageTests {
         // breaking change for them, not a copy edit.
         expect(ClaudeCredentials.rateLimitedMessage == "rate limited", "rateLimitedMessage literal is stable")
         expect(ClaudeCredentials.reauthRequiredMessage == "re-login: claude /login", "reauthRequiredMessage literal is stable")
+
+        runCodexResetCreditTests()
+
+        failures += await CodexAccountTests.run()
 
         if failures > 0 {
             print("\(failures) failure(s)")

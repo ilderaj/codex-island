@@ -104,9 +104,43 @@ struct ChartsBlock: View {
             if needsReauth && ClaudeCredentials.canPromptReauth() {
                 ReauthButton()
             }
+            if provider == .codex, let presentation = usage.codexResetCredits?.presentation() {
+                ResetCreditsSummaryRow(presentation: presentation)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.horizontal, 12)
+    }
+}
+
+struct ResetCreditsSummaryRow: View {
+    let presentation: CodexResetCreditsPresentation
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(IslandColor.codex)
+                .frame(width: 5, height: 5)
+            Text(L10n.tr(presentation.title))
+                .font(Typography.micro.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.55))
+            Text(presentation.summary)
+                .font(Typography.chip)
+                .foregroundStyle(.white.opacity(0.72))
+        }
+        .lineLimit(1)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(.white.opacity(0.04))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 6)
+                        .strokeBorder(.white.opacity(0.06), lineWidth: 0.5)
+                }
+        )
+        .accessibilityLabel("\(L10n.tr(presentation.title)), \(presentation.summary)")
     }
 }
 
