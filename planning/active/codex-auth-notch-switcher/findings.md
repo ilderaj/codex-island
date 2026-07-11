@@ -76,6 +76,10 @@
 - Final read-only reviewer `019f5193-6af4-76d3-99ed-dcc7441d7c94` verified revised hashes and found no critical defect. It identified two important omissions: `terminationFailed` also needs a user-controlled local restoration path, and Task 2 must commit `ChatGPTHostPolicy.swift`.
 - Chief reconciled both omissions. The final plan preserves the release-blocking runtime proof: launch attempt never claims auth reload, and user confirmation remains the only path to host interruption.
 
+## Findings Record: 2026-07-11 22:32:31 UTC+8
+- Visible implementation worker `019f5196-c321-7c62-8d49-7f25f82cb02a` stopped at preflight before tests or edits because its native worktree contained a changed `.harness/runtime-hooks/codex.jsonl`.
+- This file is a harness runtime hook artifact and lies outside Task 1 allowed source paths. Chief authorized a narrowly documented exception only for that exact path; all product/test/planning/design/script dirt remains a hard stop. The stale worker will not be resumed; Task 1 will use a replacement visible worker.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

@@ -91,7 +91,7 @@ Phase 4: Isolated implementation
 
 ### Unit: implementation-storage-transaction
 - Kind: implementation
-- Status: dispatched
+- Status: respawn_required
 - Scope:
   - Do: Execute companion-plan Task 1 only, including its RED/GREEN tests and one commit.
   - Not do: Host lifecycle, SwiftUI account rail, Pencil, Settings workflow, external auth, process operations, push, PR, merge, or release.
@@ -105,6 +105,11 @@ Phase 4: Isolated implementation
 - Return Artifacts: commit SHA, changed-file list, RED/GREEN evidence, and residual risks
 - Integration Target: Chief review, then `findings.md` and `progress.md`
 - Exit Criteria: Task 1 proof target passes without touching real `~/.codex` or host processes
+
+### Preflight Exception: native worktree runtime noise
+- Allowed unrelated dirty path: `.harness/runtime-hooks/codex.jsonl` only, when it is generated during worker startup.
+- Required observation: `git status --short` contains no source, test, planning, design, or script change outside this one runtime path.
+- Effect: a replacement worker may proceed after recording this exception; any other dirty path remains a binding mismatch and immediate stop condition.
 
 ## Risk Assessment
 
