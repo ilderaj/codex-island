@@ -26,3 +26,23 @@ swiftc \
   Tests/ResolveUsageTests.swift
 
 CLAUDE_CODE_OAUTH_TOKEN="test-stub-token" "$OUT_DIR/resolve-usage-tests"
+
+swiftc \
+  -parse-as-library \
+  -framework AppKit \
+  -o "$OUT_DIR/chatgpt-host-tests" \
+  Sources/Model/UsageDisplayModeStore.swift \
+  Sources/Usage/AppUsage.swift \
+  Sources/Usage/CodexResetCredits.swift \
+  Sources/Usage/CodexAuthModels.swift \
+  Sources/Usage/CodexAuthParser.swift \
+  Sources/Usage/CodexAccountDataWriter.swift \
+  Sources/Usage/CodexAccountStore.swift \
+  Sources/Usage/ClaudeCredentials.swift \
+  Sources/Usage/UsageFetcher.swift \
+  Sources/Usage/ChatGPTHostPolicy.swift \
+  Sources/Usage/ChatGPTHostController.swift \
+  Sources/Usage/CodexAccountApplyCoordinator.swift \
+  Tests/ChatGPTHostControllerTests.swift
+
+"$OUT_DIR/chatgpt-host-tests"
