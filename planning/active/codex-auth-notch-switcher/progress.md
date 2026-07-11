@@ -34,6 +34,7 @@
   - Committed Task 1's durable receipt as `d60c76b` and dispatched visible isolated Task 2 worker `019f51a5-1620-75a2-840c-f43029b36cfe` from that `dev` baseline.
   - Reconciled Task 2 after the worker's TDD slice. Independently reran its full harness and exact diff checks, then cherry-picked the committed exact-path host lifecycle slice into `dev` as `0780104`.
   - Reused the freshly completed Task 2 visible worktree for Task 3 after recording a narrow plan-table reconciliation: shared-coordinator ownership and privacy-safe default-label coverage require their exact source/test files.
+  - Reconciled Task 3 after a build RED/GREEN slice and then a narrow code review. Integrated the rail at `3e9142c`, immediately followed by reviewed recovery/privacy corrections at `cda2d15`.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -51,6 +52,10 @@
 | Task 2 RED | dedicated host harness before Task 2 sources exist | Compile failure | Expected missing-source compile failure observed | pass |
 | Task 2 final independent harness | `HARNESS_PROJECT_ROOT=<worker-root> ./scripts/run-tests.sh` | Existing + fake-driven host tests pass without a real host action | All tests passed, including policy, refusal, timeout, target drift, launch retry, and restoration cases | pass |
 | Task 2 whitespace | `git diff --check d60c76b..1e47096` and `git show --check 1e47096` | No whitespace errors | Exit 0 | pass |
+| Task 3 baseline | `./build.sh` and `./scripts/run-tests.sh` in isolated worktree | Existing app and harness pass | Exit 0 | pass |
+| Task 3 RED | `./build.sh` before shared coordinator/rail route exist | Compile failure | Expected missing symbol failure observed | pass |
+| Task 3 final worker proof | `./build.sh`, `./scripts/run-tests.sh`, diff/show checks | App output and all non-UI cases pass | `build/CodexIsland.app` exists; all tests passed | pass |
+| Task 3 review follow-up | `./scripts/run-tests.sh` plus source/diff inspection | Embedded raw-ID label rejected; no pre-switch restore CTA | All tests passed; four-file correction integrated as `cda2d15` | pass |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
@@ -60,12 +65,13 @@
 | 2026-07-11 22:39 UTC+8 | Review found non-durable rollback misreporting and untested unknown-auth rollback | 1 | Reused worker for a bounded test-first amend; independently reran the harness before integration. |
 | 2026-07-11 22:44 UTC+8 | First Task 2 session-create call had an invalid argument shape | 1 | No state was created; retried with the valid project-target schema. |
 | 2026-07-11 22:57 UTC+8 | Narrow Task 2 reviewer did not return before close request stalled | 1 | Do not rely on absent review evidence; Chief performed independent code, diff, and full-harness verification before integration. |
+| 2026-07-11 23:17 UTC+8 | Task 3 review arrived after initial cherry-pick with P1/P2 findings | 1 | Reused the worker for a bounded correction; independent regression test and source checks passed before integrating `cda2d15`. |
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |---|---|
-| Where am I? | Phase 4: Isolated implementation; Task 1 and Task 2 are integrated on `dev`. |
-| Where am I going? | Task 3 expanded-notch account rail and confirmation flow, then reconciliation, verification, PR, and release gate. |
+| Where am I? | Phase 4 complete: Tasks 1-3 are integrated on `dev`. |
+| Where am I going? | Task 4 design/docs reconciliation, full verification, PR preparation, and the explicit user-controlled runtime/release gate. |
 | What's the goal? | Safely expose per-account Codex usage and account switching, including the correct merged-host apply/relaunch behavior. |
-| What have I learned? | The account primitive is recoverable under the writer contract; host lifecycle can be policy- and fake-tested without broad targeting, but a real post-relaunch auth reload remains unproven. |
-| What have I done? | Completed and integrated local transaction recovery plus fake-driven exact-path host coordination without touching real auth or host processes. |
+| What have I learned? | Local transaction recovery, exact host targeting, and staged UI behavior are testable without touching real auth/host state; labels and recovery CTAs need explicit negative proof as well as positive flow proof. |
+| What have I done? | Completed and integrated Task 1-3 with review-follow-up corrections, without touching real auth or ChatGPT processes. |

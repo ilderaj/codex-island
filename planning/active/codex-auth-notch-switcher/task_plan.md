@@ -44,7 +44,7 @@ Phase 4: Isolated implementation
 - [ ] Create a dedicated implementation worktree and branch after plan approval.
 - [x] Implement Task 1: local transaction recovery and multi-account test coverage.
 - [x] Implement Task 2: exact-path host lifecycle and coordinator.
-- [ ] Implement Task 3: expanded-notch account rail and confirmation flow.
+- [x] Implement Task 3: expanded-notch account rail and confirmation flow.
 - [ ] Keep code, design, and tests synchronized.
 - **Status:** in_progress
 
@@ -125,7 +125,7 @@ Phase 4: Isolated implementation
 
 ### Unit: implementation-account-rail
 - Kind: implementation
-- Status: in_progress
+- Status: complete
 - Scope:
   - Do: Execute companion-plan Task 3 only: expanded Usage rail, staged selection, explicit confirmation, Settings bridge, privacy-safe account labels, localized copy, build proof, and non-UI regression coverage.
   - Not do: Real host/auth action, Pencil redesign, README/documentation reconciliation, push, PR, merge, release, or archive.
@@ -136,10 +136,10 @@ Phase 4: Isolated implementation
   - External effects: none; confirmation action must not be activated during proof.
 - Dependencies: `4e23d59` and companion-plan Task 3
 - Reconcile Note: the companion plan's Task 3 prose requires `CodexAccountApplyCoordinator.shared` and privacy-safe `defaultLabel(for:)` coverage even though its initial file table omits their implementation/test files. These two files are explicitly included here as required plan-contract completion, not a scope expansion.
-- Verification Plan: build RED/GREEN, non-UI harness GREEN, source inspection that only the confirmation callback can call `apply(accountKey:)`, `git diff --check`, and Chief review/reconciliation.
-- Return Artifacts: one commit SHA, changed-file list, RED/GREEN evidence, worktree status, and residual risks.
-- Integration Target: Chief review, then `findings.md` and `progress.md`.
-- Exit Criteria: account browsing/staging/cancel are local UI state only; the sole apply call sits behind explicit confirmation; UI labels expose no email or raw account ID.
+- Verification Plan: build RED/GREEN, non-UI harness GREEN, source inspection that only affirmative confirmation callbacks can call `apply(accountKey:)`, `git diff --check`, Chief review, and review-follow-up regression coverage.
+- Return Artifacts: worker commits `5e6375b` and `179d2c3`; integrated commits `3e9142c` and `cda2d15`; changed-file list, RED/GREEN evidence, worktree status, and residual risks.
+- Integration Target: reconciled by Chief into `dev`; receipt recorded in `findings.md` and `progress.md`.
+- Exit Criteria: complete; browsing/staging/cancel are local UI state only, affirmative confirmation is the sole apply path, UI labels expose no email or raw account ID, and a pre-switch validation failure cannot offer local restore.
 
 ### Preflight Exception: native worktree runtime noise
 - Allowed unrelated dirty path: `.harness/runtime-hooks/codex.jsonl` only, when it is generated during worker startup.

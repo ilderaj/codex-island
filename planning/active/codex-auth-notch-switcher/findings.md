@@ -96,6 +96,12 @@
 ## Findings Record: 2026-07-11 23:00:00 UTC+8
 - Task 3's plan prose requires `CodexAccountApplyCoordinator.shared` and a non-identifying `CodexAccountStore.defaultLabel(for:)` with tests, but its initial files table omits the coordinator/store/test files. Chief treats these as mandatory interface/privacy-contract completion and adds only those exact files to the Task 3 worker's declared write set.
 
+## Findings Record: 2026-07-11 23:24:00 UTC+8
+- Visible worker `019f51a5-1620-75a2-840c-f43029b36cfe` completed Task 3 in two reviewed commits: rail implementation `5e6375b`, then correction `179d2c3`. Chief integrated them as `3e9142c` and `cda2d15` after independent scope checks, full non-UI harness runs, build output checks, and source inspection.
+- The expanded Usage route now stages a saved account and calls `apply(accountKey:)` only from affirmative confirmation callbacks in the rail and Settings bridge. Compact/peek remain free of account controls. The coordinator is shared app-wide; Settings preserves import and refresh operations.
+- The first narrow Task 3 review arrived after the initial integration and found a P1 raw-ID label bypass plus two P2 truthfulness/recovery issues. The follow-up rejects labels containing any raw identity substring, adds its regression test, suppresses pre-switch completion copy, and exposes local restore only after that apply invocation has actually switched local auth.
+- No real authentication file or ChatGPT process was operated. Fresh host auth reload remains unverified and continues to block release closure until a user-controlled runtime confirmation supplies evidence.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
