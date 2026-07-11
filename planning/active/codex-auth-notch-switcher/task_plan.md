@@ -1,0 +1,120 @@
+# Task Plan: Codex Auth Notch Switcher
+
+## Goal
+Deliver a verified macOS Codex Island flow that can retain multiple local Codex/ChatGPT account snapshots, show per-account usage in the notch UI, switch the active account safely, and apply the selected authentication to the current ChatGPT/Codex host with an explicit, reversible relaunch strategy.
+
+## Current State
+Status: waiting_review
+Archive Eligible: no
+Close Reason:
+Reconcile: waiting for user design-spec review and persistence of the Pencil editor state into the tracked `.pen` file
+
+## Routing Decision
+- Selected Route: deep
+- Route Reason: The request crosses local credential ownership, undocumented usage APIs, a Pencil-governed SwiftUI surface, and relaunch semantics for a host whose bundle arrangement has changed.
+- Promotion Trigger: Already deep; a reviewed implementation plan and independent plan review are mandatory before source changes.
+- Route Evidence Surface: This trio, `docs/design/Codex_Island_Design.pen`, source/tests, local host-bundle inspection, and GitHub PR state.
+
+## Current Phase
+Phase 2: Product and UI design (spec ready for review; Pencil persistence unresolved)
+
+## Phases
+
+### Phase 1: Discovery and Source Truth
+- [x] Confirm the existing account registry, snapshot, active-auth replacement, and per-account usage behaviors from source and tests.
+- [x] Inspect the installed ChatGPT/Codex host and obtain a read-only Copool reference for relaunch semantics.
+- [x] Record evidence, limitations, and security boundaries in `findings.md`.
+- **Status:** complete
+
+### Phase 2: Product and UI Design
+- [x] Present bounded implementation approaches and obtain the required design approval.
+- [ ] Persist the approved account-usage/switching board into `docs/design/Codex_Island_Design.pen`.
+- [ ] Re-run visual proof after Pencil rendering/export recovers.
+- [x] Review Pencil structure and record the design contract.
+- **Status:** waiting_review
+
+### Phase 3: Reviewed Implementation Plan
+- [ ] Create `docs/superpowers/plans/2026-07-11-codex-auth-notch-switcher.md`.
+- [ ] Define exact interfaces, test-first steps, worktree strategy, and relaunch rollback behavior.
+- [ ] Obtain an independent read-only plan review and reconcile findings.
+- **Status:** pending
+
+### Phase 4: Isolated Implementation
+- [ ] Create a dedicated implementation worktree and branch after plan approval.
+- [ ] Implement the selected account picker, usage presentation, safe switch, and host relaunch path.
+- [ ] Keep code, design, and tests synchronized.
+- **Status:** pending
+
+### Phase 5: Verification and Delivery
+- [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
+- [ ] Commit, push, open a PR, complete review/reconciliation, and request the explicit merge/release gate.
+- [ ] Perform post-merge adoption checks before closure.
+- **Status:** pending
+
+## Verification Contract
+
+### Mode: Implementation completion
+- Proof Target: A user can distinguish account usage, activate a chosen local account snapshot, and the documented host-relaunch behavior applies that selection without corrupting the prior active auth file.
+- Primary Proof: New focused Swift tests covering registry/switch/relaunch decision behavior, followed by `./scripts/run-tests.sh` and `./scripts/verify.sh` from the isolated worktree.
+- Backstop Proof: Fresh inspection of the installed host bundle/process state plus a manual switch-and-relaunch walkthrough using non-secret metadata only.
+- Escalation Trigger: Host bundle identity, launch path, or CLI persistence cannot be proven from local inspection; then implementation stops short of forcing process termination and records the ambiguity.
+- Evidence Sink: `progress.md`, `findings.md`, test output, and the PR.
+- Reconcile Rule: Design, Swift behavior, tests, and README must agree on one restart contract; mismatches block PR readiness.
+- Unacceptable Substitute: A successful build alone, an arbitrary `killall`, or a claim based solely on the prior standalone Codex app behavior.
+
+## Execution Contract
+
+### Unit: discovery-auth-usage
+- Kind: research
+- Status: in_progress
+- Scope:
+  - Do: Read source/tests and report what existing multi-account functionality is proven.
+  - Not do: Modify source, auth files, keychain, or network account state.
+- Owner Mode: visible worker
+- Proof Target: Exact source and test references for import, list, switch, and per-account usage behaviors.
+- Evidence Sink: `findings.md` and `progress.md` after Chief review.
+- Stop Condition: Return a bounded evidence report with gaps and no edits.
+
+### Unit: discovery-host-relaunch
+- Kind: research
+- Status: in_progress
+- Scope:
+  - Do: Inspect installed app/bundle/process facts and the available Copool reference to identify safe relaunch options.
+  - Not do: Quit, relaunch, kill, change auth, or modify source.
+- Owner Mode: visible worker
+- Proof Target: Bundle/process evidence plus a recommendation ranked by safety and applicability to the merged host.
+- Evidence Sink: `findings.md` and `progress.md` after Chief review.
+- Stop Condition: Return a bounded evidence report with limitations and no edits.
+
+## Risk Assessment
+
+| Risk | Trigger | Impact | Mitigation / rollback |
+|---|---|---|---|
+| Credential loss | Snapshot replacement is interrupted | Current CLI/host auth may be unusable | Atomic replacement with preserved prior auth and explicit restore path; tests before invoking runtime behavior |
+| Wrong host target | ChatGPT/Codex bundle/process identity is guessed | User's active app could be terminated or left stale | Read local bundle/process truth; use no terminate action until exact target is proven |
+| Usage privacy | Account labels or tokens leak into UI/logs | Sensitive account data exposure | Persist only existing non-secret metadata; redact all reports and avoid token logging |
+| Design drift | Pencil frame and SwiftUI diverge | Notch interaction becomes unclear or clipped | Make `.pen` review a pre-implementation gate and keep an alignment map in the plan |
+
+## Key Questions
+1. Which portions of account import, switching, and usage are already present and tested today?
+2. Which installed ChatGPT/Codex process should be relaunched, if any, after `~/.codex/auth.json` changes?
+3. Can the notch remain readable while selecting among several accounts, or should selection live in the expanded panel with a compact active-account indicator?
+
+## Decisions Made
+| Decision | Rationale |
+|---|---|
+| Treat old implementation as evidence, not completion | The requested host architecture changed after the previous plan and must be revalidated live. |
+| Keep all auth mutations local and reversible | Account switching controls credentials and must preserve the previously active file. |
+| Use a bounded visible worker pair for discovery | Source audit and host/Copool inspection are independent and read-only. |
+| Treat host relaunch as an explicit product contract, not an implementation detail | The merged host and legacy Codex app share a bundle ID, and no evidence yet proves cache/read timing. |
+| Block rather than infer restart confirmation semantics | Switching credentials and terminating ChatGPT is a user-visible interruption with data-loss potential. |
+| Use Contract A for host application | The user selected an explicit “Switch & relaunch ChatGPT” confirmation before credential mutation and host termination. |
+| Block rather than edit Pencil without design approval | The deep-design gate requires approval of the full interaction direction before creative or implementation changes. |
+| Use the approved account-rail interaction | The user approved the expanded-notch account rail, passive compact indicator, and explicit confirmation sheet. |
+| Do not treat MCP canvas state as disk-backed design truth | The editor reports the new board, but the checked-out `.pen` hash remains identical to `HEAD`. |
+
+## Errors Encountered
+| Error | Attempt | Resolution |
+|---|---|---|
+| None | 0 | Not applicable |
+| Pencil account-switching board produced clipping and a blank screenshot | 1 | Record the failure; replace the new board with a fixed-dimension, explicitly positioned layout before accepting any design proof. |
