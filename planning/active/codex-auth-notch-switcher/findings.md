@@ -109,6 +109,10 @@
 - Documentation now describes saved snapshots, expanded Usage browsing/staging, explicit confirmed relaunch, local restoration, exact target validation, and the unverified-auth-reload limitation. No claim is made that a real ChatGPT relaunch has adopted the selected auth.
 - Release remains blocked only by the user-controlled runtime proof and the explicit PR/push/merge/release gates. The runtime proof must stop before the confirmation unless the user personally presses it.
 
+## Findings Record: 2026-07-11 23:36:00 UTC+8
+- Read-only delivery audit: local `dev` is 14 commits ahead of its tracking branch `origin/dev`; GitHub authentication for `ilderaj` has repository write scope; no open PR has head branch `dev`.
+- `ilderaj/codex-island` is the writable fork and has default branch `main`; `ericjypark/codex-island` is the read-only upstream. The recommended PR is therefore fork-local `dev -> main` after the user grants the external-write gate.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

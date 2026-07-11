@@ -54,6 +54,13 @@ Phase 4: Isolated implementation
 - [ ] Perform post-merge adoption checks before closure.
 - **Status:** in_progress
 
+### Delivery Readiness
+- Local delivery branch: `dev` at `9fd5d5e`, ahead of `origin/dev` by 14 commits.
+- Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
+- Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
+- Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
+- Remaining gates: user-controlled confirmed ChatGPT relaunch proof; explicit approval for push/PR; then a separate merge/release decision.
+
 ## Verification Contract
 
 ### Mode: Implementation completion

@@ -36,6 +36,7 @@
   - Reused the freshly completed Task 2 visible worktree for Task 3 after recording a narrow plan-table reconciliation: shared-coordinator ownership and privacy-safe default-label coverage require their exact source/test files.
   - Reconciled Task 3 after a build RED/GREEN slice and then a narrow code review. Integrated the rail at `3e9142c`, immediately followed by reviewed recovery/privacy corrections at `cda2d15`.
   - Reconciled design/documentation and completed fresh full verification. A clean-root build caught two missed `UsageView` compile errors from the worker's stale-artifact proof; Chief corrected them and accepted only the later clean build and smoke launch.
+  - Completed a read-only remote readiness audit: no existing `dev` PR, writable fork `ilderaj/codex-island` defaults to `main`, and local `dev` is 14 commits ahead of `origin/dev`. Recorded the recommended fork-local `dev -> main` PR route without pushing or creating a PR.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -71,6 +72,7 @@
 | 2026-07-11 22:57 UTC+8 | Narrow Task 2 reviewer did not return before close request stalled | 1 | Do not rely on absent review evidence; Chief performed independent code, diff, and full-harness verification before integration. |
 | 2026-07-11 23:17 UTC+8 | Task 3 review arrived after initial cherry-pick with P1/P2 findings | 1 | Reused the worker for a bounded correction; independent regression test and source checks passed before integrating `cda2d15`. |
 | 2026-07-11 23:29 UTC+8 | Clean-root build found missing Claude callback and opaque-return errors in `UsageView` | 1 | Chief fixed the single file, reran `rm -rf build && ./build.sh`, then accepted fresh build and smoke evidence only. |
+| 2026-07-11 23:36 UTC+8 | Delivery actions require explicit external-write and destructive-runtime approval | 1 | Prepared fork-local PR route read-only; wait for the user to approve push/PR and personally confirm the runtime action. |
 
 ## 5-Question Reboot Check
 | Question | Answer |
