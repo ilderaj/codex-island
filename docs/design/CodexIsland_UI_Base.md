@@ -25,7 +25,7 @@ Primary implementation anchors:
 
 ## Design Board Coverage
 
-The `.pen` file [Codex_Island_Design.pen](/Users/jared/Personal%20Projects/Codex%20Island/docs/design/Codex_Island_Design.pen) is organized into three boards:
+The `.pen` file [Codex_Island_Design.pen](/Users/jared/Personal%20Projects/Codex%20Island/docs/design/Codex_Island_Design.pen) is organized into four boards:
 
 1. `Component Shelf`
    Captures the reusable visual vocabulary: color tiers, type tiers, chips, toggle, segmented controls, settings row shape, and extension constraints.
@@ -33,6 +33,9 @@ The `.pen` file [Codex_Island_Design.pen](/Users/jared/Personal%20Projects/Codex
    Covers the compact, peek, expanded usage, expanded cost, and expanded overview surfaces.
 3. `Settings Window`
    Covers one full `General` tab shell plus reference panels for `Display` and `Providers`.
+4. `Codex Account Switching` (`nsus8`)
+   Covers the expanded-Usage account rail, staged non-active account selection,
+   and the explicit ChatGPT relaunch confirmation state.
 
 ## Structural Conclusions
 
@@ -74,6 +77,20 @@ The Settings window intentionally avoids dashboard weight. It is:
 
 This is important for future additions. New settings rows should keep the existing restraint.
 
+### 5. Account browsing belongs in expanded Usage
+
+Saved Codex accounts are browseable only after the user opens the expanded
+Usage account rail. Selecting a non-active row stages it locally; it does not
+rewrite auth or touch ChatGPT. The sole destructive command is the explicit
+`Switch & relaunch ChatGPT` confirmation. Compact and peek remain passive and
+may show only the active account label.
+
+The relaunch is deliberately truthful rather than optimistic: the application
+validates a concrete `/Applications/ChatGPT.app` target before local switching
+and again before attempting lifecycle work. A launch attempt ends in
+`authReloadUnverified`; fresh usage evidence is required before claiming that
+ChatGPT adopted the selected auth.
+
 ## Extension Rules
 
 - Reuse the existing chrome primitives before inventing new ones.
@@ -81,6 +98,8 @@ This is important for future additions. New settings rows should keep the existi
 - Prefer tab-local growth in Settings over cross-tab blending.
 - Keep provider parity when a feature applies to both Claude and Codex.
 - Maintain the notch-native silhouette language in all island states.
+- Keep account selection staged until explicit confirmation and keep recovery
+  affordances local to an apply attempt that actually changed local auth.
 
 ## Deliberate Simplification
 

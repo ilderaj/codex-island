@@ -35,18 +35,20 @@ struct UsageView: View {
         let claudeOn = visibility.claudeVisible
         let codexOn = visibility.codexVisible
 
-        HStack(spacing: 0) {
+        return HStack(spacing: 0) {
             switch (claudeOn, codexOn) {
             case (true, true):
                 ChartsBlock(color: IslandColor.claude, usage: store.claude,
-                            style: style, seed: 1, provider: .claude)
+                            style: style, seed: 1, provider: .claude,
+                            onOpenAccounts: nil)
                 hairline
                 ChartsBlock(color: IslandColor.codex, usage: store.codex,
                             style: style, seed: 3, provider: .codex,
                             onOpenAccounts: { accountRoute = .accounts })
             case (true, false):
                 ChartsBlock(color: IslandColor.claude, usage: store.claude,
-                            style: style, seed: 1, provider: .claude)
+                            style: style, seed: 1, provider: .claude,
+                            onOpenAccounts: nil)
                 hairline
                 PerModelBreakdown(provider: .claude, metric: .tokens)
                     .frame(maxWidth: .infinity, alignment: .top)

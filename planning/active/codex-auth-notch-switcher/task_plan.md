@@ -45,14 +45,14 @@ Phase 4: Isolated implementation
 - [x] Implement Task 1: local transaction recovery and multi-account test coverage.
 - [x] Implement Task 2: exact-path host lifecycle and coordinator.
 - [x] Implement Task 3: expanded-notch account rail and confirmation flow.
-- [ ] Keep code, design, and tests synchronized.
-- **Status:** in_progress
+- [x] Keep code, design, and tests synchronized.
+- **Status:** complete
 
 ### Phase 5: Verification and Delivery
 - [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
 - [ ] Commit, push, open a PR, complete review/reconciliation, and request the explicit merge/release gate.
 - [ ] Perform post-merge adoption checks before closure.
-- **Status:** pending
+- **Status:** in_progress
 
 ## Verification Contract
 
@@ -186,3 +186,4 @@ Phase 4: Isolated implementation
 | None | 0 | Not applicable |
 | Pencil account-switching board produced clipping and a blank screenshot | 1 | Record the failure; replace the new board with a fixed-dimension, explicitly positioned layout before accepting any design proof. |
 | First Task 2 session-create call had an invalid argument shape | 1 | No thread/worktree was created; removed the extra top-level `projectId` and retried with the valid project target. |
+| Task 3 worker reported a build artifact without a clean build exit | 1 | Chief removed `build/`, found two Swift compile errors in `UsageView`, corrected them, and accepted only the subsequent fresh build plus `verify.sh` smoke proof. |

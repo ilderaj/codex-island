@@ -102,6 +102,13 @@
 - The first narrow Task 3 review arrived after the initial integration and found a P1 raw-ID label bypass plus two P2 truthfulness/recovery issues. The follow-up rejects labels containing any raw identity substring, adds its regression test, suppresses pre-switch completion copy, and exposes local restore only after that apply invocation has actually switched local auth.
 - No real authentication file or ChatGPT process was operated. Fresh host auth reload remains unverified and continues to block release closure until a user-controlled runtime confirmation supplies evidence.
 
+## Findings Record: 2026-07-11 23:32:00 UTC+8
+- Task 4 reconciliation confirms the saved Pencil document has four boards and retains `Codex Account Switching` (`nsus8`). Fresh `snapshot_layout` with `problemsOnly: true` reports `No layout problems`.
+- Chief's first clean-root build gate exposed two `UsageView` compiler defects that had been masked by a stale `build/CodexIsland.app`: the new optional account callback was not supplied to both Claude calls, and the multi-statement opaque `usageSummary` needed an explicit return. Both were corrected directly in `Sources/Views/UsageView.swift`.
+- Fresh verification after `rm -rf build` passed: `./build.sh` exits 0 and creates a new universal app, `./scripts/run-tests.sh` passes all account/host regression cases, and `./scripts/verify.sh` rebuilds then smoke-launches CodexIsland cleanly. `git diff --check` passes.
+- Documentation now describes saved snapshots, expanded Usage browsing/staging, explicit confirmed relaunch, local restoration, exact target validation, and the unverified-auth-reload limitation. No claim is made that a real ChatGPT relaunch has adopted the selected auth.
+- Release remains blocked only by the user-controlled runtime proof and the explicit PR/push/merge/release gates. The runtime proof must stop before the confirmation unless the user personally presses it.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

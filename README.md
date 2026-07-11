@@ -124,6 +124,16 @@ For Codex:
 - In Settings -> Providers, you can import the current auth as a local named
   account. Imported snapshots live under `~/.codex/accounts/`; switching
   accounts replaces `~/.codex/auth.json` with the selected snapshot.
+- In expanded **Usage**, open **Accounts** to compare saved snapshots and
+  stage a non-active account. Browsing, staging, and cancelling leave the
+  active auth unchanged.
+- **Switch & relaunch ChatGPT** is an explicit confirmation. It validates the
+  exact `/Applications/ChatGPT.app` target before changing local auth and
+  again before attempting a graceful relaunch. A successful launch attempt is
+  still reported as unverified until a fresh usage read proves auth reload.
+- If relaunch fails after a local switch, the app can restore the previous
+  local snapshot. It never claims that ChatGPT has accepted restored or new
+  auth without fresh evidence.
 - If the file or access token is missing, the panel shows `no codex auth`.
 
 For Claude:
@@ -151,9 +161,14 @@ the first peek. Opening Settings also triggers a fresh fetch.
 - Click `synced Xs ago` in the panel header to refetch immediately.
 - Click the gear in the lower-left corner of the expanded panel to open
   Settings.
+- In expanded **Usage**, use **Accounts** to inspect local account usage and
+  select a non-active account. Confirm **Switch & relaunch ChatGPT** only when
+  you are ready for ChatGPT to quit and reopen; dismissing the prompt is
+  non-destructive.
 - Use Settings to enable Launch at Login, pick a refresh interval, toggle Low
   Power Mode, hide/show Claude or Codex, choose the default chart and cost
-  styles, import and switch stored Codex accounts, choose between all-tokens
+  styles, import and switch stored Codex accounts with the same confirmation
+  flow, choose between all-tokens
   and billable-only token counting, open GitHub / License, or quit the app.
 
 Provider visibility is display-only. Hiding a provider removes that provider's
