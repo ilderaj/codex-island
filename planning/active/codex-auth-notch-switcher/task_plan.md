@@ -4,10 +4,10 @@
 Deliver a verified macOS Codex Island flow that can retain multiple local Codex/ChatGPT account snapshots, show per-account usage in the notch UI, switch the active account safely, and apply the selected authentication to the current ChatGPT/Codex host with an explicit, reversible relaunch strategy.
 
 ## Current State
-Status: waiting_review
+Status: active
 Archive Eligible: no
 Close Reason:
-Reconcile: waiting for user design-spec review and persistence of the Pencil editor state into the tracked `.pen` file
+Reconcile: final independent review reconciled; implementation plan frozen
 
 ## Routing Decision
 - Selected Route: deep
@@ -16,7 +16,7 @@ Reconcile: waiting for user design-spec review and persistence of the Pencil edi
 - Route Evidence Surface: This trio, `docs/design/Codex_Island_Design.pen`, source/tests, local host-bundle inspection, and GitHub PR state.
 
 ## Current Phase
-Phase 2: Product and UI design (spec ready for review; Pencil persistence unresolved)
+Phase 3: Reviewed implementation plan
 
 ## Phases
 
@@ -28,16 +28,17 @@ Phase 2: Product and UI design (spec ready for review; Pencil persistence unreso
 
 ### Phase 2: Product and UI Design
 - [x] Present bounded implementation approaches and obtain the required design approval.
-- [ ] Persist the approved account-usage/switching board into `docs/design/Codex_Island_Design.pen`.
-- [ ] Re-run visual proof after Pencil rendering/export recovers.
+- [x] Persist the approved account-usage/switching board into `docs/design/Codex_Island_Design.pen`.
+- [x] Re-run structural and desktop-canvas visual proof.
 - [x] Review Pencil structure and record the design contract.
-- **Status:** waiting_review
+- **Status:** complete
 
 ### Phase 3: Reviewed Implementation Plan
-- [ ] Create `docs/superpowers/plans/2026-07-11-codex-auth-notch-switcher.md`.
-- [ ] Define exact interfaces, test-first steps, worktree strategy, and relaunch rollback behavior.
-- [ ] Obtain an independent read-only plan review and reconcile findings.
-- **Status:** pending
+- [x] Create `docs/superpowers/plans/2026-07-11-codex-auth-notch-switcher.md`.
+- [x] Define exact interfaces, test-first steps, worktree strategy, and relaunch rollback behavior.
+- [x] Obtain an independent read-only plan review and reconcile findings.
+- [x] Obtain final re-review after the material safety revision.
+- **Status:** complete
 
 ### Phase 4: Isolated Implementation
 - [ ] Create a dedicated implementation worktree and branch after plan approval.
@@ -112,6 +113,13 @@ Phase 2: Product and UI design (spec ready for review; Pencil persistence unreso
 | Block rather than edit Pencil without design approval | The deep-design gate requires approval of the full interaction direction before creative or implementation changes. |
 | Use the approved account-rail interaction | The user approved the expanded-notch account rail, passive compact indicator, and explicit confirmation sheet. |
 | Do not treat MCP canvas state as disk-backed design truth | The editor reports the new board, but the checked-out `.pen` hash remains identical to `HEAD`. |
+| Use the saved Pencil Desktop board as the design source | Cmd+S persisted the board; Git now detects 957 changed lines and Desktop canvas proof is visible. |
+| Treat the user's recovery instruction as design-spec approval | It reopened the task after the spec-review/persistence gates and current evidence proves persistence. |
+
+## Companion Plan
+- Path: `docs/superpowers/plans/2026-07-11-codex-auth-notch-switcher.md`
+- Summary: Four TDD slices cover transaction recovery, exact-path host lifecycle, expanded-notch account rail, and release reconciliation.
+- Sync-back status: both reviewer rounds reconciled; plan frozen pending immutable-base commit.
 
 ## Errors Encountered
 | Error | Attempt | Resolution |

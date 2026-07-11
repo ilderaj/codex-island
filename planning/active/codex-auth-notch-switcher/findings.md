@@ -61,6 +61,21 @@
 - Both `get_screenshot` and `export_nodes` produce fully white output, so visual rendering proof failed. The exported file is `docs/design/exports/nsus8.png` and is intentionally not treated as acceptance evidence.
 - Source-truth guard: the disk file `docs/design/Codex_Island_Design.pen` retains the exact `HEAD` hash `e20e1c9ee71ec16f9a60cfcdc30764c5131a218d4ffd64013a83ebce709184d5` and `git diff` is empty, although the active Pencil MCP canvas reports the new `Codex Account Switching` board. The board must be saved/adopted into the tracked file before implementation can claim Pencil alignment.
 
+## Findings Record: 2026-07-11 22:20:06 UTC+8
+- Pencil Desktop displayed `Codex_Island_Design.pen — Edited`; a standard save cleared the edited marker. The disk hash is now `47873ae9a3cb76f53bb74e296bbc9a3866cff8666c9b4b1d64f303fc1d7ef866`, differs from `HEAD`, and Git reports 957 changed `.pen` lines.
+- Pencil Desktop visual inspection shows the new `Codex Account Switching` board beside the base boards; it contains the account rail, staged account, and confirmation states. Fresh MCP structural proof returns `No layout problems`.
+- Pencil MCP screenshot/export remains all-white, but the Desktop canvas is a usable visual backstop. The saved source plus structural proof is sufficient to proceed; PNG export remains a release reconciliation item.
+- Companion implementation plan exists at `docs/superpowers/plans/2026-07-11-codex-auth-notch-switcher.md`. Placeholder scan and `git diff --check` passed before independent review.
+
+## Findings Record: 2026-07-11 22:26:38 UTC+8
+- Read-only reviewer `019f518d-7624-7593-95d9-f6fa7491e21a` verified all planning/plan hashes before review. It found critical gaps in time-of-use host identity validation and in the over-broad `.applied` lifecycle state, plus important test-harness, rollback, Settings-bridge, privacy, Pencil-reproducibility, and verify-script gaps.
+- Chief integrated all actionable findings: symlink-resolved path plus app/executable metadata validation before local switch and termination; granular lifecycle outcomes with user-controlled launch retry/restoration; injected runtime policy seams; preimage/postimage recovery tests; AppKit-only non-UI test harness scope; shared coordinator plus Settings alert bridge; non-identity labels/row display; board `nsus8`; immutable worktree base commit; and corrected `verify.sh` claim.
+- Plan placeholder scan and whitespace check remain clean after revision. A second read-only review is required before execution because these are material safety changes.
+
+## Findings Record: 2026-07-11 22:26:38 UTC+8
+- Final read-only reviewer `019f5193-6af4-76d3-99ed-dcc7441d7c94` verified revised hashes and found no critical defect. It identified two important omissions: `terminationFailed` also needs a user-controlled local restoration path, and Task 2 must commit `ChatGPTHostPolicy.swift`.
+- Chief reconciled both omissions. The final plan preserves the release-blocking runtime proof: launch attempt never claims auth reload, and user confirmation remains the only path to host interruption.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
