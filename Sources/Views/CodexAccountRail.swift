@@ -134,21 +134,23 @@ struct CodexAccountRail: View {
         switch coordinator.state {
         case .terminationFailed(let message):
             coordinatorMessage(message)
-            restoreButton
+            if coordinator.didSwitchLocallyForCurrentApply { restoreButton }
         case .launchFailed(let message):
             coordinatorMessage(message)
             Button(L10n.tr("Retry launch")) {
                 Task { await coordinator.retryLaunch() }
             }
             .buttonStyle(.bordered)
-            restoreButton
+            if coordinator.didSwitchLocallyForCurrentApply { restoreButton }
         case .localRestoreFailed(let message), .localSwitchFailed(let message):
             coordinatorMessage(message)
         case .localSwitchComplete:
             coordinatorMessage(L10n.tr("Local switch complete"))
         case .authReloadUnverified:
             coordinatorMessage(L10n.tr("ChatGPT relaunch attempted"))
-        case .validatingTarget, .switchingLocally, .terminatingHost, .hostTerminated, .launchAttempted:
+        case .validatingTarget, .switchingLocally:
+            EmptyView()
+        case .terminatingHost, .hostTerminated, .launchAttempted:
             coordinatorMessage(L10n.tr("Local switch complete"))
         case .idle:
             Button(L10n.tr("Switch & relaunch ChatGPT")) {

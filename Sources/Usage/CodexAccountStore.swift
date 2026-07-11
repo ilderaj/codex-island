@@ -300,7 +300,7 @@ final class CodexAccountStore: ObservableObject {
         let rawIdentity = [accountKey, chatgptAccountId, principalId].compactMap { $0 }
         guard !trimmed.isEmpty,
               !trimmed.contains("@"),
-              !rawIdentity.contains(trimmed) else {
+              !rawIdentity.contains(where: { !$0.isEmpty && trimmed.contains($0) }) else {
             return defaultLabel(forAccountKey: accountKey)
         }
         return trimmed

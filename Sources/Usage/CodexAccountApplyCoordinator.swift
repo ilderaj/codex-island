@@ -25,6 +25,7 @@ final class CodexAccountApplyCoordinator: ObservableObject {
     @Published private(set) var state: ChatGPTHostApplyState = .idle
     @Published private(set) var switchedAccountKey: String?
     @Published private(set) var restorationRequiresManualHostLaunch = false
+    @Published private(set) var didSwitchLocallyForCurrentApply = false
 
     let store: CodexAccountStore
     private let policy: ChatGPTHostTargetValidating
@@ -43,6 +44,8 @@ final class CodexAccountApplyCoordinator: ObservableObject {
     }
 
     func apply(accountKey: String) async {
+        didSwitchLocallyForCurrentApply = false
+        restorationRequiresManualHostLaunch = false
         state = .validatingTarget
         let initialTarget: ChatGPTHostTarget
         do {
@@ -56,7 +59,7 @@ final class CodexAccountApplyCoordinator: ObservableObject {
         do {
             try store.switchToAccount(accountKey)
             switchedAccountKey = accountKey
-            restorationRequiresManualHostLaunch = false
+            didSwitchLocallyForCurrentApply = true
             state = .localSwitchComplete
         } catch {
             state = .localSwitchFailed(error.localizedDescription)

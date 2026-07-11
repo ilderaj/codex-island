@@ -94,6 +94,22 @@ enum CodexAccountTests {
             lastError: nil
         ))
         expect(!legacyIdentityLabel.contains("@") && !legacyIdentityLabel.contains("acct-workspace-123456"), "display label omits email and full account ID")
+        let embeddedIdentityLabel = CodexAccountStore.displayLabel(for: CodexAccountRecord(
+            accountKey: "account-key-123456",
+            chatgptUserId: "user-123456",
+            chatgptAccountId: "acct-workspace-123456",
+            principalId: "principal-123456",
+            identityConfidence: .strong,
+            email: nil,
+            label: "Work acct-workspace-123456",
+            plan: "pro",
+            createdAt: Date(timeIntervalSince1970: 0),
+            lastUsedAt: nil,
+            lastUsageAt: nil,
+            lastUsage: nil,
+            lastError: nil
+        ))
+        expect(!embeddedIdentityLabel.contains("acct-workspace-123456"), "display label omits embedded full account ID")
 
         do {
             let root = try makeTempRoot()
