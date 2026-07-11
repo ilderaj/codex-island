@@ -31,6 +31,7 @@
   - Worker preflight stopped before edits because native worktree runtime hook output modified `.harness/runtime-hooks/codex.jsonl`. Recorded an exact-path exception and chose respawn rather than continuing a stopped context.
   - Reused the same visible worker after Chief documented the exact-path startup-noise exception. It completed Task 1, then amended its slice after a narrow independent review found two P2 rollback gaps.
   - Independently re-ran the final Task 1 harness and whitespace checks, then cherry-picked the corrected worker commit into `dev` as `cb04ecc`.
+  - Committed Task 1's durable receipt as `d60c76b` and dispatched visible isolated Task 2 worker `019f51a5-1620-75a2-840c-f43029b36cfe` from that `dev` baseline.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -51,6 +52,7 @@
 | N/A | None | 0 | Not applicable |
 | 2026-07-11 22:32 UTC+8 | Worker preflight saw `.harness/runtime-hooks/codex.jsonl` dirty | 1 | Chief approved an exact-path startup-noise exception; any other dirty path remains a stop condition. |
 | 2026-07-11 22:39 UTC+8 | Review found non-durable rollback misreporting and untested unknown-auth rollback | 1 | Reused worker for a bounded test-first amend; independently reran the harness before integration. |
+| 2026-07-11 22:44 UTC+8 | First Task 2 session-create call had an invalid argument shape | 1 | No state was created; retried with the valid project-target schema. |
 
 ## 5-Question Reboot Check
 | Question | Answer |

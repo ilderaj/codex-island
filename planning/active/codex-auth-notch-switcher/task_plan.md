@@ -106,6 +106,23 @@ Phase 4: Isolated implementation
 - Integration Target: reconciled by Chief into `dev`; receipt recorded in `findings.md` and `progress.md`
 - Exit Criteria: complete; Task 1 proof passed without touching real `~/.codex` or host processes
 
+### Unit: implementation-host-lifecycle
+- Kind: implementation
+- Status: in_progress
+- Scope:
+  - Do: Execute companion-plan Task 2 only: exact-path host policy/controller, apply coordinator, fake-driven tests, and bare-harness wiring.
+  - Not do: SwiftUI, Settings integration, Pencil, localization, real auth mutation, real host/process operation, push, PR, merge, release, or archive.
+- Owner Mode: visible worktree worker `019f51a5-1620-75a2-840c-f43029b36cfe`
+- Allowed Ops:
+  - Files: `Sources/Usage/ChatGPTHostPolicy.swift`, `Sources/Usage/ChatGPTHostController.swift`, `Sources/Usage/CodexAccountApplyCoordinator.swift`, `Tests/ChatGPTHostControllerTests.swift`, and `scripts/run-tests.sh`
+  - Commands: focused non-UI harness, diff checks, and a local commit
+  - External effects: none; all host lifecycle behavior is fake-driven
+- Dependencies: `d60c76b` and companion-plan Task 2
+- Verification Plan: RED proof, focused GREEN `./scripts/run-tests.sh`, exact-target fake cases, `git diff --check`, `git show --check`, then Chief review/reconciliation
+- Return Artifacts: one commit SHA, changed-file list, baseline/RED/GREEN evidence, worktree status, and residual risks
+- Integration Target: Chief review, then `findings.md` and `progress.md`
+- Exit Criteria: coordinator and controller are proven fake-only, and no state claims fresh host auth reload
+
 ### Preflight Exception: native worktree runtime noise
 - Allowed unrelated dirty path: `.harness/runtime-hooks/codex.jsonl` only, when it is generated during worker startup.
 - Required observation: `git status --short` contains no source, test, planning, design, or script change outside this one runtime path.
@@ -150,3 +167,4 @@ Phase 4: Isolated implementation
 |---|---|---|
 | None | 0 | Not applicable |
 | Pencil account-switching board produced clipping and a blank screenshot | 1 | Record the failure; replace the new board with a fixed-dimension, explicitly positioned layout before accepting any design proof. |
+| First Task 2 session-create call had an invalid argument shape | 1 | No thread/worktree was created; removed the extra top-level `projectId` and retried with the valid project target. |
