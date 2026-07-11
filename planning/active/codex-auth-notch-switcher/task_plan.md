@@ -16,7 +16,7 @@ Reconcile: final independent review reconciled; implementation plan frozen
 - Route Evidence Surface: This trio, `docs/design/Codex_Island_Design.pen`, source/tests, local host-bundle inspection, and GitHub PR state.
 
 ## Current Phase
-Phase 3: Reviewed implementation plan
+Phase 4: Isolated implementation
 
 ## Phases
 
@@ -42,9 +42,11 @@ Phase 3: Reviewed implementation plan
 
 ### Phase 4: Isolated Implementation
 - [ ] Create a dedicated implementation worktree and branch after plan approval.
-- [ ] Implement the selected account picker, usage presentation, safe switch, and host relaunch path.
+- [ ] Implement Task 1: local transaction recovery and multi-account test coverage.
+- [ ] Implement Task 2: exact-path host lifecycle and coordinator.
+- [ ] Implement Task 3: expanded-notch account rail and confirmation flow.
 - [ ] Keep code, design, and tests synchronized.
-- **Status:** pending
+- **Status:** in_progress
 
 ### Phase 5: Verification and Delivery
 - [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
@@ -67,7 +69,7 @@ Phase 3: Reviewed implementation plan
 
 ### Unit: discovery-auth-usage
 - Kind: research
-- Status: in_progress
+- Status: complete
 - Scope:
   - Do: Read source/tests and report what existing multi-account functionality is proven.
   - Not do: Modify source, auth files, keychain, or network account state.
@@ -78,7 +80,7 @@ Phase 3: Reviewed implementation plan
 
 ### Unit: discovery-host-relaunch
 - Kind: research
-- Status: in_progress
+- Status: complete
 - Scope:
   - Do: Inspect installed app/bundle/process facts and the available Copool reference to identify safe relaunch options.
   - Not do: Quit, relaunch, kill, change auth, or modify source.
@@ -86,6 +88,23 @@ Phase 3: Reviewed implementation plan
 - Proof Target: Bundle/process evidence plus a recommendation ranked by safety and applicability to the merged host.
 - Evidence Sink: `findings.md` and `progress.md` after Chief review.
 - Stop Condition: Return a bounded evidence report with limitations and no edits.
+
+### Unit: implementation-storage-transaction
+- Kind: implementation
+- Status: dispatched
+- Scope:
+  - Do: Execute companion-plan Task 1 only, including its RED/GREEN tests and one commit.
+  - Not do: Host lifecycle, SwiftUI account rail, Pencil, Settings workflow, external auth, process operations, push, PR, merge, or release.
+- Owner Mode: visible worker
+- Allowed Ops:
+  - Files: `Sources/Usage/CodexAccountDataWriter.swift`, `Sources/Usage/CodexAccountStore.swift`, `Tests/CodexAccountTests.swift`, `scripts/run-tests.sh`
+  - Commands: focused test harness, diff checks, and local commit
+  - External effects: none
+- Dependencies: immutable base `4b2794c` and companion-plan Task 1
+- Verification Plan: RED compile proof, focused GREEN `./scripts/run-tests.sh`, `git diff --check`, and clean worker worktree after commit
+- Return Artifacts: commit SHA, changed-file list, RED/GREEN evidence, and residual risks
+- Integration Target: Chief review, then `findings.md` and `progress.md`
+- Exit Criteria: Task 1 proof target passes without touching real `~/.codex` or host processes
 
 ## Risk Assessment
 
