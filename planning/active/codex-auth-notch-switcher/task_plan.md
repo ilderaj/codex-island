@@ -64,6 +64,7 @@ Phase 5: Verification and Delivery
 ### Latest Verification Receipt
 - A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.
 - `./scripts/run-tests.sh` passed after this addition. The earlier fresh build and `./scripts/verify.sh` proof remains current because this receipt changes only the test harness.
+- Product/test receipt commit: `cf1b744` (`test: cover account switch validation guard`).
 
 ## Verification Contract
 

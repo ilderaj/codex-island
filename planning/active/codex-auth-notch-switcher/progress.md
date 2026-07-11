@@ -38,6 +38,7 @@
   - Reconciled design/documentation and completed fresh full verification. A clean-root build caught two missed `UsageView` compile errors from the worker's stale-artifact proof; Chief corrected them and accepted only the later clean build and smoke launch.
   - Completed a read-only remote readiness audit: no existing `dev` PR, writable fork `ilderaj/codex-island` defaults to `main`, and local `dev` is 14 commits ahead of `origin/dev`. Recorded the recommended fork-local `dev -> main` PR route without pushing or creating a PR.
   - Completed a final coordinator recovery audit. Added and passed a focused fake-driven regression case proving that an initial target-validation failure preserves the active account, performs no host I/O, and leaves the rail's local-restore guard false.
+  - Committed the product/test receipt as `cf1b744` (`test: cover account switch validation guard`) after `git diff --check` and `git show --check`; `dev` was then 16 commits ahead of `origin/dev`. No remote or runtime gate was crossed.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
