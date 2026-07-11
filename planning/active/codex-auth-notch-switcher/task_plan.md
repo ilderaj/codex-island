@@ -43,7 +43,7 @@ Phase 4: Isolated implementation
 ### Phase 4: Isolated Implementation
 - [ ] Create a dedicated implementation worktree and branch after plan approval.
 - [x] Implement Task 1: local transaction recovery and multi-account test coverage.
-- [ ] Implement Task 2: exact-path host lifecycle and coordinator.
+- [x] Implement Task 2: exact-path host lifecycle and coordinator.
 - [ ] Implement Task 3: expanded-notch account rail and confirmation flow.
 - [ ] Keep code, design, and tests synchronized.
 - **Status:** in_progress
@@ -108,7 +108,7 @@ Phase 4: Isolated implementation
 
 ### Unit: implementation-host-lifecycle
 - Kind: implementation
-- Status: in_progress
+- Status: complete
 - Scope:
   - Do: Execute companion-plan Task 2 only: exact-path host policy/controller, apply coordinator, fake-driven tests, and bare-harness wiring.
   - Not do: SwiftUI, Settings integration, Pencil, localization, real auth mutation, real host/process operation, push, PR, merge, release, or archive.
@@ -118,10 +118,10 @@ Phase 4: Isolated implementation
   - Commands: focused non-UI harness, diff checks, and a local commit
   - External effects: none; all host lifecycle behavior is fake-driven
 - Dependencies: `d60c76b` and companion-plan Task 2
-- Verification Plan: RED proof, focused GREEN `./scripts/run-tests.sh`, exact-target fake cases, `git diff --check`, `git show --check`, then Chief review/reconciliation
-- Return Artifacts: one commit SHA, changed-file list, baseline/RED/GREEN evidence, worktree status, and residual risks
-- Integration Target: Chief review, then `findings.md` and `progress.md`
-- Exit Criteria: coordinator and controller are proven fake-only, and no state claims fresh host auth reload
+- Verification Plan: RED proof, focused GREEN `./scripts/run-tests.sh`, exact-target fake cases, `git diff --check`, `git show --check`, and Chief's independent harness run
+- Return Artifacts: worker commit `1e47096`, integrated commit `0780104`, changed-file list, baseline/RED/GREEN evidence, worktree status, and residual risks
+- Integration Target: reconciled by Chief into `dev`; receipt recorded in `findings.md` and `progress.md`
+- Exit Criteria: complete; coordinator and controller are proven fake-only, and no state claims fresh host auth reload
 
 ### Preflight Exception: native worktree runtime noise
 - Allowed unrelated dirty path: `.harness/runtime-hooks/codex.jsonl` only, when it is generated during worker startup.

@@ -86,6 +86,13 @@
 - A narrow read-only review found two P2 gaps before integration: registry write failures were falsely reported as durable recovery, and the unknown-current-auth rollback mutation was untested. The worker added RED/GREEN coverage and a preimage-aware restore check; the final tests prove both failure paths preserve the original state and use the non-durable error state when the writer contract preserves destination bytes.
 - Chief cherry-picked the reviewed slice into `dev` as `cb04ecc`. No real `~/.codex` file, host process, UI, external service, push, PR, merge, or release action was performed.
 
+## Findings Record: 2026-07-11 22:57:00 UTC+8
+- Visible worktree worker `019f51a5-1620-75a2-840c-f43029b36cfe` completed companion-plan Task 2 at `1e47096` (`feat: coordinate ChatGPT account apply`). Chief independently confirmed the five-file scope, `git diff --check`, `git show --check`, and a fresh full `./scripts/run-tests.sh` run. The reviewed slice was cherry-picked into `dev` as `0780104`.
+- `ChatGPTHostTarget` resolves symlinks and requires `ChatGPT.app`, `CFBundleExecutable == ChatGPT`, and an executable `Contents/MacOS/ChatGPT`. The AppKit runtime filters running applications by exact resolved bundle URL and uses only that concrete target for termination, bounded wait, and launch; it contains no bundle-ID, process-name, `killall`, `open -b`, or `open -n` path.
+- `CodexAccountApplyCoordinator` validates the target before local switching and again before termination. Refusal, timeout, target drift, and launch failure end in non-success states; retry revalidates/launches without another termination; local restoration performs no host I/O; the only post-launch state is `authReloadUnverified`.
+- The host proof is intentionally fake-driven and does not assert that a real relaunched ChatGPT process has reloaded `~/.codex/auth.json`. That runtime question remains a release-blocking manual verification gate.
+- A timeboxed narrow read-only reviewer did not return before its close request stalled. Its absent output was not used for acceptance; Chief's independent code/test/diff checks were the integration gate. No process, auth, or external operation was performed.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
