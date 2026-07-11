@@ -1,6 +1,17 @@
 import Foundation
 
 enum CodexAccountTests {
+    final class FailingWriter: CodexAccountDataWriting {
+        var failingPath: URL?
+
+        func write(_ data: Data, to url: URL) throws {
+            if url == failingPath {
+                throw TestError.forcedWriteFailure
+            }
+            try LiveCodexAccountDataWriter().write(data, to: url)
+        }
+    }
+
     final class MockUsageClient: CodexUsageClient {
         struct Request {
             let token: String
@@ -136,6 +147,201 @@ enum CodexAccountTests {
             expect(false, "refresh all stores usage: \(error)")
         }
 
+        do {
+            let root = try makeTempRoot()
+            let paths = CodexAccountPaths(root: root)
+            try FileManager.default.createDirectory(at: paths.codexDirectory, withIntermediateDirectories: true)
+            try authJSON.write(to: paths.activeAuthPath)
+
+            let store = try CodexAccountStore(paths: paths)
+            try store.importCurrentAuth(label: "Personal")
+            let personalKey = try require(store.registry.activeAccountKey, "personal active key")
+
+            let secondAuth = sampleAuthJSON(
+                accessToken: "access-b",
+                accountID: "acct-workspace-2",
+                principalID: "principal-2",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-2",
+                    "chatgpt_plan_type": "team",
+                ])
+            )
+            try secondAuth.write(to: paths.activeAuthPath)
+            try store.importCurrentAuth(label: "Business")
+
+            let client = MockUsageClient()
+            client.responses = [
+                AppUsage(fiveHour: .unknown, weekly: .unknown),
+                AppUsage(fiveHour: .unknown, weekly: .unknown),
+            ]
+            await store.refreshAllUsage(client: client)
+
+            expect(
+                Set(client.requests.compactMap(\.accountID)) == Set(["acct-workspace-1", "acct-workspace-2"]),
+                "refresh all isolates both account contexts"
+            )
+            expect(store.registry.accounts.count == 2, "refresh all retains both accounts")
+            expect(store.registry.accounts.contains(where: { $0.accountKey == personalKey }), "refresh all retains personal account")
+        } catch {
+            expect(false, "refresh all isolates multiple accounts: \(error)")
+        }
+
+        do {
+            let root = try makeTempRoot()
+            let paths = CodexAccountPaths(root: root)
+            try FileManager.default.createDirectory(at: paths.codexDirectory, withIntermediateDirectories: true)
+            try authJSON.write(to: paths.activeAuthPath)
+
+            let setupStore = try CodexAccountStore(paths: paths)
+            try setupStore.importCurrentAuth(label: "Personal")
+            let personalKey = try require(setupStore.registry.activeAccountKey, "personal recovery key")
+
+            let secondAuth = sampleAuthJSON(
+                accessToken: "access-b",
+                accountID: "acct-workspace-2",
+                principalID: "principal-2",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-2",
+                    "chatgpt_plan_type": "team",
+                ])
+            )
+            try secondAuth.write(to: paths.activeAuthPath)
+            try setupStore.importCurrentAuth(label: "Business")
+            let previousKey = try require(setupStore.registry.activeAccountKey, "business recovery key")
+
+            let activeAuthBeforeFailure = try Data(contentsOf: paths.activeAuthPath)
+            let registryBytesBeforeFailure = try Data(contentsOf: paths.registryPath)
+            let personalSnapshotBeforeFailure = try Data(contentsOf: paths.snapshotPath(for: personalKey))
+            let businessSnapshotBeforeFailure = try Data(contentsOf: paths.snapshotPath(for: previousKey))
+
+            let writer = FailingWriter()
+            writer.failingPath = paths.registryPath
+            let store = try CodexAccountStore(paths: paths, writer: writer)
+
+            do {
+                try store.switchToAccount(personalKey)
+                expect(false, "switch throws when registry write fails")
+            } catch TestError.forcedWriteFailure {
+                expect(true, "switch throws original registry write failure")
+            } catch {
+                expect(false, "switch retains original registry write failure: \(error)")
+            }
+
+            expect(
+                try Data(contentsOf: paths.activeAuthPath) == activeAuthBeforeFailure,
+                "switch restores active auth when registry write fails"
+            )
+            expect(store.registry.activeAccountKey == previousKey, "switch restores in-memory active account when registry write fails")
+            expect(
+                try Data(contentsOf: paths.registryPath) == registryBytesBeforeFailure,
+                "switch preserves on-disk registry when registry write fails"
+            )
+            expect(
+                try Data(contentsOf: paths.snapshotPath(for: personalKey)) == personalSnapshotBeforeFailure,
+                "switch preserves selected account snapshot when registry write fails"
+            )
+            expect(
+                try Data(contentsOf: paths.snapshotPath(for: previousKey)) == businessSnapshotBeforeFailure,
+                "switch preserves existing account snapshots when registry write fails"
+            )
+            expect(
+                store.lastError == CodexAccountError.inconsistentSwitchState.localizedDescription,
+                "fail-before-replace registry failure does not require durable recovery"
+            )
+        } catch {
+            expect(false, "switch recovers from storage failure: \(error)")
+        }
+
+        do {
+            let root = try makeTempRoot()
+            let paths = CodexAccountPaths(root: root)
+            try FileManager.default.createDirectory(at: paths.codexDirectory, withIntermediateDirectories: true)
+            try authJSON.write(to: paths.activeAuthPath)
+
+            let setupStore = try CodexAccountStore(paths: paths)
+            try setupStore.importCurrentAuth(label: "Personal")
+            let personalKey = try require(setupStore.registry.activeAccountKey, "personal unknown recovery key")
+
+            let businessAuth = sampleAuthJSON(
+                accessToken: "access-b",
+                accountID: "acct-workspace-2",
+                principalID: "principal-2",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-2",
+                    "chatgpt_plan_type": "team",
+                ])
+            )
+            try businessAuth.write(to: paths.activeAuthPath)
+            try setupStore.importCurrentAuth(label: "Business")
+            let businessKey = try require(setupStore.registry.activeAccountKey, "business unknown recovery key")
+
+            let unregisteredAuth = sampleAuthJSON(
+                accessToken: "access-unregistered",
+                accountID: "acct-workspace-3",
+                principalID: "principal-3",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-3",
+                    "chatgpt_plan_type": "enterprise",
+                ])
+            )
+            let unknownKey = try CodexAuthParser.parseAuth(data: unregisteredAuth).accountKey
+            try unregisteredAuth.write(to: paths.activeAuthPath)
+
+            let activeAuthBeforeFailure = try Data(contentsOf: paths.activeAuthPath)
+            let registryBytesBeforeFailure = try Data(contentsOf: paths.registryPath)
+            let personalSnapshotBeforeFailure = try Data(contentsOf: paths.snapshotPath(for: personalKey))
+            let businessSnapshotBeforeFailure = try Data(contentsOf: paths.snapshotPath(for: businessKey))
+
+            let writer = FailingWriter()
+            writer.failingPath = paths.registryPath
+            let store = try CodexAccountStore(paths: paths, writer: writer)
+
+            do {
+                try store.switchToAccount(personalKey)
+                expect(false, "unknown current auth switch throws when registry write fails")
+            } catch TestError.forcedWriteFailure {
+                expect(true, "unknown current auth switch throws original registry write failure")
+            } catch {
+                expect(false, "unknown current auth retains original registry write failure: \(error)")
+            }
+
+            expect(
+                try Data(contentsOf: paths.activeAuthPath) == activeAuthBeforeFailure,
+                "unknown current auth switch restores active auth"
+            )
+            expect(store.registry.activeAccountKey == businessKey, "unknown current auth switch restores in-memory registry")
+            expect(
+                try Data(contentsOf: paths.registryPath) == registryBytesBeforeFailure,
+                "unknown current auth switch preserves on-disk registry"
+            )
+            expect(
+                try Data(contentsOf: paths.snapshotPath(for: personalKey)) == personalSnapshotBeforeFailure,
+                "unknown current auth switch preserves personal snapshot"
+            )
+            expect(
+                try Data(contentsOf: paths.snapshotPath(for: businessKey)) == businessSnapshotBeforeFailure,
+                "unknown current auth switch preserves business snapshot"
+            )
+            expect(
+                !FileManager.default.fileExists(atPath: paths.snapshotPath(for: unknownKey).path),
+                "unknown current auth switch removes created unknown snapshot"
+            )
+            expect(
+                store.lastError == CodexAccountError.inconsistentSwitchState.localizedDescription,
+                "unknown current auth fail-before-replace registry failure does not require durable recovery"
+            )
+        } catch {
+            expect(false, "unknown current auth switch recovers from storage failure: \(error)")
+        }
+
         return failures
     }
 
@@ -187,5 +393,6 @@ enum CodexAccountTests {
 
     enum TestError: Error {
         case missing(String)
+        case forcedWriteFailure
     }
 }

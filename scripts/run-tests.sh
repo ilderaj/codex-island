@@ -18,6 +18,7 @@ swiftc \
   Sources/Usage/CodexResetCredits.swift \
   Sources/Usage/CodexAuthModels.swift \
   Sources/Usage/CodexAuthParser.swift \
+  Sources/Usage/CodexAccountDataWriter.swift \
   Sources/Usage/CodexAccountStore.swift \
   Sources/Usage/ClaudeCredentials.swift \
   Sources/Usage/UsageFetcher.swift \
