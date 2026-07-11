@@ -33,6 +33,7 @@
   - Independently re-ran the final Task 1 harness and whitespace checks, then cherry-picked the corrected worker commit into `dev` as `cb04ecc`.
   - Committed Task 1's durable receipt as `d60c76b` and dispatched visible isolated Task 2 worker `019f51a5-1620-75a2-840c-f43029b36cfe` from that `dev` baseline.
   - Reconciled Task 2 after the worker's TDD slice. Independently reran its full harness and exact diff checks, then cherry-picked the committed exact-path host lifecycle slice into `dev` as `0780104`.
+  - Reused the freshly completed Task 2 visible worktree for Task 3 after recording a narrow plan-table reconciliation: shared-coordinator ownership and privacy-safe default-label coverage require their exact source/test files.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)

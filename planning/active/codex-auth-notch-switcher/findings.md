@@ -93,6 +93,9 @@
 - The host proof is intentionally fake-driven and does not assert that a real relaunched ChatGPT process has reloaded `~/.codex/auth.json`. That runtime question remains a release-blocking manual verification gate.
 - A timeboxed narrow read-only reviewer did not return before its close request stalled. Its absent output was not used for acceptance; Chief's independent code/test/diff checks were the integration gate. No process, auth, or external operation was performed.
 
+## Findings Record: 2026-07-11 23:00:00 UTC+8
+- Task 3's plan prose requires `CodexAccountApplyCoordinator.shared` and a non-identifying `CodexAccountStore.defaultLabel(for:)` with tests, but its initial files table omits the coordinator/store/test files. Chief treats these as mandatory interface/privacy-contract completion and adds only those exact files to the Task 3 worker's declared write set.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

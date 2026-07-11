@@ -123,6 +123,24 @@ Phase 4: Isolated implementation
 - Integration Target: reconciled by Chief into `dev`; receipt recorded in `findings.md` and `progress.md`
 - Exit Criteria: complete; coordinator and controller are proven fake-only, and no state claims fresh host auth reload
 
+### Unit: implementation-account-rail
+- Kind: implementation
+- Status: in_progress
+- Scope:
+  - Do: Execute companion-plan Task 3 only: expanded Usage rail, staged selection, explicit confirmation, Settings bridge, privacy-safe account labels, localized copy, build proof, and non-UI regression coverage.
+  - Not do: Real host/auth action, Pencil redesign, README/documentation reconciliation, push, PR, merge, release, or archive.
+- Owner Mode: reused visible worktree worker `019f51a5-1620-75a2-840c-f43029b36cfe`
+- Allowed Ops:
+  - Files: `Sources/Views/CodexAccountRail.swift`, `Sources/Views/UsageView.swift`, `Sources/Views/PanelHeader.swift`, `Sources/Views/Settings/CodexAccountsBlock.swift`, `Resources/en.lproj/Localizable.strings`, `Resources/zh-Hans.lproj/Localizable.strings`, `Sources/Usage/CodexAccountApplyCoordinator.swift`, `Sources/Usage/CodexAccountStore.swift`, `Tests/CodexAccountTests.swift`, and `scripts/run-tests.sh` only when strictly needed.
+  - Commands: `./build.sh`, non-UI test harness, diff checks, and a local commit.
+  - External effects: none; confirmation action must not be activated during proof.
+- Dependencies: `4e23d59` and companion-plan Task 3
+- Reconcile Note: the companion plan's Task 3 prose requires `CodexAccountApplyCoordinator.shared` and privacy-safe `defaultLabel(for:)` coverage even though its initial file table omits their implementation/test files. These two files are explicitly included here as required plan-contract completion, not a scope expansion.
+- Verification Plan: build RED/GREEN, non-UI harness GREEN, source inspection that only the confirmation callback can call `apply(accountKey:)`, `git diff --check`, and Chief review/reconciliation.
+- Return Artifacts: one commit SHA, changed-file list, RED/GREEN evidence, worktree status, and residual risks.
+- Integration Target: Chief review, then `findings.md` and `progress.md`.
+- Exit Criteria: account browsing/staging/cancel are local UI state only; the sole apply call sits behind explicit confirmation; UI labels expose no email or raw account ID.
+
 ### Preflight Exception: native worktree runtime noise
 - Allowed unrelated dirty path: `.harness/runtime-hooks/codex.jsonl` only, when it is generated during worker startup.
 - Required observation: `git status --short` contains no source, test, planning, design, or script change outside this one runtime path.
