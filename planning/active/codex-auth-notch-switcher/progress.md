@@ -29,6 +29,8 @@
   - Completed final read-only re-review. Reconciled its two local omissions and froze the plan for immutable-base commit and isolated implementation.
   - Created immutable base commit `4b2794c` (`docs: finalize codex account switcher plan`) and dispatched the visible worktree worker for companion-plan Task 1 only.
   - Worker preflight stopped before edits because native worktree runtime hook output modified `.harness/runtime-hooks/codex.jsonl`. Recorded an exact-path exception and chose respawn rather than continuing a stopped context.
+  - Reused the same visible worker after Chief documented the exact-path startup-noise exception. It completed Task 1, then amended its slice after a narrow independent review found two P2 rollback gaps.
+  - Independently re-ran the final Task 1 harness and whitespace checks, then cherry-picked the corrected worker commit into `dev` as `cb04ecc`.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -38,17 +40,23 @@
 | Test | Input | Expected | Actual | Status |
 |---|---|---|---|---|
 | Source baseline inventory | `rg --files` + focused search | Locate existing auth/usage/UI/test surfaces | Located account store/models/parser/block/tests and Pencil file | pass |
+| Task 1 worker baseline | `./scripts/run-tests.sh` in isolated worktree | Existing harness passes before edits | Exit 0 | pass |
+| Task 1 RED | `./scripts/run-tests.sh` after new coverage | Fail because writer injection and review assertions are absent | Expected compile/test failures observed before implementation and review fix | pass |
+| Task 1 final independent harness | `HARNESS_PROJECT_ROOT=<worker-root> ./scripts/run-tests.sh` | Account transaction and existing tests pass without real auth/process access | All tests passed | pass |
+| Task 1 whitespace | `git diff --check 45d458d..6bb3e99` and `git show --check 6bb3e99` | No whitespace errors | Exit 0 | pass |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |---|---|---|---|
 | N/A | None | 0 | Not applicable |
+| 2026-07-11 22:32 UTC+8 | Worker preflight saw `.harness/runtime-hooks/codex.jsonl` dirty | 1 | Chief approved an exact-path startup-noise exception; any other dirty path remains a stop condition. |
+| 2026-07-11 22:39 UTC+8 | Review found non-durable rollback misreporting and untested unknown-auth rollback | 1 | Reused worker for a bounded test-first amend; independently reran the harness before integration. |
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |---|---|
-| Where am I? | Phase 1: Discovery and source-truth audit. |
-| Where am I going? | Pencil design/review, reviewed plan, isolated implementation, verification and PR/release closure. |
+| Where am I? | Phase 4: Isolated implementation; Task 1 is integrated on `dev`. |
+| Where am I going? | Task 2 exact-path host lifecycle/coordinator, then Task 3 account rail, reconciliation, verification, PR, and release gate. |
 | What's the goal? | Safely expose per-account Codex usage and account switching, including the correct merged-host apply/relaunch behavior. |
-| What have I learned? | Existing account primitives are present, but their live behavior and host restart applicability are not yet proven. |
-| What have I done? | Created the authoritative trio and captured live baseline evidence. |
+| What have I learned? | The existing account primitives can be made recoverable under the writer's fail-before-replace contract; host reload remains unproven and must stay behind Task 2's exact-path runtime proof. |
+| What have I done? | Completed, independently reviewed, and integrated the isolated local transaction slice without touching real auth or host processes. |

@@ -42,7 +42,7 @@ Phase 4: Isolated implementation
 
 ### Phase 4: Isolated Implementation
 - [ ] Create a dedicated implementation worktree and branch after plan approval.
-- [ ] Implement Task 1: local transaction recovery and multi-account test coverage.
+- [x] Implement Task 1: local transaction recovery and multi-account test coverage.
 - [ ] Implement Task 2: exact-path host lifecycle and coordinator.
 - [ ] Implement Task 3: expanded-notch account rail and confirmation flow.
 - [ ] Keep code, design, and tests synchronized.
@@ -91,7 +91,7 @@ Phase 4: Isolated implementation
 
 ### Unit: implementation-storage-transaction
 - Kind: implementation
-- Status: respawn_required
+- Status: complete
 - Scope:
   - Do: Execute companion-plan Task 1 only, including its RED/GREEN tests and one commit.
   - Not do: Host lifecycle, SwiftUI account rail, Pencil, Settings workflow, external auth, process operations, push, PR, merge, or release.
@@ -101,10 +101,10 @@ Phase 4: Isolated implementation
   - Commands: focused test harness, diff checks, and local commit
   - External effects: none
 - Dependencies: immutable base `4b2794c` and companion-plan Task 1
-- Verification Plan: RED compile proof, focused GREEN `./scripts/run-tests.sh`, `git diff --check`, and clean worker worktree after commit
-- Return Artifacts: commit SHA, changed-file list, RED/GREEN evidence, and residual risks
-- Integration Target: Chief review, then `findings.md` and `progress.md`
-- Exit Criteria: Task 1 proof target passes without touching real `~/.codex` or host processes
+- Verification Plan: RED compile proof, focused GREEN `./scripts/run-tests.sh`, `git diff --check`, review follow-up coverage, and Chief's independent harness run
+- Return Artifacts: worker commit `6bb3e99`, integrated commit `cb04ecc`, changed-file list, RED/GREEN evidence, and residual risks
+- Integration Target: reconciled by Chief into `dev`; receipt recorded in `findings.md` and `progress.md`
+- Exit Criteria: complete; Task 1 proof passed without touching real `~/.codex` or host processes
 
 ### Preflight Exception: native worktree runtime noise
 - Allowed unrelated dirty path: `.harness/runtime-hooks/codex.jsonl` only, when it is generated during worker startup.

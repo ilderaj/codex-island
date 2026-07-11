@@ -80,6 +80,12 @@
 - Visible implementation worker `019f5196-c321-7c62-8d49-7f25f82cb02a` stopped at preflight before tests or edits because its native worktree contained a changed `.harness/runtime-hooks/codex.jsonl`.
 - This file is a harness runtime hook artifact and lies outside Task 1 allowed source paths. Chief authorized a narrowly documented exception only for that exact path; all product/test/planning/design/script dirt remains a hard stop. The stale worker will not be resumed; Task 1 will use a replacement visible worker.
 
+## Findings Record: 2026-07-11 22:42:00 UTC+8
+- Reused visible worker `019f5196-c321-7c62-8d49-7f25f82cb02a` under the exact-path harness exception. It completed companion-plan Task 1 in an isolated worktree and amended its final slice to `6bb3e99` (`feat: harden codex account switching`). Chief independently verified the authorized four-file scope, `git diff --check`, `git show --check`, and a fresh `./scripts/run-tests.sh` run with all tests passing.
+- The completed slice adds an injectable fail-before-replace account-data writer, per-account refresh-context coverage, and byte-level rollback evidence for active auth, disk/memory registry, registered snapshots, and the newly created unknown-current-auth snapshot.
+- A narrow read-only review found two P2 gaps before integration: registry write failures were falsely reported as durable recovery, and the unknown-current-auth rollback mutation was untested. The worker added RED/GREEN coverage and a preimage-aware restore check; the final tests prove both failure paths preserve the original state and use the non-durable error state when the writer contract preserves destination bytes.
+- Chief cherry-picked the reviewed slice into `dev` as `cb04ecc`. No real `~/.codex` file, host process, UI, external service, push, PR, merge, or release action was performed.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
