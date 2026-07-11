@@ -37,6 +37,7 @@
   - Reconciled Task 3 after a build RED/GREEN slice and then a narrow code review. Integrated the rail at `3e9142c`, immediately followed by reviewed recovery/privacy corrections at `cda2d15`.
   - Reconciled design/documentation and completed fresh full verification. A clean-root build caught two missed `UsageView` compile errors from the worker's stale-artifact proof; Chief corrected them and accepted only the later clean build and smoke launch.
   - Completed a read-only remote readiness audit: no existing `dev` PR, writable fork `ilderaj/codex-island` defaults to `main`, and local `dev` is 14 commits ahead of `origin/dev`. Recorded the recommended fork-local `dev -> main` PR route without pushing or creating a PR.
+  - Completed a final coordinator recovery audit. Added and passed a focused fake-driven regression case proving that an initial target-validation failure preserves the active account, performs no host I/O, and leaves the rail's local-restore guard false.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -61,6 +62,7 @@
 | Pencil account board | `snapshot_layout(parentId: nsus8, maxDepth: 6, problemsOnly: true)` | Saved account board has no structural issue | No layout problems | pass |
 | Fresh root build | `rm -rf build && ./build.sh` | Recompile all Swift sources and create a new app | Exit 0; `build/CodexIsland.app` created | pass |
 | Full smoke verification | `./scripts/run-tests.sh && ./scripts/verify.sh && git diff --check` | All harness cases, universal build, one-second CodexIsland launch, whitespace clean | Exit 0; all tests passed; `launched cleanly` | pass |
+| Initial validation recovery guard | `./scripts/run-tests.sh` after focused coordinator test | Failed initial target validation preserves local account and exposes no local recovery action | All tests passed; no host I/O and local-switch flag remains false | pass |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |

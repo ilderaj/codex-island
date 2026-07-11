@@ -16,7 +16,7 @@ Reconcile: final independent review reconciled; implementation plan frozen
 - Route Evidence Surface: This trio, `docs/design/Codex_Island_Design.pen`, source/tests, local host-bundle inspection, and GitHub PR state.
 
 ## Current Phase
-Phase 4: Isolated implementation
+Phase 5: Verification and Delivery
 
 ## Phases
 
@@ -55,11 +55,15 @@ Phase 4: Isolated implementation
 - **Status:** in_progress
 
 ### Delivery Readiness
-- Local delivery branch: `dev` at `9fd5d5e`, ahead of `origin/dev` by 14 commits.
+- Pre-audit delivery head: `dev` at `71bca9d`, ahead of `origin/dev` by 15 commits.
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
 - Remaining gates: user-controlled confirmed ChatGPT relaunch proof; explicit approval for push/PR; then a separate merge/release decision.
+
+### Latest Verification Receipt
+- A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.
+- `./scripts/run-tests.sh` passed after this addition. The earlier fresh build and `./scripts/verify.sh` proof remains current because this receipt changes only the test harness.
 
 ## Verification Contract
 

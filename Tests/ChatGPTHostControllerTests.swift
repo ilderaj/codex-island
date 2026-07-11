@@ -167,6 +167,40 @@ struct ChatGPTHostControllerTests {
 
         do {
             let root = try makeTemporaryRoot()
+            let appURL = try makeChatGPTApp(in: root)
+            let target = try ChatGPTHostTarget.validate(applicationURL: appURL)
+            let fake = FakeHostRuntime()
+            let coordinator = try makeCoordinator(
+                root: root,
+                target: target,
+                runtime: fake,
+                policy: SequencedTargetPolicy([])
+            )
+            let originalAccountKey = coordinator.store.registry.activeAccountKey
+
+            await coordinator.apply(accountKey: try alternateAccountKey(for: coordinator.store))
+            expect(
+                coordinator.state == .terminationFailed("ChatGPT target could not be verified; reopen it manually"),
+                "initial target validation prevents a local switch"
+            )
+            expect(
+                coordinator.store.registry.activeAccountKey == originalAccountKey,
+                "initial target validation preserves the active account"
+            )
+            expect(
+                !coordinator.didSwitchLocallyForCurrentApply,
+                "initial target validation does not expose a local restore path"
+            )
+            expect(
+                fake.terminationRequests.isEmpty && fake.launched.isEmpty,
+                "initial target validation performs no host I/O"
+            )
+        } catch {
+            expect(false, "initial target validation prevents a local switch: \(error)")
+        }
+
+        do {
+            let root = try makeTemporaryRoot()
             let firstTarget = try ChatGPTHostTarget.validate(
                 applicationURL: try makeChatGPTApp(in: root.appendingPathComponent("first"))
             )

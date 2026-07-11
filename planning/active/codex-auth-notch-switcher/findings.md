@@ -113,6 +113,11 @@
 - Read-only delivery audit: local `dev` is 14 commits ahead of its tracking branch `origin/dev`; GitHub authentication for `ilderaj` has repository write scope; no open PR has head branch `dev`.
 - `ilderaj/codex-island` is the writable fork and has default branch `main`; `ericjypark/codex-island` is the read-only upstream. The recommended PR is therefore fork-local `dev -> main` after the user grants the external-write gate.
 
+## Findings Record: 2026-07-11 23:39:22 UTC+8
+- Chief's completion audit found that the rail's pre-switch restore suppression was implemented but not directly exercised by the coordinator harness. Added a focused regression case using an empty sequenced target policy.
+- The case proves initial target validation failure keeps the original active account, performs no termination or launch request, and leaves `didSwitchLocallyForCurrentApply` false. The rail's restore button is guarded by that same state in `Sources/Views/CodexAccountRail.swift`.
+- Fresh `./scripts/run-tests.sh` exits 0 with all existing and new cases passing. No real auth file, ChatGPT process, network endpoint, push, PR, or release action was performed.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
