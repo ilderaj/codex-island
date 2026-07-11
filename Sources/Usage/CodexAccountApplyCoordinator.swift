@@ -20,6 +20,8 @@ enum ChatGPTHostApplyState: Equatable {
 
 @MainActor
 final class CodexAccountApplyCoordinator: ObservableObject {
+    static let shared = CodexAccountApplyCoordinator()
+
     @Published private(set) var state: ChatGPTHostApplyState = .idle
     @Published private(set) var switchedAccountKey: String?
     @Published private(set) var restorationRequiresManualHostLaunch = false

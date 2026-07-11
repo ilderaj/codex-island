@@ -42,7 +42,12 @@ final class CodexAccountStore: ObservableObject {
             principalId: context.identity.principalId,
             identityConfidence: context.identity.confidence,
             email: context.identity.email,
-            label: label.isEmpty ? defaultLabel(for: context) : label,
+            label: Self.sanitizedLabel(
+                label,
+                accountKey: context.accountKey,
+                chatgptAccountId: context.identity.chatgptAccountId,
+                principalId: context.identity.principalId
+            ),
             plan: context.identity.plan,
             createdAt: now,
             lastUsedAt: now,
@@ -272,8 +277,33 @@ final class CodexAccountStore: ObservableObject {
         }
     }
 
-    private func defaultLabel(for context: CodexAuthContext) -> String {
-        context.identity.email ?? "Codex Account"
+    static func defaultLabel(forAccountKey accountKey: String) -> String {
+        "Codex Account \(accountKey.suffix(6))"
+    }
+
+    static func displayLabel(for account: CodexAccountRecord) -> String {
+        sanitizedLabel(
+            account.label,
+            accountKey: account.accountKey,
+            chatgptAccountId: account.chatgptAccountId,
+            principalId: account.principalId
+        )
+    }
+
+    private static func sanitizedLabel(
+        _ label: String,
+        accountKey: String,
+        chatgptAccountId: String?,
+        principalId: String?
+    ) -> String {
+        let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
+        let rawIdentity = [accountKey, chatgptAccountId, principalId].compactMap { $0 }
+        guard !trimmed.isEmpty,
+              !trimmed.contains("@"),
+              !rawIdentity.contains(trimmed) else {
+            return defaultLabel(forAccountKey: accountKey)
+        }
+        return trimmed
     }
 }
 

@@ -11,6 +11,7 @@ struct PanelHeader: View {
     let notch: NotchInfo
     @ObservedObject private var visibility = ProviderVisibilityStore.shared
     @ObservedObject private var usageStore = UsageStore.shared
+    @ObservedObject private var codexAccounts = CodexAccountStore.shared
 
     var body: some View {
         HStack(spacing: 0) {
@@ -23,6 +24,7 @@ struct PanelHeader: View {
                 .accessibilityHidden(!claudeOn)
             Color.clear.frame(width: notch.width)
             providerTitle(name: "Codex", tag: usageStore.codex.plan?.uppercased(),
+                          detail: activeCodexAccountLabel,
                           color: IslandColor.codex, alignment: .trailing)
                 .opacity(codexOn ? 1 : 0)
                 .animation(.openMorph, value: codexOn)
@@ -38,6 +40,7 @@ struct PanelHeader: View {
     private func providerTitle(
         name: String,
         tag: String?,
+        detail: String? = nil,
         color: Color,
         alignment: HorizontalAlignment
     ) -> some View {
@@ -62,7 +65,13 @@ struct PanelHeader: View {
                                 RoundedRectangle(cornerRadius: 3)
                                     .strokeBorder(.white.opacity(0.08), lineWidth: 0.5)
                             )
-                    )
+                )
+            }
+            if let detail {
+                Text(detail)
+                    .font(Typography.micro)
+                    .foregroundStyle(.white.opacity(0.48))
+                    .lineLimit(1)
             }
         }
 
@@ -79,5 +88,13 @@ struct PanelHeader: View {
             }
             .frame(maxWidth: .infinity)
         }
+    }
+
+    private var activeCodexAccountLabel: String? {
+        guard let key = codexAccounts.registry.activeAccountKey,
+              let account = codexAccounts.registry.accounts.first(where: { $0.accountKey == key }) else {
+            return nil
+        }
+        return CodexAccountStore.displayLabel(for: account)
     }
 }

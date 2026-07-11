@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CodexAccountsBlock: View {
     @ObservedObject var store: CodexAccountStore
+    @ObservedObject private var coordinator = CodexAccountApplyCoordinator.shared
 
     @State private var actionMessage: String?
 
@@ -49,11 +50,8 @@ struct CodexAccountsBlock: View {
                 Text(L10n.tr("No stored accounts"))
             } else {
                 ForEach(store.registry.accounts) { account in
-                    Button(account.label) {
-                        perform(L10n.tr("Codex account switched. Codex CLI/App may need restart.")) {
-                            try store.switchToAccount(account.accountKey)
-                            UsageStore.shared.refresh()
-                        }
+                    Button(CodexAccountStore.displayLabel(for: account)) {
+                        confirmSwitch(to: account)
                     }
                 }
             }
@@ -87,7 +85,7 @@ struct CodexAccountsBlock: View {
               let account = store.registry.accounts.first(where: { $0.accountKey == key }) else {
             return L10n.tr("No stored accounts")
         }
-        return account.label
+        return CodexAccountStore.displayLabel(for: account)
     }
 
     private var actionGrid: some View {
@@ -97,10 +95,7 @@ struct CodexAccountsBlock: View {
                     importCurrentAuth()
                 }
                 accountAction("Switch Previous") {
-                    perform(L10n.tr("Codex account switched. Codex CLI/App may need restart.")) {
-                        try store.switchPrevious()
-                        UsageStore.shared.refresh()
-                    }
+                    confirmPreviousSwitch()
                 }
                 .disabled(store.registry.previousActiveAccountKey == nil)
             }
@@ -170,7 +165,7 @@ struct CodexAccountsBlock: View {
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment: .firstTextBaseline, spacing: 7) {
-                    Text(account.label)
+                    Text(CodexAccountStore.displayLabel(for: account))
                         .font(Typography.rowTitle)
                         .foregroundStyle(.white.opacity(0.90))
                     if active {
@@ -180,7 +175,7 @@ struct CodexAccountsBlock: View {
                         chip(plan.uppercased(), color: .white)
                     }
                 }
-                Text(accountMeta(account))
+                Text(accountStatus(account))
                     .font(Typography.micro)
                     .foregroundStyle(.white.opacity(0.55))
                     .lineLimit(1)
@@ -220,7 +215,7 @@ struct CodexAccountsBlock: View {
 
     @ViewBuilder
     private var footerMessage: some View {
-        if let message = actionMessage ?? store.lastError {
+        if let message = coordinatorMessage ?? actionMessage ?? store.lastError {
             Text(message)
                 .font(Typography.micro)
                 .foregroundStyle(.white.opacity(0.45))
@@ -228,11 +223,30 @@ struct CodexAccountsBlock: View {
         }
     }
 
-    private func accountMeta(_ account: CodexAccountRecord) -> String {
-        let email = account.email ?? L10n.tr("Unknown email")
-        let accountID = shortID(account.chatgptAccountId ?? account.principalId)
-        let confidence = account.identityConfidence == .low ? L10n.tr("low confidence") : nil
-        return [email, accountID, confidence].compactMap { $0 }.joined(separator: " · ")
+    private var coordinatorMessage: String? {
+        switch coordinator.state {
+        case .localSwitchComplete:
+            return L10n.tr("Local switch complete")
+        case .authReloadUnverified:
+            return L10n.tr("ChatGPT relaunch attempted")
+        case .launchFailed:
+            return L10n.tr("ChatGPT relaunch failed")
+        case .terminationFailed(let message), .localSwitchFailed(let message), .localRestoreFailed(let message):
+            return message
+        case .idle, .validatingTarget, .switchingLocally, .terminatingHost, .hostTerminated, .launchAttempted:
+            return nil
+        }
+    }
+
+    private func accountStatus(_ account: CodexAccountRecord) -> String {
+        var parts: [String] = []
+        if let plan = account.plan { parts.append(plan.uppercased()) }
+        if let last = account.lastUsageAt {
+            parts.append(L10n.tr("Last refreshed %@", Self.relativeFormatter.localizedString(for: last, relativeTo: Date())))
+        } else {
+            parts.append(L10n.tr(account.lastUsage == nil ? "No usage snapshot" : "Usage available"))
+        }
+        return parts.joined(separator: " · ")
     }
 
     private func accountUsage(_ account: CodexAccountRecord) -> String {
@@ -260,12 +274,6 @@ struct CodexAccountsBlock: View {
         return "\(L10n.tr(label)) \(percent)% \(L10n.tr("resets in %@", Duration.compact(delta)))"
     }
 
-    private func shortID(_ value: String?) -> String? {
-        guard let value, !value.isEmpty else { return nil }
-        if value.count <= 8 { return value }
-        return "\(value.prefix(4))…\(value.suffix(4))"
-    }
-
     private func importCurrentAuth() {
         let label = promptForLabel()
         perform(L10n.tr("Imported current Codex auth")) {
@@ -287,6 +295,22 @@ struct CodexAccountsBlock: View {
             return field.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         return ""
+    }
+
+    private func confirmPreviousSwitch() {
+        guard let key = store.registry.previousActiveAccountKey,
+              let account = store.registry.accounts.first(where: { $0.accountKey == key }) else { return }
+        confirmSwitch(to: account)
+    }
+
+    private func confirmSwitch(to account: CodexAccountRecord) {
+        let alert = NSAlert()
+        alert.messageText = L10n.tr("Switch & relaunch ChatGPT")
+        alert.informativeText = "\(CodexAccountStore.displayLabel(for: account))\n\n\(L10n.tr("ChatGPT will quit and reopen to apply this account."))"
+        alert.addButton(withTitle: L10n.tr("Switch & relaunch ChatGPT"))
+        alert.addButton(withTitle: L10n.tr("Cancel"))
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        Task { await coordinator.apply(accountKey: account.accountKey) }
     }
 
     private func perform(_ success: String, action: () throws -> Void) {

@@ -14,10 +14,24 @@ struct UsageView: View {
     @ObservedObject private var store = UsageStore.shared
     @ObservedObject private var pref = StylePref.shared
     @ObservedObject private var visibility = ProviderVisibilityStore.shared
+    @ObservedObject private var accountApply = CodexAccountApplyCoordinator.shared
+    @State private var accountRoute: CodexAccountRailRoute = .summary
 
     private var style: ChartStyle { pref.style }
 
     var body: some View {
+        if accountRoute == .summary {
+            usageSummary
+        } else {
+            CodexAccountRail(
+                store: .shared,
+                coordinator: accountApply,
+                route: $accountRoute
+            )
+        }
+    }
+
+    private var usageSummary: some View {
         let claudeOn = visibility.claudeVisible
         let codexOn = visibility.codexVisible
 
@@ -28,7 +42,8 @@ struct UsageView: View {
                             style: style, seed: 1, provider: .claude)
                 hairline
                 ChartsBlock(color: IslandColor.codex, usage: store.codex,
-                            style: style, seed: 3, provider: .codex)
+                            style: style, seed: 3, provider: .codex,
+                            onOpenAccounts: { accountRoute = .accounts })
             case (true, false):
                 ChartsBlock(color: IslandColor.claude, usage: store.claude,
                             style: style, seed: 1, provider: .claude)
@@ -44,7 +59,8 @@ struct UsageView: View {
                     .transition(breakdownTransition)
                 hairline
                 ChartsBlock(color: IslandColor.codex, usage: store.codex,
-                            style: style, seed: 3, provider: .codex)
+                            style: style, seed: 3, provider: .codex,
+                            onOpenAccounts: { accountRoute = .accounts })
             case (false, false):
                 BothHiddenPlaceholder()
                     .transition(.opacity)
@@ -81,6 +97,8 @@ struct ChartsBlock: View {
     let style: ChartStyle
     let seed: Int
     let provider: AlertEngine.Provider
+    let onOpenAccounts: (() -> Void)?
+    @ObservedObject private var codexAccounts = CodexAccountStore.shared
 
     /// Treat the block as needing re-auth when both windows are stuck on the
     /// scope-insufficient sentinel. Either tile alone could be a transient
@@ -108,9 +126,36 @@ struct ChartsBlock: View {
                 ResetCreditsSummaryRow(presentation: presentation)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
+            if provider == .codex, let onOpenAccounts {
+                Button(action: onOpenAccounts) {
+                    HStack(spacing: 5) {
+                        Text(activeAccountLabel)
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 8, weight: .semibold))
+                    }
+                    .font(Typography.micro.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.65))
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(.white.opacity(0.05))
+                    )
+                }
+                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.horizontal, 12)
+    }
+
+    private var activeAccountLabel: String {
+        guard let key = codexAccounts.registry.activeAccountKey,
+              let account = codexAccounts.registry.accounts.first(where: { $0.accountKey == key }) else {
+            return L10n.tr("Accounts")
+        }
+        return CodexAccountStore.displayLabel(for: account)
     }
 }
 

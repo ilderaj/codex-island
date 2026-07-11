@@ -76,6 +76,25 @@ enum CodexAccountTests {
             expect(true, "parser rejects missing access token")
         }
 
+        let defaultLabel = CodexAccountStore.defaultLabel(forAccountKey: "account-key-123456")
+        expect(defaultLabel == "Codex Account 123456", "default label uses a non-identifying account-key suffix")
+        let legacyIdentityLabel = CodexAccountStore.displayLabel(for: CodexAccountRecord(
+            accountKey: "account-key-123456",
+            chatgptUserId: "user-123456",
+            chatgptAccountId: "acct-workspace-123456",
+            principalId: "principal-123456",
+            identityConfidence: .strong,
+            email: "jared@example.com",
+            label: "jared@example.com",
+            plan: "pro",
+            createdAt: Date(timeIntervalSince1970: 0),
+            lastUsedAt: nil,
+            lastUsageAt: nil,
+            lastUsage: nil,
+            lastError: nil
+        ))
+        expect(!legacyIdentityLabel.contains("@") && !legacyIdentityLabel.contains("acct-workspace-123456"), "display label omits email and full account ID")
+
         do {
             let root = try makeTempRoot()
             let paths = CodexAccountPaths(root: root)
