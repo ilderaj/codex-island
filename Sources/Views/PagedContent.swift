@@ -23,7 +23,6 @@ struct PagedContent: View {
             let pageWidth = geo.size.width
             HStack(spacing: 0) {
                 UsageView()
-                    .offset(y: compactPageYOffset)
                     .frame(width: pageWidth)
                 CostView()
                     .offset(y: compactPageYOffset)
