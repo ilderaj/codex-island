@@ -132,6 +132,15 @@
 - 按用户明确授权，Chief 已将 `dev` 从 `5598581` 推送至 `9ebbbbd`，并创建 fork-local [PR #4](https://github.com/ilderaj/codex-island/pull/4)（`ilderaj/codex-island:dev -> main`）。PR 描述包含完整本地验证、单双 provider 视觉确认，以及未执行真实 ChatGPT 重启 proof 的明确 caveat。
 - 未执行 merge、release、publish、真实 auth 写入或 ChatGPT 进程操作。
 
+## Findings Record: 2026-07-12 16:16:10 UTC+8
+- PR #4 的独立只读 review 复核了 `origin/main...dev`、host fake harness 与当前 rail 状态，确认两项可操作问题：P1 为成功应用后 Rail 没有为新选择的账户重新提供显式切换入口；P2 为已终止 host 的 launch-failure 路径在本地恢复后没有消费 `restorationRequiresManualHostLaunch`，未提示用户手动重新打开 ChatGPT。
+- 处置：进入隔离的 TDD follow-up，只限 coordinator/rail/host-harness/必要的本地化字符串。真实 ChatGPT auth reload 仍是明确保留的用户控制 runtime gate，不是这轮 review defect。
+
+## Findings Record: 2026-07-12 16:25:39 UTC+8
+- 隔离 worker 的 RED/GREEN follow-up 已由 Chief 集成为 `76ec9c0`。新状态契约让 `authReloadUnverified` 明确允许下一次同样经过确认的 apply；host 已终止且 launch-failure 后的本地恢复会显示“ChatGPT 已关闭。请手动重新打开它。”，且恢复本身没有 host I/O。
+- Chief 独立运行完整 `./scripts/run-tests.sh` 与 fresh `rm -rf build && ./build.sh`，均通过。第二个只读 reviewer 对 `ebf7d92..76ec9c0` 复查后无可操作 P0/P1/P2；显式确认、切换前后精确目标校验与无 host-I/O restore 均未被削弱。
+- 剩余 proof gap：无 SwiftUI 自动点击/截图 harness，且真实 ChatGPT 是否读取新 auth 仍未执行。前者有源代码、状态 harness 与用户已完成的 layout 视觉确认作为 backstop；后者仍是 release-blocking 的用户控制 runtime gate。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

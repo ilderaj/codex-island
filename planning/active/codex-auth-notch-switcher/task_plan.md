@@ -52,7 +52,8 @@ Phase 5: Verification and Delivery
 - [x] Resolve the user-reported first expanded-usage page occlusion in both single- and dual-provider states.
 - [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
 - [x] Commit, push `dev`, and open [PR #4](https://github.com/ilderaj/codex-island/pull/4) from `ilderaj/codex-island:dev` into `main`.
-- [ ] Complete PR review/reconciliation and request the explicit merge/release gate.
+- [x] Complete independent PR review/reconciliation: two actionable rail/recovery findings were fixed, re-verified, and pushed to PR #4.
+- [ ] Request the explicit merge/release gate after the user-controlled runtime proof is recorded.
 - [ ] Perform post-merge adoption checks before closure.
 - **Status:** in_progress
 
@@ -61,7 +62,7 @@ Phase 5: Verification and Delivery
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
-- Remaining gates: user-controlled confirmed ChatGPT relaunch proof; PR review/reconciliation; then a separate merge/release decision.
+- Remaining gates: user-controlled confirmed ChatGPT relaunch proof; then a separate merge/release decision.
 - PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) is open. Push/PR authorization is satisfied; user-controlled runtime proof and a separate merge/release decision remain required.
 
 ### Latest Verification Receipt
@@ -70,6 +71,7 @@ Phase 5: Verification and Delivery
 - Product/test receipt commit: `cf1b744` (`test: cover account switch validation guard`).
 - UI regression receipt: `619da65` removes the historical `-28pt` vertical offset from page-zero `UsageView`; `CostView` keeps its existing compact alignment. Fresh `./scripts/run-tests.sh`, `rm -rf build && ./build.sh`, and diff checks pass.
 - User acceptance: live single- and dual-provider expanded views were visually confirmed after the fix.
+- PR follow-up receipt: `76ec9c0` restores the explicit post-success apply path and makes terminated-host local recovery instruct manual ChatGPT reopening. A fresh independent re-review reports no actionable P0/P1/P2 findings.
 
 ## Verification Contract
 

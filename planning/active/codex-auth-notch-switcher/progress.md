@@ -42,6 +42,8 @@
   - Reopened for a user-reported expanded-usage layout regression. Reused tracked-task worker discipline for a one-file fix: removed page-zero's historical `-28pt` vertical offset so `UsageView` remains within fixed header/footer chrome for both single- and dual-provider states. Chief independently ran the full harness and a fresh universal build after accepting worker commit `619da65`.
   - 用户完成真实单 provider 与双 provider 展开页视觉确认；布局回归的代码、构建、harness 与人工视觉证据现已闭环。该确认不涵盖 ChatGPT 账号切换/重启 runtime proof。
   - 用户授权后已推送本地 `dev` 至 `origin/dev`，并创建 `ilderaj/codex-island:dev -> main` 的 PR #4。PR 描述明确保留真实 ChatGPT 重启 proof 与 merge/release 作为独立 gate。
+  - PR #4 独立只读 review 发现 P1 多账号连续切换入口缺失与 P2 host 已终止后的本地恢复提示缺失；Chief 已复核成立，进入隔离的 test-first follow-up。PR 暂不进入 merge gate。
+  - 隔离 follow-up 在 RED/GREEN 后集成为 `76ec9c0`：成功 relaunch 尝试后 rail 重新显示显式确认入口；host 已终止的 launch-failure 恢复显示手动重开提示。Chief full harness 与 fresh build 通过，第二轮独立只读 re-review 无 P0/P1/P2；PR review/reconciliation 已完成。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -68,6 +70,7 @@
 | Full smoke verification | `./scripts/run-tests.sh && ./scripts/verify.sh && git diff --check` | All harness cases, universal build, one-second CodexIsland launch, whitespace clean | Exit 0; all tests passed; `launched cleanly` | pass |
 | Initial validation recovery guard | `./scripts/run-tests.sh` after focused coordinator test | Failed initial target validation preserves local account and exposes no local recovery action | All tests passed; no host I/O and local-switch flag remains false | pass |
 | Usage first-page chrome boundary | User screenshots plus `PagedContent` source inspection, `./scripts/run-tests.sh`, and `rm -rf build && ./build.sh` | First page is not vertically shifted under fixed header/footer in either provider configuration | Offset removed only from `UsageView`; full harness and fresh universal build passed | pass |
+| Rail review follow-up | RED/GREEN host harness, `./scripts/run-tests.sh`, fresh `rm -rf build && ./build.sh`, independent re-review | Subsequent apply remains confirmation-driven; terminated-host recovery instructs manual reopen without host I/O | All checks passed; re-review reports no P0/P1/P2 | pass |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
