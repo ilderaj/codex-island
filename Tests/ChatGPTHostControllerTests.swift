@@ -232,6 +232,27 @@ struct ChatGPTHostControllerTests {
             let target = try ChatGPTHostTarget.validate(applicationURL: appURL)
             let fake = FakeHostRuntime()
             fake.running = [appURL]
+            let coordinator = try makeCoordinator(root: root, target: target, runtime: fake)
+
+            await coordinator.apply(accountKey: try alternateAccountKey(for: coordinator.store))
+            expect(
+                coordinator.state == .authReloadUnverified,
+                "successful launch leaves host auth reload unverified"
+            )
+            expect(
+                coordinator.permitsSubsequentExplicitApply,
+                "post-success state permits an explicit subsequent apply command"
+            )
+        } catch {
+            expect(false, "post-success state permits an explicit subsequent apply command: \(error)")
+        }
+
+        do {
+            let root = try makeTemporaryRoot()
+            let appURL = try makeChatGPTApp(in: root)
+            let target = try ChatGPTHostTarget.validate(applicationURL: appURL)
+            let fake = FakeHostRuntime()
+            fake.running = [appURL]
             fake.launchError = TestError.forcedHostFailure
             let coordinator = try makeCoordinator(root: root, target: target, runtime: fake)
             let key = try alternateAccountKey(for: coordinator.store)
@@ -250,6 +271,10 @@ struct ChatGPTHostControllerTests {
 
             let hostActionCount = fake.terminationRequests.count + fake.launched.count
             await coordinator.restorePreviousAccount()
+            expect(
+                coordinator.requiresManualHostLaunchInstruction,
+                "restoring local auth after a terminated-host launch failure requires manual host launch"
+            )
             expect(
                 fake.terminationRequests.count + fake.launched.count == hostActionCount,
                 "restoring the previous account performs no host I/O"

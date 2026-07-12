@@ -62,6 +62,7 @@
 "ChatGPT will quit and reopen to apply this account." = "ChatGPT 将退出并重新打开以应用此账号。";
 "Restore previous local account" = "恢复上一个本地账号";
 "Local switch complete" = "本地切换完成";
+"ChatGPT is closed. Reopen it manually." = "ChatGPT 已关闭。请手动重新打开它。";
 "ChatGPT relaunch attempted" = "已尝试重启 ChatGPT";
 "ChatGPT relaunch failed" = "ChatGPT 重启失败";
 "Retry launch" = "重试启动";

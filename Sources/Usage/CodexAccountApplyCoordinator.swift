@@ -27,6 +27,14 @@ final class CodexAccountApplyCoordinator: ObservableObject {
     @Published private(set) var restorationRequiresManualHostLaunch = false
     @Published private(set) var didSwitchLocallyForCurrentApply = false
 
+    var permitsSubsequentExplicitApply: Bool {
+        state == .idle || state == .authReloadUnverified
+    }
+
+    var requiresManualHostLaunchInstruction: Bool {
+        state == .localSwitchComplete && restorationRequiresManualHostLaunch
+    }
+
     let store: CodexAccountStore
     private let policy: ChatGPTHostTargetValidating
     private let controller: ChatGPTHostController

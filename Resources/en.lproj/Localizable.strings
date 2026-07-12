@@ -62,6 +62,7 @@
 "ChatGPT will quit and reopen to apply this account." = "ChatGPT will quit and reopen to apply this account.";
 "Restore previous local account" = "Restore previous local account";
 "Local switch complete" = "Local switch complete";
+"ChatGPT is closed. Reopen it manually." = "ChatGPT is closed. Reopen it manually.";
 "ChatGPT relaunch attempted" = "ChatGPT relaunch attempted";
 "ChatGPT relaunch failed" = "ChatGPT relaunch failed";
 "Retry launch" = "Retry launch";

@@ -145,19 +145,30 @@ struct CodexAccountRail: View {
         case .localRestoreFailed(let message), .localSwitchFailed(let message):
             coordinatorMessage(message)
         case .localSwitchComplete:
-            coordinatorMessage(L10n.tr("Local switch complete"))
+            coordinatorMessage(
+                L10n.tr(
+                    coordinator.requiresManualHostLaunchInstruction
+                        ? "ChatGPT is closed. Reopen it manually."
+                        : "Local switch complete"
+                )
+            )
         case .authReloadUnverified:
             coordinatorMessage(L10n.tr("ChatGPT relaunch attempted"))
+            if coordinator.permitsSubsequentExplicitApply { explicitApplyButton }
         case .validatingTarget, .switchingLocally:
             EmptyView()
         case .terminatingHost, .hostTerminated, .launchAttempted:
             coordinatorMessage(L10n.tr("Local switch complete"))
         case .idle:
-            Button(L10n.tr("Switch & relaunch ChatGPT")) {
-                confirmsSwitch = true
-            }
-            .buttonStyle(.borderedProminent)
+            explicitApplyButton
         }
+    }
+
+    private var explicitApplyButton: some View {
+        Button(L10n.tr("Switch & relaunch ChatGPT")) {
+            confirmsSwitch = true
+        }
+        .buttonStyle(.borderedProminent)
     }
 
     private var restoreButton: some View {
