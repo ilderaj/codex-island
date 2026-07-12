@@ -49,6 +49,7 @@ Phase 5: Verification and Delivery
 - **Status:** complete
 
 ### Phase 5: Verification and Delivery
+- [x] Resolve the user-reported first expanded-usage page occlusion in both single- and dual-provider states.
 - [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
 - [ ] Commit, push, open a PR, complete review/reconciliation, and request the explicit merge/release gate.
 - [ ] Perform post-merge adoption checks before closure.
@@ -65,6 +66,7 @@ Phase 5: Verification and Delivery
 - A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.
 - `./scripts/run-tests.sh` passed after this addition. The earlier fresh build and `./scripts/verify.sh` proof remains current because this receipt changes only the test harness.
 - Product/test receipt commit: `cf1b744` (`test: cover account switch validation guard`).
+- UI regression receipt: `619da65` removes the historical `-28pt` vertical offset from page-zero `UsageView`; `CostView` keeps its existing compact alignment. Fresh `./scripts/run-tests.sh`, `rm -rf build && ./build.sh`, and diff checks pass.
 
 ## Verification Contract
 

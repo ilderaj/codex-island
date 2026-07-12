@@ -119,6 +119,11 @@
 - Fresh `./scripts/run-tests.sh` exits 0 with all existing and new cases passing. No real auth file, ChatGPT process, network endpoint, push, PR, or release action was performed.
 - Committed the focused test and this audit receipt separately: `cf1b744` contains the test plus first receipt; unrelated pre-existing `.harness`, planning archive, and design export changes remain unstaged and untouched.
 
+## Findings Record: 2026-07-12 16:04:54 UTC+8
+- User-provided screenshots reproduced a first expanded-usage page occlusion with both one and two providers. The fixed `PanelHeader` and `PanelFooter` frame the middle `PagedContent` area, but page-zero `UsageView` alone had a historical `compactPageYOffset = -28` offset and was therefore drawn underneath the header and footer.
+- Visible worker `019f554e-5d76-7dd1-bef1-92c340fa111c` returned bounded commit `619da65` (`fix(ui): keep usage page within panel chrome`), changing only `Sources/Views/PagedContent.swift` to remove that offset from `UsageView`. Cost retains its existing offset; overview is unchanged.
+- Chief independently verified the exact one-line diff, `git show --check`, full `./scripts/run-tests.sh`, and a fresh `rm -rf build && ./build.sh` universal build. There is no repository SwiftUI screenshot harness, so a live single- and dual-provider expanded-panel inspection remains the visual backstop; no auth, host, or remote action occurred.
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

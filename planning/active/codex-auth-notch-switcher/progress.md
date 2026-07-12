@@ -39,6 +39,7 @@
   - Completed a read-only remote readiness audit: no existing `dev` PR, writable fork `ilderaj/codex-island` defaults to `main`, and local `dev` is 14 commits ahead of `origin/dev`. Recorded the recommended fork-local `dev -> main` PR route without pushing or creating a PR.
   - Completed a final coordinator recovery audit. Added and passed a focused fake-driven regression case proving that an initial target-validation failure preserves the active account, performs no host I/O, and leaves the rail's local-restore guard false.
   - Committed the product/test receipt as `cf1b744` (`test: cover account switch validation guard`) after `git diff --check` and `git show --check`; `dev` was then 16 commits ahead of `origin/dev`. No remote or runtime gate was crossed.
+  - Reopened for a user-reported expanded-usage layout regression. Reused tracked-task worker discipline for a one-file fix: removed page-zero's historical `-28pt` vertical offset so `UsageView` remains within fixed header/footer chrome for both single- and dual-provider states. Chief independently ran the full harness and a fresh universal build after accepting worker commit `619da65`.
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
@@ -64,6 +65,7 @@
 | Fresh root build | `rm -rf build && ./build.sh` | Recompile all Swift sources and create a new app | Exit 0; `build/CodexIsland.app` created | pass |
 | Full smoke verification | `./scripts/run-tests.sh && ./scripts/verify.sh && git diff --check` | All harness cases, universal build, one-second CodexIsland launch, whitespace clean | Exit 0; all tests passed; `launched cleanly` | pass |
 | Initial validation recovery guard | `./scripts/run-tests.sh` after focused coordinator test | Failed initial target validation preserves local account and exposes no local recovery action | All tests passed; no host I/O and local-switch flag remains false | pass |
+| Usage first-page chrome boundary | User screenshots plus `PagedContent` source inspection, `./scripts/run-tests.sh`, and `rm -rf build && ./build.sh` | First page is not vertically shifted under fixed header/footer in either provider configuration | Offset removed only from `UsageView`; full harness and fresh universal build passed | pass |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
