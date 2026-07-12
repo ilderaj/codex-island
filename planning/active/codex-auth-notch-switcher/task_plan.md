@@ -73,6 +73,13 @@ Phase 5: Verification and Delivery
 - User acceptance: live single- and dual-provider expanded views were visually confirmed after the fix.
 - PR follow-up receipt: `76ec9c0` restores the explicit post-success apply path and makes terminated-host local recovery instruct manual ChatGPT reopening. A fresh independent re-review reports no actionable P0/P1/P2 findings.
 
+### User-Controlled Runtime Acceptance
+1. Before confirming, close or save any unsaved ChatGPT work and note only the non-secret active account label.
+2. In expanded **Usage** -> **Accounts**, select a non-active saved account and personally confirm **Switch & relaunch ChatGPT**.
+3. Observe ChatGPT quit and reopen. Confirm the intended account from the normal ChatGPT profile surface, without sending tokens, auth JSON, email, or account IDs to the issue/PR.
+4. In a new Terminal invocation, run `codex login status` and confirm it reports the intended signed-in account. Codex Island does not terminate arbitrary CLI processes; a new CLI invocation is the supported CLI readback.
+5. If launch fails after local switching, use **Restore previous local account**, manually reopen ChatGPT when instructed, and record the result without sensitive values. Do not claim success from a launch attempt alone.
+
 ## Verification Contract
 
 ### Mode: Implementation completion

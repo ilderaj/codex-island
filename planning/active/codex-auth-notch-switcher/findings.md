@@ -141,6 +141,10 @@
 - Chief 独立运行完整 `./scripts/run-tests.sh` 与 fresh `rm -rf build && ./build.sh`，均通过。第二个只读 reviewer 对 `ebf7d92..76ec9c0` 复查后无可操作 P0/P1/P2；显式确认、切换前后精确目标校验与无 host-I/O restore 均未被削弱。
 - 剩余 proof gap：无 SwiftUI 自动点击/截图 harness，且真实 ChatGPT 是否读取新 auth 仍未执行。前者有源代码、状态 harness 与用户已完成的 layout 视觉确认作为 backstop；后者仍是 release-blocking 的用户控制 runtime gate。
 
+## Findings Record: 2026-07-12 16:25:39 UTC+8
+- 本机只读检查确认 `/opt/homebrew/bin/codex login --help` 提供 `status` 子命令。Runtime proof 因此分为两个不重叠的 readback：用户在正常 ChatGPT profile 界面确认重开后的账户，以及新的 `codex login status` invocation 确认 CLI 读取切换后的本地 auth。
+- Codex Island 不终止、枚举或猜测任意 CLI 进程；这是刻意的安全边界。完整用户控制的验收/回退步骤已写入 `task_plan.md`，在成功 evidence 出现前不执行 merge/release。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
