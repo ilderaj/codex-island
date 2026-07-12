@@ -145,6 +145,10 @@
 - 本机只读检查确认 `/opt/homebrew/bin/codex login --help` 提供 `status` 子命令。Runtime proof 因此分为两个不重叠的 readback：用户在正常 ChatGPT profile 界面确认重开后的账户，以及新的 `codex login status` invocation 确认 CLI 读取切换后的本地 auth。
 - Codex Island 不终止、枚举或猜测任意 CLI 进程；这是刻意的安全边界。完整用户控制的验收/回退步骤已写入 `task_plan.md`，在成功 evidence 出现前不执行 merge/release。
 
+## Findings Record: 2026-07-12 16:28:42 UTC+8
+- 同一 user-controlled runtime-proof gate 已连续三次阻止后续 release work。任务因此被如实置为 blocked，而非把 launch attempt、构建成功或 PR `CLEAN` 状态替代为真实 auth reload evidence。
+- 恢复输入：用户报告 ChatGPT profile 与新的 `codex login status` 是否反映选定账户，或明确说明 runtime proof 未通过。随后 Chief 将记录结果、处理必要恢复，并请求独立的 merge/release 授权。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

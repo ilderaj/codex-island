@@ -4,9 +4,9 @@
 Deliver a verified macOS Codex Island flow that can retain multiple local Codex/ChatGPT account snapshots, show per-account usage in the notch UI, switch the active account safely, and apply the selected authentication to the current ChatGPT/Codex host with an explicit, reversible relaunch strategy.
 
 ## Current State
-Status: active
+Status: blocked
 Archive Eligible: no
-Close Reason:
+Close Reason: Awaiting the user-controlled runtime proof that real ChatGPT and a fresh Codex CLI invocation read the selected local auth.
 Reconcile: final independent review reconciled; implementation plan frozen
 
 ## Routing Decision
@@ -64,6 +64,7 @@ Phase 5: Verification and Delivery
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
 - Remaining gates: user-controlled confirmed ChatGPT relaunch proof; then a separate merge/release decision.
 - PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) is open. Push/PR authorization is satisfied; user-controlled runtime proof and a separate merge/release decision remain required.
+- Blocked checkpoint: all non-destructive implementation, build, test, visual-layout acceptance, push, PR, review, and review-follow-up work is complete at remote `dev` head `25f3b6a`. Resume only when the user reports the runtime proof result or explicitly changes the release decision.
 
 ### Latest Verification Receipt
 - A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.

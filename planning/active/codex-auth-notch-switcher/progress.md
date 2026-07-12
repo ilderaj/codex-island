@@ -45,6 +45,7 @@
   - PR #4 独立只读 review 发现 P1 多账号连续切换入口缺失与 P2 host 已终止后的本地恢复提示缺失；Chief 已复核成立，进入隔离的 test-first follow-up。PR 暂不进入 merge gate。
   - 隔离 follow-up 在 RED/GREEN 后集成为 `76ec9c0`：成功 relaunch 尝试后 rail 重新显示显式确认入口；host 已终止的 launch-failure 恢复显示手动重开提示。Chief full harness 与 fresh build 通过，第二轮独立只读 re-review 无 P0/P1/P2；PR review/reconciliation 已完成。
   - 为剩余用户控制 runtime gate 固化了非敏感验收/回退步骤：正常 ChatGPT profile readback 与新 `codex login status` invocation 分别验证 host 和 CLI；不终止或猜测任何 CLI 进程。
+  - 连续三次等待同一 user-controlled runtime proof 后，任务已置为 blocked。远端 PR #4 仍 open；没有 merge、release、真实 auth 写入或 ChatGPT 进程操作。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
