@@ -51,7 +51,8 @@ Phase 5: Verification and Delivery
 ### Phase 5: Verification and Delivery
 - [x] Resolve the user-reported first expanded-usage page occlusion in both single- and dual-provider states.
 - [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
-- [ ] Commit, push, open a PR, complete review/reconciliation, and request the explicit merge/release gate.
+- [x] Commit, push `dev`, and open [PR #4](https://github.com/ilderaj/codex-island/pull/4) from `ilderaj/codex-island:dev` into `main`.
+- [ ] Complete PR review/reconciliation and request the explicit merge/release gate.
 - [ ] Perform post-merge adoption checks before closure.
 - **Status:** in_progress
 
@@ -60,7 +61,8 @@ Phase 5: Verification and Delivery
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
-- Remaining gates: user-controlled confirmed ChatGPT relaunch proof; explicit approval for push/PR; then a separate merge/release decision.
+- Remaining gates: user-controlled confirmed ChatGPT relaunch proof; PR review/reconciliation; then a separate merge/release decision.
+- PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) is open. Push/PR authorization is satisfied; user-controlled runtime proof and a separate merge/release decision remain required.
 
 ### Latest Verification Receipt
 - A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.

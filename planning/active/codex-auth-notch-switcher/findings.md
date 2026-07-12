@@ -128,6 +128,10 @@
 - 用户已在真实运行的 App 中确认单 provider 与双 provider 展开页的首屏视觉效果；该 layout regression 的视觉 backstop 已通过。
 - 此确认仅覆盖 Usage 展开布局，不代表用户执行或确认了 ChatGPT 的账号切换/重启路径；该独立 runtime gate 保持不变。
 
+## Findings Record: 2026-07-12 16:08:48 UTC+8
+- 按用户明确授权，Chief 已将 `dev` 从 `5598581` 推送至 `9ebbbbd`，并创建 fork-local [PR #4](https://github.com/ilderaj/codex-island/pull/4)（`ilderaj/codex-island:dev -> main`）。PR 描述包含完整本地验证、单双 provider 视觉确认，以及未执行真实 ChatGPT 重启 proof 的明确 caveat。
+- 未执行 merge、release、publish、真实 auth 写入或 ChatGPT 进程操作。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

@@ -41,6 +41,7 @@
   - Committed the product/test receipt as `cf1b744` (`test: cover account switch validation guard`) after `git diff --check` and `git show --check`; `dev` was then 16 commits ahead of `origin/dev`. No remote or runtime gate was crossed.
   - Reopened for a user-reported expanded-usage layout regression. Reused tracked-task worker discipline for a one-file fix: removed page-zero's historical `-28pt` vertical offset so `UsageView` remains within fixed header/footer chrome for both single- and dual-provider states. Chief independently ran the full harness and a fresh universal build after accepting worker commit `619da65`.
   - 用户完成真实单 provider 与双 provider 展开页视觉确认；布局回归的代码、构建、harness 与人工视觉证据现已闭环。该确认不涵盖 ChatGPT 账号切换/重启 runtime proof。
+  - 用户授权后已推送本地 `dev` 至 `origin/dev`，并创建 `ilderaj/codex-island:dev -> main` 的 PR #4。PR 描述明确保留真实 ChatGPT 重启 proof 与 merge/release 作为独立 gate。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
