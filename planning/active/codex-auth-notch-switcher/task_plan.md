@@ -67,6 +67,7 @@ Phase 5: Verification and Delivery
 - `./scripts/run-tests.sh` passed after this addition. The earlier fresh build and `./scripts/verify.sh` proof remains current because this receipt changes only the test harness.
 - Product/test receipt commit: `cf1b744` (`test: cover account switch validation guard`).
 - UI regression receipt: `619da65` removes the historical `-28pt` vertical offset from page-zero `UsageView`; `CostView` keeps its existing compact alignment. Fresh `./scripts/run-tests.sh`, `rm -rf build && ./build.sh`, and diff checks pass.
+- User acceptance: live single- and dual-provider expanded views were visually confirmed after the fix.
 
 ## Verification Contract
 

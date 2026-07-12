@@ -40,6 +40,7 @@
   - Completed a final coordinator recovery audit. Added and passed a focused fake-driven regression case proving that an initial target-validation failure preserves the active account, performs no host I/O, and leaves the rail's local-restore guard false.
   - Committed the product/test receipt as `cf1b744` (`test: cover account switch validation guard`) after `git diff --check` and `git show --check`; `dev` was then 16 commits ahead of `origin/dev`. No remote or runtime gate was crossed.
   - Reopened for a user-reported expanded-usage layout regression. Reused tracked-task worker discipline for a one-file fix: removed page-zero's historical `-28pt` vertical offset so `UsageView` remains within fixed header/footer chrome for both single- and dual-provider states. Chief independently ran the full harness and a fresh universal build after accepting worker commit `619da65`.
+  - 用户完成真实单 provider 与双 provider 展开页视觉确认；布局回归的代码、构建、harness 与人工视觉证据现已闭环。该确认不涵盖 ChatGPT 账号切换/重启 runtime proof。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)

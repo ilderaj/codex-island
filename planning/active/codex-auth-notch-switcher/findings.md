@@ -124,6 +124,10 @@
 - Visible worker `019f554e-5d76-7dd1-bef1-92c340fa111c` returned bounded commit `619da65` (`fix(ui): keep usage page within panel chrome`), changing only `Sources/Views/PagedContent.swift` to remove that offset from `UsageView`. Cost retains its existing offset; overview is unchanged.
 - Chief independently verified the exact one-line diff, `git show --check`, full `./scripts/run-tests.sh`, and a fresh `rm -rf build && ./build.sh` universal build. There is no repository SwiftUI screenshot harness, so a live single- and dual-provider expanded-panel inspection remains the visual backstop; no auth, host, or remote action occurred.
 
+## Findings Record: 2026-07-12 16:08:48 UTC+8
+- 用户已在真实运行的 App 中确认单 provider 与双 provider 展开页的首屏视觉效果；该 layout regression 的视觉 backstop 已通过。
+- 此确认仅覆盖 Usage 展开布局，不代表用户执行或确认了 ChatGPT 的账号切换/重启路径；该独立 runtime gate 保持不变。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
