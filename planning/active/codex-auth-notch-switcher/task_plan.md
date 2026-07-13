@@ -58,7 +58,7 @@ Phase 5: Verification and Delivery
 - **Status:** in_progress
 
 ### Delivery Readiness
-- Delivery head: remote `origin/dev` at `cfd7676`; PR #4 head matches this receipt.
+- Delivery head: remote `origin/dev` contains the latest durable planning receipt; PR #4 tracks the fork-local `dev` branch.
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
