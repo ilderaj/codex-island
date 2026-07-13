@@ -127,6 +127,8 @@ For Codex:
 - In expanded **Usage**, open **Accounts** to compare saved snapshots and
   stage a non-active account. Browsing, staging, and cancelling leave the
   active auth unchanged.
+- Use the refresh icon in the account rail to fetch usage for every saved
+  account without changing the active auth.
 - **Switch & relaunch ChatGPT** is an explicit confirmation. It validates the
   exact `/Applications/ChatGPT.app` target before changing local auth and
   again before attempting a graceful relaunch. A successful launch attempt is
@@ -161,8 +163,9 @@ the first peek. Opening Settings also triggers a fresh fetch.
 - Click `synced Xs ago` in the panel header to refetch immediately.
 - Click the gear in the lower-left corner of the expanded panel to open
   Settings.
-- In expanded **Usage**, use **Accounts** to inspect local account usage and
-  select a non-active account. Confirm **Switch & relaunch ChatGPT** only when
+- In expanded **Usage**, use **Accounts** to inspect local account usage,
+  refresh every saved account from the rail, then select a non-active account.
+  Confirm **Switch & relaunch ChatGPT** only when
   you are ready for ChatGPT to quit and reopen; dismissing the prompt is
   non-destructive.
 - Use Settings to enable Launch at Login, pick a refresh interval, toggle Low
