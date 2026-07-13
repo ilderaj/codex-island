@@ -166,6 +166,7 @@
 - Worker commit `3742d04` 经 Chief cherry-pick 为 `ed2e1ee`。worker 与 root 均通过 `./scripts/run-tests.sh`、fresh universal `./build.sh` 和 `git diff --check`。
 - 刷新期间使用稳定尺寸的 progress state；无账号/刷新中禁用；图标提供 English/Simplified Chinese tooltip 与 accessibility label。
 - README receipt `17ab444` 已集成；中英文使用说明现在明确 rail 可刷新所有已保存账号，且不会修改当前 active auth。
+- 最新 durable receipt 已随 `dev` push 至 `a8b1964`；显式 fork 查询确认 PR #4 仍 OPEN、`dev -> main`，未执行 merge/release。
 
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
