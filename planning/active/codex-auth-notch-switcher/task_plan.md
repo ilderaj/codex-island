@@ -76,6 +76,7 @@ Phase 5: Verification and Delivery
 - User acceptance: live single- and dual-provider expanded views were visually confirmed after the fix.
 - PR follow-up receipt: `76ec9c0` restores the explicit post-success apply path and makes terminated-host local recovery instruct manual ChatGPT reopening. A fresh independent re-review reports no actionable P0/P1/P2 findings.
 - Account rail refresh receipt: `ed2e1ee` adds a fixed-size refresh control to the expanded notch rail, with disabled/loading states and localized accessibility copy. Root `./scripts/run-tests.sh`, fresh `./build.sh`, and `git diff --check` pass.
+- Documentation receipt: `17ab444` reconciles English and Simplified Chinese README guidance with the notch account-rail refresh path.
 
 ### User-Controlled Runtime Acceptance
 1. Before confirming, close or save any unsaved ChatGPT work and note only the non-secret active account label.
