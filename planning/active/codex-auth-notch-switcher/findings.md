@@ -161,6 +161,11 @@
 - 发现可用性缺口：账号 rail 没有直接刷新所有已保存账号 usage 的入口，用户必须绕到 Settings 执行 `Refresh All`。Pencil 的账号 rail 设计已有 refresh 状态/affordance，下一 slice 将把刷新动作接回 notch。
 - 当前架构刻意不终止任意 Codex CLI 进程；合并宿主由精确的 ChatGPT app 重启，CLI 通过用户新开 invocation 读取本地 auth。该边界与实机 bundle 事实及已完成的 runtime readback 一致。
 
+## Findings Record: 2026-07-13 account rail refresh slice
+- 隔离 worktree `codex/account-rail-refresh` 的 bounded slice 只修改 `Sources/Views/CodexAccountRail.swift` 与两份本地化资源；刷新按钮调用现有 `CodexAccountStore.refreshAllUsage()`，不改变 auth 或 host lifecycle。
+- Worker commit `3742d04` 经 Chief cherry-pick 为 `ed2e1ee`。worker 与 root 均通过 `./scripts/run-tests.sh`、fresh universal `./build.sh` 和 `git diff --check`。
+- 刷新期间使用稳定尺寸的 progress state；无账号/刷新中禁用；图标提供 English/Simplified Chinese tooltip 与 accessibility label。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|

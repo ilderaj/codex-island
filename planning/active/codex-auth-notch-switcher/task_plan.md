@@ -50,7 +50,7 @@ Phase 5: Verification and Delivery
 
 ### Phase 5: Verification and Delivery
 - [x] Resolve the user-reported first expanded-usage page occlusion in both single- and dual-provider states.
-- [ ] Close the audit gap by exposing per-account usage refresh directly in the expanded notch account rail.
+- [x] Close the audit gap by exposing per-account usage refresh directly in the expanded notch account rail.
 - [x] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
 - [x] Commit, push `dev`, and open [PR #4](https://github.com/ilderaj/codex-island/pull/4) from `ilderaj/codex-island:dev` into `main`.
 - [x] Complete independent PR review/reconciliation: two actionable rail/recovery findings were fixed, re-verified, and pushed to PR #4.
@@ -75,6 +75,7 @@ Phase 5: Verification and Delivery
 - UI regression receipt: `619da65` removes the historical `-28pt` vertical offset from page-zero `UsageView`; `CostView` keeps its existing compact alignment. Fresh `./scripts/run-tests.sh`, `rm -rf build && ./build.sh`, and diff checks pass.
 - User acceptance: live single- and dual-provider expanded views were visually confirmed after the fix.
 - PR follow-up receipt: `76ec9c0` restores the explicit post-success apply path and makes terminated-host local recovery instruct manual ChatGPT reopening. A fresh independent re-review reports no actionable P0/P1/P2 findings.
+- Account rail refresh receipt: `ed2e1ee` adds a fixed-size refresh control to the expanded notch rail, with disabled/loading states and localized accessibility copy. Root `./scripts/run-tests.sh`, fresh `./build.sh`, and `git diff --check` pass.
 
 ### User-Controlled Runtime Acceptance
 1. Before confirming, close or save any unsaved ChatGPT work and note only the non-secret active account label.

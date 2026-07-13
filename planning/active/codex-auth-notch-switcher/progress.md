@@ -59,6 +59,8 @@
 - 恢复 task 后重新检查了当前 `dev`、PR #4、源代码、设计文件与实机宿主；发现 `/Applications/ChatGPT.app` 当前 metadata 与精确 ChatGPT host policy 一致。
 - 按原始目标复核后确认多账号快照、独立 usage、expanded notch 选择与显式 ChatGPT relaunch 已有实现和证据。
 - 发现一个与“在 notch 上查看不同账号 usage”直接相关的可用性缺口：rail 只显示已缓存 snapshot，没有自己的 refresh action；将以一个窄 implementation slice 补齐，不改变 auth/relaunch 边界。
+- 已在隔离 worktree 完成 bounded refresh slice，Chief 以 `ed2e1ee` 集成；root 独立 harness 与 fresh universal build 均通过，proof target 达成。
+- 该 slice 不涉及真实 auth、ChatGPT 进程、CLI 进程或外部系统写入；当前原始功能目标的剩余外部 gate 仍只有 PR merge/release。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)
