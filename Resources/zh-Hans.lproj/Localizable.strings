@@ -58,6 +58,7 @@
 "Unknown plan" = "未知套餐";
 "No stored accounts" = "暂无已存账号";
 "Accounts" = "账号";
+"Refresh account usage" = "刷新账号用量";
 "Switch & relaunch ChatGPT" = "切换并重启 ChatGPT";
 "ChatGPT will quit and reopen to apply this account." = "ChatGPT 将退出并重新打开以应用此账号。";
 "Restore previous local account" = "恢复上一个本地账号";

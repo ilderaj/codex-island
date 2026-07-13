@@ -42,7 +42,30 @@ struct CodexAccountRail: View {
                 .font(Typography.rowTitle)
                 .foregroundStyle(.white.opacity(0.92))
             Spacer()
+            Button {
+                Task { await store.refreshAllUsage() }
+            } label: {
+                Group {
+                    if isRefreshing {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                }
+                .frame(width: 18, height: 18)
+                .foregroundStyle(.white.opacity(isRefreshing ? 0.45 : 0.7))
+            }
+            .buttonStyle(.plain)
+            .help(L10n.tr("Refresh account usage"))
+            .accessibilityLabel(L10n.tr("Refresh account usage"))
+            .disabled(store.registry.accounts.isEmpty || isRefreshing)
         }
+    }
+
+    private var isRefreshing: Bool {
+        !store.refreshingAccountKeys.isEmpty
     }
 
     @ViewBuilder
