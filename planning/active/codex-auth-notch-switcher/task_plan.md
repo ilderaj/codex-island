@@ -58,12 +58,12 @@ Phase 5: Verification and Delivery
 - **Status:** in_progress
 
 ### Delivery Readiness
-- Delivery head: remote `origin/dev` at `25f3b6a`; this receipt will advance the branch after push.
+- Delivery head: remote `origin/dev` at `cfd7676`; PR #4 head matches this receipt.
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
 - Remaining gates: the separate explicit merge/release decision only.
-- PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) remains the fork-local delivery target. Push/PR authorization and user-controlled runtime proof are satisfied; merge/release remains a human gate.
+- PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) remains OPEN with `dev -> main` on the fork; GitHub reports no checks, and merge/release remains a human gate.
 - Runtime checkpoint cleared: the user confirmed that both the normal ChatGPT profile surface and a fresh `codex login status` invocation reflected the selected target account. No sensitive account values were recorded.
 - Release checkpoint: all non-destructive implementation, build, test, visual-layout acceptance, push, PR, review, review-follow-up, and runtime proof work is complete. Do not merge or release without explicit authorization.
 

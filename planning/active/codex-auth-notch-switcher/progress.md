@@ -52,6 +52,7 @@
 - 已将 task 状态从 blocked 恢复为 active；实现、测试、构建、视觉验收、review、push、PR 与 runtime proof 均完成。
 - 当前仅保留显式 merge/release gate；不得在没有用户授权时执行 merge、release 或 post-merge adoption 操作。
 - 远端核对：`origin/dev` 当前为 `25f3b6a`；默认 `gh` repo 解析到了只读 upstream，后续 GitHub 查询应显式指定 fork repo。
+- Durable receipt `cfd7676` 已 push 至 `origin/dev`；显式 fork 查询确认 PR #4 为 OPEN、`dev -> main`，未报告 CI checks，未执行 merge。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)

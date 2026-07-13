@@ -153,6 +153,7 @@
 - 用户确认正常 ChatGPT profile 界面与新的 `codex login status` invocation 均反映选定的目标账号；这两项 readback 共同关闭了真实 runtime proof gate。
 - 未记录邮箱、token、auth JSON、账号 ID 或其他敏感值；没有新增真实 host/process 操作。
 - 当前只剩显式 merge/release gate；PR #4 仍以 fork-local `dev -> main` 为交付目标。
+- Receipt commit `cfd7676` 已成功 push 至 `origin/dev`。显式指定 fork 查询确认 PR #4 仍为 OPEN，head 为 `dev`、base 为 `main`；当前未报告 CI checks，未执行 merge。
 
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
