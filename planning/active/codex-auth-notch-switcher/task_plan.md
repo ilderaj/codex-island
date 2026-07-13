@@ -50,6 +50,7 @@ Phase 5: Verification and Delivery
 
 ### Phase 5: Verification and Delivery
 - [x] Resolve the user-reported first expanded-usage page occlusion in both single- and dual-provider states.
+- [ ] Close the audit gap by exposing per-account usage refresh directly in the expanded notch account rail.
 - [x] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
 - [x] Commit, push `dev`, and open [PR #4](https://github.com/ilderaj/codex-island/pull/4) from `ilderaj/codex-island:dev` into `main`.
 - [x] Complete independent PR review/reconciliation: two actionable rail/recovery findings were fixed, re-verified, and pushed to PR #4.

@@ -54,6 +54,11 @@
 - 远端核对：`origin/dev` 当前为 `25f3b6a`；默认 `gh` repo 解析到了只读 upstream，后续 GitHub 查询应显式指定 fork repo。
 - Durable receipt `cfd7676` 已 push 至 `origin/dev`；显式 fork 查询确认 PR #4 为 OPEN、`dev -> main`，未报告 CI checks，未执行 merge。
 - 后续 planning receipt `a078df8` 也已 push；task plan 保持使用不易过期的“latest durable planning receipt”表述。
+
+### Current-state audit and bounded follow-up - 2026-07-13
+- 恢复 task 后重新检查了当前 `dev`、PR #4、源代码、设计文件与实机宿主；发现 `/Applications/ChatGPT.app` 当前 metadata 与精确 ChatGPT host policy 一致。
+- 按原始目标复核后确认多账号快照、独立 usage、expanded notch 选择与显式 ChatGPT relaunch 已有实现和证据。
+- 发现一个与“在 notch 上查看不同账号 usage”直接相关的可用性缺口：rail 只显示已缓存 snapshot，没有自己的 refresh action；将以一个窄 implementation slice 补齐，不改变 auth/relaunch 边界。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)

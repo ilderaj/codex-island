@@ -155,6 +155,12 @@
 - 当前只剩显式 merge/release gate；PR #4 仍以 fork-local `dev -> main` 为交付目标。
 - Receipt commit `cfd7676` 已成功 push 至 `origin/dev`。显式指定 fork 查询确认 PR #4 仍为 OPEN，head 为 `dev`、base 为 `main`；当前未报告 CI checks，未执行 merge。
 
+## Findings Record: 2026-07-13 current-state audit
+- 实机只读检查确认 `/Applications/ChatGPT.app` 的 `CFBundleDisplayName`/`CFBundleName` 为 `ChatGPT`、`CFBundleExecutable` 为 `ChatGPT`、bundle identifier 为 `com.openai.codex`；运行中的主进程路径也匹配该 app。当前精确路径宿主策略与合并后的 bundle 事实一致。
+- 当前实现已支持通过多次导入当前 `~/.codex/auth.json` 保存多个快照，并通过每个快照的 token 拉取并展示独立 usage；expanded Usage 的账号 rail 已支持浏览、选择和显式切换确认。
+- 发现可用性缺口：账号 rail 没有直接刷新所有已保存账号 usage 的入口，用户必须绕到 Settings 执行 `Refresh All`。Pencil 的账号 rail 设计已有 refresh 状态/affordance，下一 slice 将把刷新动作接回 notch。
+- 当前架构刻意不终止任意 Codex CLI 进程；合并宿主由精确的 ChatGPT app 重启，CLI 通过用户新开 invocation 读取本地 auth。该边界与实机 bundle 事实及已完成的 runtime readback 一致。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
