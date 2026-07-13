@@ -46,6 +46,12 @@
   - 隔离 follow-up 在 RED/GREEN 后集成为 `76ec9c0`：成功 relaunch 尝试后 rail 重新显示显式确认入口；host 已终止的 launch-failure 恢复显示手动重开提示。Chief full harness 与 fresh build 通过，第二轮独立只读 re-review 无 P0/P1/P2；PR review/reconciliation 已完成。
   - 为剩余用户控制 runtime gate 固化了非敏感验收/回退步骤：正常 ChatGPT profile readback 与新 `codex login status` invocation 分别验证 host 和 CLI；不终止或猜测任何 CLI 进程。
   - 连续三次等待同一 user-controlled runtime proof 后，任务已置为 blocked。远端 PR #4 仍 open；没有 merge、release、真实 auth 写入或 ChatGPT 进程操作。
+
+### Runtime proof closure - 2026-07-13
+- 用户确认正常 ChatGPT profile 与新的 `codex login status` 均反映选定的目标账号，runtime proof 已通过。
+- 已将 task 状态从 blocked 恢复为 active；实现、测试、构建、视觉验收、review、push、PR 与 runtime proof 均完成。
+- 当前仅保留显式 merge/release gate；不得在没有用户授权时执行 merge、release 或 post-merge adoption 操作。
+- 远端核对：`origin/dev` 当前为 `25f3b6a`；默认 `gh` repo 解析到了只读 upstream，后续 GitHub 查询应显式指定 fork repo。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)

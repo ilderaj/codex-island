@@ -4,9 +4,9 @@
 Deliver a verified macOS Codex Island flow that can retain multiple local Codex/ChatGPT account snapshots, show per-account usage in the notch UI, switch the active account safely, and apply the selected authentication to the current ChatGPT/Codex host with an explicit, reversible relaunch strategy.
 
 ## Current State
-Status: blocked
+Status: active
 Archive Eligible: no
-Close Reason: Awaiting the user-controlled runtime proof that real ChatGPT and a fresh Codex CLI invocation read the selected local auth.
+Close Reason:
 Reconcile: final independent review reconciled; implementation plan frozen
 
 ## Routing Decision
@@ -50,7 +50,7 @@ Phase 5: Verification and Delivery
 
 ### Phase 5: Verification and Delivery
 - [x] Resolve the user-reported first expanded-usage page occlusion in both single- and dual-provider states.
-- [ ] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
+- [x] Run targeted tests, full repository tests, build/launch verification, and manual host-path proof appropriate to the selected strategy.
 - [x] Commit, push `dev`, and open [PR #4](https://github.com/ilderaj/codex-island/pull/4) from `ilderaj/codex-island:dev` into `main`.
 - [x] Complete independent PR review/reconciliation: two actionable rail/recovery findings were fixed, re-verified, and pushed to PR #4.
 - [ ] Request the explicit merge/release gate after the user-controlled runtime proof is recorded.
@@ -58,13 +58,14 @@ Phase 5: Verification and Delivery
 - **Status:** in_progress
 
 ### Delivery Readiness
-- Pre-audit delivery head: `dev` at `71bca9d`, ahead of `origin/dev` by 15 commits.
+- Delivery head: remote `origin/dev` at `25f3b6a`; this receipt will advance the branch after push.
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
-- Remaining gates: user-controlled confirmed ChatGPT relaunch proof; then a separate merge/release decision.
-- PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) is open. Push/PR authorization is satisfied; user-controlled runtime proof and a separate merge/release decision remain required.
-- Blocked checkpoint: all non-destructive implementation, build, test, visual-layout acceptance, push, PR, review, and review-follow-up work is complete at remote `dev` head `25f3b6a`. Resume only when the user reports the runtime proof result or explicitly changes the release decision.
+- Remaining gates: the separate explicit merge/release decision only.
+- PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) remains the fork-local delivery target. Push/PR authorization and user-controlled runtime proof are satisfied; merge/release remains a human gate.
+- Runtime checkpoint cleared: the user confirmed that both the normal ChatGPT profile surface and a fresh `codex login status` invocation reflected the selected target account. No sensitive account values were recorded.
+- Release checkpoint: all non-destructive implementation, build, test, visual-layout acceptance, push, PR, review, review-follow-up, and runtime proof work is complete. Do not merge or release without explicit authorization.
 
 ### Latest Verification Receipt
 - A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.

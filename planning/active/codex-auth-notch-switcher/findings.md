@@ -149,6 +149,11 @@
 - 同一 user-controlled runtime-proof gate 已连续三次阻止后续 release work。任务因此被如实置为 blocked，而非把 launch attempt、构建成功或 PR `CLEAN` 状态替代为真实 auth reload evidence。
 - 恢复输入：用户报告 ChatGPT profile 与新的 `codex login status` 是否反映选定账户，或明确说明 runtime proof 未通过。随后 Chief 将记录结果、处理必要恢复，并请求独立的 merge/release 授权。
 
+## Findings Record: 2026-07-13
+- 用户确认正常 ChatGPT profile 界面与新的 `codex login status` invocation 均反映选定的目标账号；这两项 readback 共同关闭了真实 runtime proof gate。
+- 未记录邮箱、token、auth JSON、账号 ID 或其他敏感值；没有新增真实 host/process 操作。
+- 当前只剩显式 merge/release gate；PR #4 仍以 fork-local `dev -> main` 为交付目标。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
