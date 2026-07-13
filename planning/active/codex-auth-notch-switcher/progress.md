@@ -62,6 +62,10 @@
 - 已在隔离 worktree 完成 bounded refresh slice，Chief 以 `ed2e1ee` 集成；root 独立 harness 与 fresh universal build 均通过，proof target 达成。
 - 该 slice 不涉及真实 auth、ChatGPT 进程、CLI 进程或外部系统写入；当前原始功能目标的剩余外部 gate 仍只有 PR merge/release。
 - 文档 worktree slice 已由 Chief 以 `17ab444` 集成，README 与实现行为对齐；最新 dev 已 push，并复核 PR #4 仍 OPEN、`dev -> main`，未执行 merge/release。
+
+### Blocked checkpoint - 2026-07-13
+- 同一 merge/release gate 已在恢复后的三轮 continuation 中重复出现：PR #4 clean/mergeable，但没有用户明确授权。
+- 已将 task 状态改为 blocked；代码、设计、plan、review、验证、runtime proof、commit、push 与 PR 均完成，等待外部 gate 变化。
 - Files created/modified:
   - `planning/active/codex-auth-notch-switcher/task_plan.md` (created)
   - `planning/active/codex-auth-notch-switcher/findings.md` (created)

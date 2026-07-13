@@ -4,9 +4,9 @@
 Deliver a verified macOS Codex Island flow that can retain multiple local Codex/ChatGPT account snapshots, show per-account usage in the notch UI, switch the active account safely, and apply the selected authentication to the current ChatGPT/Codex host with an explicit, reversible relaunch strategy.
 
 ## Current State
-Status: active
+Status: blocked
 Archive Eligible: no
-Close Reason:
+Close Reason: Awaiting explicit human merge/release authorization; PR #4 is clean and mergeable but remains open.
 Reconcile: final independent review reconciled; implementation plan frozen
 
 ## Routing Decision
@@ -56,17 +56,18 @@ Phase 5: Verification and Delivery
 - [x] Complete independent PR review/reconciliation: two actionable rail/recovery findings were fixed, re-verified, and pushed to PR #4.
 - [ ] Request the explicit merge/release gate after the user-controlled runtime proof is recorded.
 - [ ] Perform post-merge adoption checks before closure.
-- **Status:** in_progress
+- **Status:** blocked
 
 ### Delivery Readiness
 - Delivery head: remote `origin/dev` contains the latest durable planning receipt; PR #4 tracks the fork-local `dev` branch.
 - Fork target: `ilderaj/codex-island`; default branch `main`; current `dev` tracks `origin/dev`.
 - Recommended PR route after approval: push `dev` to `origin/dev`, then open `ilderaj/codex-island:dev` into `ilderaj/codex-island:main`.
 - Upstream `ericjypark/codex-island` is read-only for the current GitHub identity and is not a write target.
-- Remaining gates: the separate explicit merge/release decision only.
+- Remaining gates: the separate explicit merge/release decision only; this is the current blocker.
 - PR state: [#4](https://github.com/ilderaj/codex-island/pull/4) remains OPEN with `dev -> main` on the fork; GitHub reports no checks, and merge/release remains a human gate.
 - Runtime checkpoint cleared: the user confirmed that both the normal ChatGPT profile surface and a fresh `codex login status` invocation reflected the selected target account. No sensitive account values were recorded.
 - Release checkpoint: all non-destructive implementation, build, test, visual-layout acceptance, push, PR, review, review-follow-up, and runtime proof work is complete. Do not merge or release without explicit authorization.
+- Blocked checkpoint: the same merge/release authorization gate remained unresolved across three resumed continuation rounds; no further source work is warranted until the gate changes.
 
 ### Latest Verification Receipt
 - A final coordinator regression test proves a failed initial target validation keeps the active local account unchanged, performs no host I/O, and leaves `didSwitchLocallyForCurrentApply` false so the rail cannot expose a local restore path.

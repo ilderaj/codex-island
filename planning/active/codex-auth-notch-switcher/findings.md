@@ -168,6 +168,10 @@
 - README receipt `17ab444` 已集成；中英文使用说明现在明确 rail 可刷新所有已保存账号，且不会修改当前 active auth。
 - 最新 durable receipt 已随 `dev` push 至 `a8b1964`；显式 fork 查询确认 PR #4 仍 OPEN、`dev -> main`，未执行 merge/release。
 
+## Findings Record: 2026-07-13 blocked checkpoint
+- 恢复后的连续三轮均核对到相同外部事实：PR #4 为 OPEN、`mergeable=true`、`mergeable_state=clean`，但没有显式 merge/release 授权。
+- 按任务治理规则将 task 保持为 blocked；不再重复修改源码、重复运行相同验证或执行 merge。恢复条件是明确的人类 merge/release 决策或外部 PR 状态变化。
+
 ## Destructive Operations Log
 | Command | Target | Checkpoint | Rollback |
 |---|---|---|---|
