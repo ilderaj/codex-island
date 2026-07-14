@@ -9,14 +9,20 @@ final class CodexAccountStore: ObservableObject {
     @Published var refreshingAccountKeys: Set<String> = []
 
     let paths: CodexAccountPaths
+    private let writer: CodexAccountDataWriting
 
-    init(paths: CodexAccountPaths = CodexAccountPaths()) throws {
+    init(
+        paths: CodexAccountPaths = CodexAccountPaths(),
+        writer: CodexAccountDataWriting = LiveCodexAccountDataWriter()
+    ) throws {
         self.paths = paths
+        self.writer = writer
         self.registry = try Self.loadRegistry(paths: paths)
     }
 
     private init(registry: CodexAccountRegistry) {
         self.paths = CodexAccountPaths()
+        self.writer = LiveCodexAccountDataWriter()
         self.registry = registry
     }
 
@@ -36,7 +42,12 @@ final class CodexAccountStore: ObservableObject {
             principalId: context.identity.principalId,
             identityConfidence: context.identity.confidence,
             email: context.identity.email,
-            label: label.isEmpty ? defaultLabel(for: context) : label,
+            label: Self.sanitizedLabel(
+                label,
+                accountKey: context.accountKey,
+                chatgptAccountId: context.identity.chatgptAccountId,
+                principalId: context.identity.principalId
+            ),
             plan: context.identity.plan,
             createdAt: now,
             lastUsedAt: now,
@@ -63,32 +74,55 @@ final class CodexAccountStore: ObservableObject {
         }
 
         let previousRegistry = registry
-        let previousAuth = try? Data(contentsOf: paths.activeAuthPath)
-        try importUnknownCurrentAuthIfNeeded()
-
-        var next = registry
-        let previousActive = next.activeAccountKey
-        for i in next.accounts.indices where next.accounts[i].accountKey == accountKey {
-            next.accounts[i].lastUsedAt = Date()
-            next.accounts[i].lastError = nil
+        let previousRegistryData = try dataIfPresent(at: paths.registryPath)
+        let previousAuthData = try dataIfPresent(at: paths.activeAuthPath)
+        let selectedData = try Data(contentsOf: targetSnapshot)
+        let unknownCurrentAuth = try unknownCurrentAuth(from: previousAuthData)
+        let previousUnknownSnapshotData = try unknownCurrentAuth.map {
+            try dataIfPresent(at: paths.snapshotPath(for: $0.context.accountKey))
         }
-        if previousActive != nil && previousActive != accountKey {
-            next.previousActiveAccountKey = previousActive
-        }
-        next.activeAccountKey = accountKey
 
         do {
-            let selectedData = try Data(contentsOf: targetSnapshot)
+            var next = previousRegistry
+            if let unknownCurrentAuth {
+                try writePrivate(unknownCurrentAuth.data, to: paths.snapshotPath(for: unknownCurrentAuth.context.accountKey))
+                upsert(unknownRecord(for: unknownCurrentAuth.context), in: &next)
+                next.activeAccountKey = unknownCurrentAuth.context.accountKey
+            }
+
+            let previousActive = next.activeAccountKey
+            for i in next.accounts.indices where next.accounts[i].accountKey == accountKey {
+                next.accounts[i].lastUsedAt = Date()
+                next.accounts[i].lastError = nil
+            }
+            if previousActive != nil && previousActive != accountKey {
+                next.previousActiveAccountKey = previousActive
+            }
+            next.activeAccountKey = accountKey
+
             try writePrivate(selectedData, to: paths.activeAuthPath)
             registry = next
             try saveRegistry()
+            lastError = nil
         } catch {
-            if let previousAuth {
-                try? writePrivate(previousAuth, to: paths.activeAuthPath)
+            var recoveryFailed = false
+            if !restorePrivate(previousAuthData, to: paths.activeAuthPath) {
+                recoveryFailed = true
+            }
+            if let unknownCurrentAuth,
+               !restorePrivate(
+                    previousUnknownSnapshotData ?? nil,
+                    to: paths.snapshotPath(for: unknownCurrentAuth.context.accountKey)
+               ) {
+                recoveryFailed = true
+            }
+            if !restorePrivate(previousRegistryData, to: paths.registryPath) {
+                recoveryFailed = true
             }
             registry = previousRegistry
-            try? saveRegistry()
-            lastError = CodexAccountError.inconsistentSwitchState.localizedDescription
+            lastError = recoveryFailed
+                ? CodexAccountError.durableRecoveryRequired.localizedDescription
+                : CodexAccountError.inconsistentSwitchState.localizedDescription
             throw error
         }
     }
@@ -144,14 +178,17 @@ final class CodexAccountStore: ObservableObject {
         try? saveRegistry()
     }
 
-    private func importUnknownCurrentAuthIfNeeded() throws {
-        guard let data = try? Data(contentsOf: paths.activeAuthPath),
+    private func unknownCurrentAuth(from data: Data?) throws -> (data: Data, context: CodexAuthContext)? {
+        guard let data,
               let context = try? CodexAuthParser.parseAuth(data: data),
               !registry.accounts.contains(where: { $0.accountKey == context.accountKey }) else {
-            return
+            return nil
         }
-        try writePrivate(data, to: paths.snapshotPath(for: context.accountKey))
-        var record = CodexAccountRecord(
+        return (data, context)
+    }
+
+    private func unknownRecord(for context: CodexAuthContext) -> CodexAccountRecord {
+        CodexAccountRecord(
             accountKey: context.accountKey,
             chatgptUserId: context.identity.chatgptUserId,
             chatgptAccountId: context.identity.chatgptAccountId,
@@ -166,10 +203,11 @@ final class CodexAccountStore: ObservableObject {
             lastUsage: nil,
             lastError: nil
         )
-        record.lastUsedAt = Date()
-        upsert(record, in: &registry)
-        registry.activeAccountKey = context.accountKey
-        try saveRegistry()
+    }
+
+    private func dataIfPresent(at url: URL) throws -> Data? {
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+        return try Data(contentsOf: url)
     }
 
     private static func loadRegistry(paths: CodexAccountPaths) throws -> CodexAccountRegistry {
@@ -205,11 +243,24 @@ final class CodexAccountStore: ObservableObject {
             at: url.deletingLastPathComponent(),
             withIntermediateDirectories: true
         )
-        try data.write(to: url, options: [.atomic])
+        try writer.write(data, to: url)
         try? FileManager.default.setAttributes(
             [.posixPermissions: NSNumber(value: Int16(0o600))],
             ofItemAtPath: url.path
         )
+    }
+
+    private func restorePrivate(_ data: Data?, to url: URL) -> Bool {
+        do {
+            if let data {
+                try writePrivate(data, to: url)
+            } else if FileManager.default.fileExists(atPath: url.path) {
+                try FileManager.default.removeItem(at: url)
+            }
+            return true
+        } catch {
+            return (try? dataIfPresent(at: url)) == data
+        }
     }
 
     private func upsert(_ record: CodexAccountRecord, in registry: inout CodexAccountRegistry) {
@@ -226,8 +277,33 @@ final class CodexAccountStore: ObservableObject {
         }
     }
 
-    private func defaultLabel(for context: CodexAuthContext) -> String {
-        context.identity.email ?? "Codex Account"
+    static func defaultLabel(forAccountKey accountKey: String) -> String {
+        "Codex Account \(accountKey.suffix(6))"
+    }
+
+    static func displayLabel(for account: CodexAccountRecord) -> String {
+        sanitizedLabel(
+            account.label,
+            accountKey: account.accountKey,
+            chatgptAccountId: account.chatgptAccountId,
+            principalId: account.principalId
+        )
+    }
+
+    private static func sanitizedLabel(
+        _ label: String,
+        accountKey: String,
+        chatgptAccountId: String?,
+        principalId: String?
+    ) -> String {
+        let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
+        let rawIdentity = [accountKey, chatgptAccountId, principalId].compactMap { $0 }
+        guard !trimmed.isEmpty,
+              !trimmed.contains("@"),
+              !rawIdentity.contains(where: { !$0.isEmpty && trimmed.contains($0) }) else {
+            return defaultLabel(forAccountKey: accountKey)
+        }
+        return trimmed
     }
 }
 
@@ -235,6 +311,7 @@ enum CodexAccountError: LocalizedError {
     case accountNotFound
     case snapshotMissing
     case inconsistentSwitchState
+    case durableRecoveryRequired
 
     var errorDescription: String? {
         switch self {
@@ -244,6 +321,8 @@ enum CodexAccountError: LocalizedError {
             return "Codex account snapshot missing"
         case .inconsistentSwitchState:
             return "Codex account switch may be inconsistent"
+        case .durableRecoveryRequired:
+            return "Codex account switch requires durable recovery"
         }
     }
 }
