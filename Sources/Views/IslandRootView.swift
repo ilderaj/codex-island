@@ -387,18 +387,12 @@ private struct GlowLayer: View {
     @ObservedObject private var lowPower = LowPowerModeStore.shared
     @ObservedObject private var alerts = AlertEngine.shared
     @ObservedObject private var occlusion = WindowOcclusionStore.shared
-    @ObservedObject private var reduceMotion = ReduceMotionStore.shared
 
     var body: some View {
         ZStack {
-            // Reduce Motion borrows LPM's event predicate: the continuous
-            // ambient orbit stops, but the sweep still runs during a
-            // fetch/hover/alert — it's the loading indicator, and
-            // comprehension-aiding motion stays under Reduce Motion.
             LoadingSweep(
                 active: !occlusion.isOccluded
-                    && (lowPower.effectiveEnabled || reduceMotion.enabled
-                        ? glowEventActive : true),
+                    && (lowPower.effectiveEnabled ? glowEventActive : true),
                 tint: glowColor
             )
 

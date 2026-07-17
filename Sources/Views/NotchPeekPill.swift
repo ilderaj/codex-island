@@ -130,17 +130,13 @@ struct NotchPeekPill: View {
 
 private struct LoadingDot: View {
     @State private var pulsing = false
-    @ObservedObject private var reduceMotion = ReduceMotionStore.shared
 
     var body: some View {
         Circle()
             .fill(.white.opacity(0.55))
             .frame(width: 6, height: 6)
-            // Reduce Motion: hold a steady mid-opacity dot — still reads
-            // as "loading", minus the pulse loop.
-            .opacity(reduceMotion.enabled ? 0.55 : (pulsing ? 0.30 : 0.85))
+            .opacity(pulsing ? 0.30 : 0.85)
             .onAppear {
-                guard !reduceMotion.enabled else { return }
                 withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) {
                     pulsing = true
                 }

@@ -61,10 +61,8 @@ struct PagedContent: View {
                 // back, so the dead-end gesture reads as "you're at the
                 // edge" instead of a dropped input. The bumpOffset == 0
                 // guard swallows Shift+wheel tick spam while a bump is
-                // already in flight; the Reduce Motion guard keeps the
-                // page row still (the page dots already say "last page").
-                guard let bump, bumpOffset == 0,
-                      !ReduceMotionStore.shared.enabled else { return }
+                // already in flight.
+                guard let bump, bumpOffset == 0 else { return }
                 withAnimation(.easeOut(duration: 0.10)) {
                     bumpOffset = bump.direction > 0 ? -12 : 12
                 }

@@ -74,12 +74,6 @@ struct CountUpDollar: View {
     }
 
     private func startAnimation() {
-        // Reduce Motion: no slot-machine ride — lastSeenTarget is already
-        // the final value, so the static branch renders it directly.
-        guard !ReduceMotionStore.shared.enabled else {
-            animating = false
-            return
-        }
         animating = true
         let token = UUID()
         animationToken = token

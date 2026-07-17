@@ -1,15 +1,6 @@
 import SwiftUI
-import AppKit
 
 extension Animation {
-    /// System-wide Reduce Motion. Movement tokens below fall back to
-    /// short strong-ease-out crossfades (no spring overshoot, shorter
-    /// travel time); opacity/blur tokens stay — reduced motion means
-    /// fewer and gentler animations, not zero.
-    private static var reduceMotion: Bool {
-        NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
-    }
-
     /// Emil Kowalski's strong ease-out: cubic-bezier(0.23, 1, 0.32, 1).
     /// Punchier than the built-in .easeOut — more visible "settle" at the
     /// end. Use for non-spring UI transitions under 300ms.
@@ -25,35 +16,19 @@ extension Animation {
 
     /// Horizontal page movement. Tuned between the too-snappy drawer curve
     /// and the slower full ease-in-out pass: responsive start, quiet settle.
-    static var pageSwipe: Animation {
-        reduceMotion
-            ? Animation.timingCurve(0.23, 1, 0.32, 1, duration: 0.20)
-            : Animation.timingCurve(0.25, 0.82, 0.25, 1, duration: 0.36)
-    }
+    static let pageSwipe = Animation.timingCurve(0.25, 0.82, 0.25, 1, duration: 0.36)
 
     /// Asymmetric springs on shape morph. Opening is leisurely (the user is
     /// reaching toward the panel and tracks the morph); closing is snappy
     /// (the system responds to the user moving away).
-    static var openMorph: Animation {
-        reduceMotion
-            ? Animation.timingCurve(0.23, 1, 0.32, 1, duration: 0.22)
-            : Animation.spring(response: 0.42, dampingFraction: 0.82)
-    }
-    static var closeMorph: Animation {
-        reduceMotion
-            ? Animation.timingCurve(0.23, 1, 0.32, 1, duration: 0.18)
-            : Animation.spring(response: 0.30, dampingFraction: 0.88)
-    }
+    static let openMorph = Animation.spring(response: 0.42, dampingFraction: 0.82)
+    static let closeMorph = Animation.spring(response: 0.30, dampingFraction: 0.88)
 
     /// Selected-day detail is a small disclosure inside an already-open
     /// panel, so it should be faster and more damped than the full island
     /// open. The collapse is shorter because exits should get out of the
     /// way before navigation continues.
-    static var detailExpand: Animation {
-        reduceMotion
-            ? Animation.timingCurve(0.23, 1, 0.32, 1, duration: 0.20)
-            : Animation.spring(response: 0.36, dampingFraction: 0.94)
-    }
+    static let detailExpand = Animation.spring(response: 0.36, dampingFraction: 0.94)
     static let detailCollapse = Animation.timingCurve(0.23, 1, 0.32, 1, duration: 0.20)
 }
 

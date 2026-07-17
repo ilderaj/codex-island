@@ -8,12 +8,11 @@ import SwiftUI
 struct LiveDot: View {
     let active: Bool
     @ObservedObject private var store = UsageStore.shared
-    @ObservedObject private var reduceMotion = ReduceMotionStore.shared
     @State private var syncBump: CGFloat = 1.0
 
     var body: some View {
         Group {
-            if active && !reduceMotion.enabled {
+            if active {
                 TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
                     let phase = context.date.timeIntervalSinceReferenceDate
                     // sin(phase * 2.6) ≈ 2.4s breath cycle. Slow enough to
@@ -30,12 +29,6 @@ struct LiveDot: View {
                     .frame(width: 6, height: 6)
                     .shadow(color: IslandColor.liveTeal.opacity(0.55), radius: 3)
                 }
-            } else if active {
-                // Reduce Motion: steady teal, no breath, no halo pulse.
-                Circle()
-                    .fill(IslandColor.liveTeal.opacity(0.9))
-                    .frame(width: 6, height: 6)
-                    .shadow(color: IslandColor.liveTeal.opacity(0.55), radius: 3)
             } else {
                 // Static dim circle when inactive — no TimelineView, no
                 // breath cycle, no halo. Cheap.
@@ -49,7 +42,6 @@ struct LiveDot: View {
         // back to 1.0 over strongEaseOut. Reads as "data just arrived" —
         // the breath continues underneath, the bump rides on top.
         .onChange(of: store.lastUpdated) { _ in
-            guard !reduceMotion.enabled else { return }
             withAnimation(.strongEaseOut) { syncBump = 1.18 }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
                 withAnimation(.strongEaseOut) { syncBump = 1.0 }
