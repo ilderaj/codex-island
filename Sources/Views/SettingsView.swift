@@ -19,9 +19,9 @@ struct SettingsView: View {
     @ObservedObject private var spacing = IslandSpacingStore.shared
     @ObservedObject private var usageDisplay = UsageDisplayModeStore.shared
     @ObservedObject private var targetDisplay = IslandTargetDisplayStore.shared
+    @ObservedObject private var codexAccounts = CodexAccountStore.shared
     @ObservedObject private var appLanguage = AppLanguageStore.shared
     @ObservedObject private var usage = UsageStore.shared
-    @ObservedObject private var codexAccounts = CodexAccountStore.shared
     @ObservedObject private var cost = CostStore.shared
     @ObservedObject private var updater = UpdaterController.shared
 
@@ -119,8 +119,8 @@ struct SettingsView: View {
                         }
                 }
         }
-        .buttonStyle(.plain)
-        .animation(.easeOut(duration: 0.12), value: isOn)
+        .buttonStyle(PressableButtonStyle(scale: 0.97))
+        .animation(.hoverFade, value: isOn)
         .accessibilityLabel(L10n.tr("%@ tab", L10n.tr(tab.label)))
         .accessibilityAddTraits(isOn ? [.isButton, .isSelected] : .isButton)
     }

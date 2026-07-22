@@ -31,18 +31,11 @@ struct AppUsage {
     /// Provider-reported plan tier — Claude's `subscriptionType` (free/pro/max)
     /// or Codex's `plan_type` (free/plus/pro). nil when unknown.
     var plan: String?
-    var codexResetCredits: CodexResetCreditsSnapshot?
 
-    init(
-        fiveHour: WindowUsage,
-        weekly: WindowUsage,
-        plan: String? = nil,
-        codexResetCredits: CodexResetCreditsSnapshot? = nil
-    ) {
+    init(fiveHour: WindowUsage, weekly: WindowUsage, plan: String? = nil) {
         self.fiveHour = fiveHour
         self.weekly = weekly
         self.plan = plan
-        self.codexResetCredits = codexResetCredits
     }
 
     static let empty = AppUsage(fiveHour: .unknown, weekly: .unknown)

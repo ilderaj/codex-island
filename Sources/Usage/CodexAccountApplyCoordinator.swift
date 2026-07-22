@@ -4,18 +4,17 @@ import Foundation
 enum ChatGPTHostApplyState: Equatable {
     case idle
     case validatingTarget
+    case requestingHostTermination
+    case cancelled
+    case targetDrift
     case switchingLocally
     case localSwitchComplete
-    case terminatingHost
     case hostTerminated
     case launchAttempted
     case authReloadUnverified
     case localSwitchFailed(String)
-    case terminationFailed(String)
     case launchFailed(String)
     case localRestoreFailed(String)
-
-    var claimsAuthReload: Bool { false }
 }
 
 @MainActor
@@ -24,16 +23,11 @@ final class CodexAccountApplyCoordinator: ObservableObject {
 
     @Published private(set) var state: ChatGPTHostApplyState = .idle
     @Published private(set) var switchedAccountKey: String?
-    @Published private(set) var restorationRequiresManualHostLaunch = false
     @Published private(set) var didSwitchLocallyForCurrentApply = false
+    @Published private(set) var applyingAccountKey: String?
+    @Published private(set) var restorationRequiresManualHostLaunch = false
 
-    var permitsSubsequentExplicitApply: Bool {
-        state == .idle || state == .authReloadUnverified
-    }
-
-    var requiresManualHostLaunchInstruction: Bool {
-        state == .localSwitchComplete && restorationRequiresManualHostLaunch
-    }
+    var isApplying: Bool { applyingAccountKey != nil }
 
     let store: CodexAccountStore
     private let policy: ChatGPTHostTargetValidating
@@ -52,84 +46,98 @@ final class CodexAccountApplyCoordinator: ObservableObject {
     }
 
     func apply(accountKey: String) async {
+        guard applyingAccountKey == nil else { return }
+        applyingAccountKey = accountKey
+        defer { applyingAccountKey = nil }
         didSwitchLocallyForCurrentApply = false
+        hostWasTerminated = false
         restorationRequiresManualHostLaunch = false
         state = .validatingTarget
-        let initialTarget: ChatGPTHostTarget
+        let initial: ChatGPTHostTarget
         do {
-            initialTarget = try policy.validateTarget()
+            initial = try policy.validateTarget()
         } catch {
-            state = .terminationFailed("ChatGPT target could not be verified; reopen it manually")
+            state = .targetDrift
             return
         }
 
+        state = .requestingHostTermination
+        let termination = await controller.terminateApplication(at: initial)
+        switch termination {
+        case .refused, .timedOut:
+            state = .cancelled
+            return
+        case .notRunning:
+            guard targetStillMatches(initial) else {
+                state = .targetDrift
+                return
+            }
+            switchLocally(accountKey)
+        case .terminated:
+            hostWasTerminated = true
+            state = .hostTerminated
+            guard targetStillMatches(initial) else {
+                state = .targetDrift
+                return
+            }
+            guard switchLocally(accountKey) else {
+                await reopenOriginalHost(afterFailedSwitchAt: initial)
+                return
+            }
+            launchTarget = initial
+            await launch(target: initial)
+        }
+    }
+
+    func retryLaunch() async {
+        guard applyingAccountKey == nil,
+              case .launchFailed = state,
+              let target = launchTarget,
+              targetStillMatches(target) else { return }
+        applyingAccountKey = switchedAccountKey
+        defer { applyingAccountKey = nil }
+        await launch(target: target)
+    }
+
+    func restorePreviousAccount() async {
+        guard applyingAccountKey == nil, case .launchFailed = state else { return }
+        applyingAccountKey = switchedAccountKey
+        defer { applyingAccountKey = nil }
+        do {
+            try store.switchPrevious()
+            switchedAccountKey = store.registry.activeAccountKey
+            didSwitchLocallyForCurrentApply = true
+            restorationRequiresManualHostLaunch = hostWasTerminated
+            state = .localSwitchComplete
+        } catch {
+            state = .localRestoreFailed(error.localizedDescription)
+        }
+    }
+
+    private func targetStillMatches(_ expected: ChatGPTHostTarget) -> Bool {
+        (try? policy.validateTarget()) == expected
+    }
+
+    @discardableResult
+    private func switchLocally(_ accountKey: String) -> Bool {
         state = .switchingLocally
         do {
             try store.switchToAccount(accountKey)
             switchedAccountKey = accountKey
             didSwitchLocallyForCurrentApply = true
             state = .localSwitchComplete
+            return true
         } catch {
             state = .localSwitchFailed(error.localizedDescription)
-            return
+            return false
         }
-
-        let terminationTarget: ChatGPTHostTarget
-        do {
-            terminationTarget = try policy.validateTarget()
-        } catch {
-            state = .terminationFailed("ChatGPT target could not be verified; reopen it manually")
-            return
-        }
-        guard terminationTarget == initialTarget else {
-            state = .terminationFailed("ChatGPT target changed; reopen it manually")
-            return
-        }
-
-        launchTarget = terminationTarget
-        state = .terminatingHost
-        switch await controller.terminateApplication(at: terminationTarget) {
-        case .notRunning:
-            hostWasTerminated = false
-        case .terminated:
-            hostWasTerminated = true
-            state = .hostTerminated
-        case .refused:
-            state = .terminationFailed("ChatGPT refused to quit; reopen it manually")
-            return
-        case .timedOut:
-            state = .terminationFailed("ChatGPT did not quit in time; reopen it manually")
-            return
-        }
-
-        await launch(target: terminationTarget)
     }
 
-    func retryLaunch() async {
-        guard case .launchFailed = state, let previousTarget = launchTarget else { return }
-
-        let retryTarget: ChatGPTHostTarget
+    private func reopenOriginalHost(afterFailedSwitchAt target: ChatGPTHostTarget) async {
         do {
-            retryTarget = try policy.validateTarget()
+            try await controller.launchApplication(at: target)
         } catch {
-            state = .launchFailed("ChatGPT target could not be verified; reopen it manually")
-            return
-        }
-        guard retryTarget == previousTarget else {
-            state = .launchFailed("ChatGPT target changed; reopen it manually")
-            return
-        }
-        await launch(target: retryTarget)
-    }
-
-    func restorePreviousAccount() async {
-        do {
-            try store.switchPrevious()
-            switchedAccountKey = store.registry.activeAccountKey
-            restorationRequiresManualHostLaunch = hostWasTerminated
-            state = .localSwitchComplete
-        } catch {
-            state = .localRestoreFailed(error.localizedDescription)
+            state = .localSwitchFailed(error.localizedDescription)
         }
     }
 

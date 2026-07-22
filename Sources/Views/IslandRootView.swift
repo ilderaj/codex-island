@@ -15,6 +15,8 @@ struct IslandRootView: View {
     @State private var claudeLogo: NSImage?
     @State private var openaiLogo: NSImage?
 
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+
     var body: some View {
         VStack(spacing: 0) {
             // Only the rotating loading sweep needs per-frame re-renders
@@ -62,12 +64,17 @@ struct IslandRootView: View {
                     // the panel content (220ms after hover-in, immediately
                     // on hover-out) and the .frame here tracks model.size,
                     // so the halo grows/shrinks with the spring morph.
-                    IslandShape()
-                        .fill(.ultraThinMaterial)
-                        .padding(-9)
-                        .blur(radius: 8)
-                        .opacity(contentVisible ? 0.55 : 0)
-                        .allowsHitTesting(false)
+                    //
+                    // Purely decorative, so Reduce Transparency drops it
+                    // entirely — the solid black silhouette is the UI.
+                    if !reduceTransparency {
+                        IslandShape()
+                            .fill(.ultraThinMaterial)
+                            .padding(-9)
+                            .blur(radius: 8)
+                            .opacity(contentVisible ? 0.55 : 0)
+                            .allowsHitTesting(false)
+                    }
                 }
                 .overlay(alignment: .topLeading) {
                     LogoOverlay(
@@ -88,7 +95,7 @@ struct IslandRootView: View {
                     )
                 }
                 .overlay(alignment: .topLeading) {
-                    // Pill lives in the new outboard slot (the 78pt the
+                    // Pill lives in the new outboard slot (the width the
                     // silhouette grew on entering peek). 14pt inset from the
                     // silhouette's new leading edge keeps it visually
                     // breathing inside the rounded corner.
@@ -147,8 +154,13 @@ struct IslandRootView: View {
                             contentVisible = true
                         }
                     }
+                    // Guard against a hover-out landing inside the 250ms
+                    // wait: under always-show it restores the pills at peek,
+                    // and this stale callback would hide them again — leaving
+                    // the rest state pill-less until the next hover cycle.
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        withAnimation(.easeIn(duration: 0.18)) {
+                        guard model.state == .expanded else { return }
+                        withAnimation(.easeOut(duration: 0.18)) {
                             pillsVisible = false
                         }
                     }
@@ -189,10 +201,16 @@ struct IslandRootView: View {
                         withAnimation(.easeOut(duration: 0.10)) {
                             contentVisible = false
                         }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+                        // Start the shape morph after only 20ms — overlapping
+                        // with the content fade — so the silhouette begins
+                        // shrinking while the content is still fading out.
+                        // The original 100ms wait caused a visible "flash black"
+                        // because the full-size black shape was exposed for the
+                        // entire fade before the closeMorph fired.
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
                             guard !hovering else { return }
                             // Re-read restState here — the user may have flipped
-                            // the always-show toggle during the 100ms wait, and
+                            // the always-show toggle during the 20ms wait, and
                             // a captured-at-creation-time `target` would settle
                             // at the wrong state for them.
                             let target = restState

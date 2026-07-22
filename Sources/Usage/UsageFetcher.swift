@@ -14,6 +14,7 @@ enum UsageFetcher {
     }
 
     static func fetchCodex(context: CodexAuthContext) async -> AppUsage {
+
         var req = URLRequest(url: URL(string: "https://chatgpt.com/backend-api/wham/usage")!)
         req.setValue("Bearer \(context.accessToken)", forHTTPHeaderField: "Authorization")
         if let accountID = context.chatgptAccountId {
@@ -38,41 +39,24 @@ enum UsageFetcher {
                   let rl = obj["rate_limit"] as? [String: Any] else {
                 return errorPair("parse error")
             }
-            return AppUsage(
-                fiveHour: parseCodexWindow(rl["primary_window"]),
-                weekly: parseCodexWindow(rl["secondary_window"]),
-                plan: obj["plan_type"] as? String
-            )
+            var fiveHour = WindowUsage.unknown
+            var weekly = WindowUsage.unknown
+
+            for rawWindow in [rl["primary_window"], rl["secondary_window"]] {
+                guard let parsed = parseCodexWindow(rawWindow) else { continue }
+                switch parsed.duration {
+                case 18_000:
+                    fiveHour = parsed.usage
+                case 604_800:
+                    weekly = parsed.usage
+                default:
+                    continue
+                }
+            }
+
+            return AppUsage(fiveHour: fiveHour, weekly: weekly, plan: obj["plan_type"] as? String)
         } catch {
             return errorPair(error.localizedDescription)
-        }
-    }
-
-    static func fetchCodexResetCredits(
-        context: CodexAuthContext,
-        timeout: TimeInterval = 3
-    ) async -> CodexResetCreditsSnapshot? {
-        guard let url = URL(string: "https://chatgpt.com/backend-api/codex/rate-limit-reset-credits") else {
-            return nil
-        }
-
-        var req = URLRequest(url: url)
-        req.timeoutInterval = timeout
-        req.setValue("Bearer \(context.accessToken)", forHTTPHeaderField: "Authorization")
-        req.setValue("application/json", forHTTPHeaderField: "Accept")
-        req.setValue("CodexIsland", forHTTPHeaderField: "User-Agent")
-        req.setValue("codex-1", forHTTPHeaderField: "OpenAI-Beta")
-        req.setValue("Codex Desktop", forHTTPHeaderField: "originator")
-        if let accountID = context.chatgptAccountId {
-            req.setValue(accountID, forHTTPHeaderField: "ChatGPT-Account-ID")
-        }
-
-        do {
-            let (data, response) = try await URLSession.shared.data(for: req)
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else { return nil }
-            return try CodexResetCreditsResponse.decode(data: data)
-        } catch {
-            return nil
         }
     }
 
@@ -83,11 +67,67 @@ enum UsageFetcher {
         )
     }
 
-    private static func parseCodexWindow(_ obj: Any?) -> WindowUsage {
-        guard let d = obj as? [String: Any] else { return .unknown }
+    private static func readCodexAccessToken() -> String? {
+        let path = NSString("~/.codex/auth.json").expandingTildeInPath
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let tokens = json["tokens"] as? [String: Any],
+              let token = tokens["access_token"] as? String else { return nil }
+        return token
+    }
+
+    private static func parseCodexWindow(_ obj: Any?) -> (duration: Int, usage: WindowUsage)? {
+        guard let d = obj as? [String: Any],
+              let duration = (d["limit_window_seconds"] as? NSNumber)?.intValue
+        else { return nil }
         let used = (d["used_percent"] as? Double) ?? 0
         let resetAt = (d["reset_at"] as? Double).map { Date(timeIntervalSince1970: $0) }
-        return WindowUsage(usedPercent: used / 100, resetAt: resetAt, error: nil)
+        let normalized = min(1, max(0, used / 100))
+        return (duration, WindowUsage(usedPercent: normalized, resetAt: resetAt, error: nil))
+    }
+
+    static func fetchCodexResetCredits() async -> CodexResetCredits? {
+        guard let token = readCodexAccessToken() else { return nil }
+
+        var req = URLRequest(url: URL(string: "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits")!)
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: req)
+            let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+            guard status == 200,
+                  let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            else { return nil }
+
+            let availableCount = (obj["available_count"] as? Int) ?? 0
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            let fallbackFormatter = ISO8601DateFormatter()
+            fallbackFormatter.formatOptions = [.withInternetDateTime]
+
+            let rawCredits: [[String: Any]] = (obj["credits"] as? [[String: Any]]) ?? []
+            let credits: [CodexResetCredit] = rawCredits.compactMap { item -> CodexResetCredit? in
+                guard let id = item["id"] as? String,
+                      let status = item["status"] as? String,
+                      let expiresRaw = item["expires_at"] as? String,
+                      let expiresAt = formatter.date(from: expiresRaw)
+                        ?? fallbackFormatter.date(from: expiresRaw)
+                else { return nil }
+
+                return CodexResetCredit(
+                    id: id,
+                    status: status,
+                    expiresAt: expiresAt,
+                    title: item["title"] as? String ?? "",
+                    description: item["description"] as? String ?? ""
+                )
+            }
+
+            return CodexResetCredits(availableCount: availableCount, credits: credits)
+        } catch {
+            return nil
+        }
     }
 
     // MARK: - Claude
@@ -96,8 +136,8 @@ enum UsageFetcher {
     /// itself talks to api.anthropic.com/api/oauth/usage with a beta header
     /// and a User-Agent that identifies as the CLI. We replicate that.
     ///
-    /// Token acquisition (env → keychain → refresh → rotation writeback) lives
-    /// behind `ClaudeCredentials`. We hand it the usage probe and render its
+    /// Token acquisition (env → keychain, strictly read-only) lives behind
+    /// `ClaudeCredentials`. We hand it the usage probe and render its
     /// resolution: a parsed `AppUsage`, or an error caption (re-auth or last
     /// error) via `errorPair`.
     static func fetchClaude() async -> AppUsage {

@@ -3,8 +3,10 @@ import Foundation
 enum CodexAccountTests {
     final class FailingWriter: CodexAccountDataWriting {
         var failingPath: URL?
+        var writeCount = 0
 
         func write(_ data: Data, to url: URL) throws {
+            writeCount += 1
             if url == failingPath {
                 throw TestError.forcedWriteFailure
             }
@@ -377,6 +379,192 @@ enum CodexAccountTests {
             expect(false, "unknown current auth switch recovers from storage failure: \(error)")
         }
 
+        do {
+            let root = try makeTempRoot()
+            let paths = CodexAccountPaths(root: root)
+            try FileManager.default.createDirectory(at: paths.codexDirectory, withIntermediateDirectories: true)
+            try authJSON.write(to: paths.activeAuthPath)
+
+            let setupStore = try CodexAccountStore(paths: paths)
+            try setupStore.importCurrentAuth(label: "Personal")
+            let personalKey = try require(setupStore.registry.activeAccountKey, "personal malformed current auth key")
+
+            let businessAuth = sampleAuthJSON(
+                accessToken: "access-b",
+                accountID: "acct-workspace-2",
+                principalID: "principal-2",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-2",
+                    "chatgpt_plan_type": "team",
+                ])
+            )
+            try businessAuth.write(to: paths.activeAuthPath)
+            try setupStore.importCurrentAuth(label: "Business")
+            _ = try require(setupStore.registry.activeAccountKey, "business malformed current auth key")
+
+            let malformedAuth = Data("not-json".utf8)
+            try malformedAuth.write(to: paths.activeAuthPath)
+            let activeAuthBeforeSwitch = try Data(contentsOf: paths.activeAuthPath)
+            let registryBytesBeforeSwitch = try Data(contentsOf: paths.registryPath)
+
+            let writer = FailingWriter()
+            let store = try CodexAccountStore(paths: paths, writer: writer)
+            let registryBeforeSwitch = try encodedRegistry(store.registry)
+
+            do {
+                try store.switchToAccount(personalKey)
+                expect(false, "malformed current auth fails before replace")
+            } catch CodexAccountError.inconsistentSwitchState {
+                expect(true, "malformed current auth fails before replace")
+            } catch {
+                expect(false, "malformed current auth keeps switch semantics stable: \(error)")
+            }
+
+            expect(
+                try Data(contentsOf: paths.activeAuthPath) == activeAuthBeforeSwitch,
+                "malformed current auth preserves active auth bytes"
+            )
+            expect(
+                try Data(contentsOf: paths.registryPath) == registryBytesBeforeSwitch,
+                "malformed current auth preserves registry bytes"
+            )
+            expect(try encodedRegistry(store.registry) == registryBeforeSwitch, "malformed current auth preserves in-memory registry")
+            expect(writer.writeCount == 0, "malformed current auth performs zero writer calls")
+        } catch {
+            expect(false, "malformed current auth fail-before-replace: \(error)")
+        }
+
+        do {
+            let root = try makeTempRoot()
+            let paths = CodexAccountPaths(root: root)
+            try FileManager.default.createDirectory(at: paths.codexDirectory, withIntermediateDirectories: true)
+            try authJSON.write(to: paths.activeAuthPath)
+
+            let setupStore = try CodexAccountStore(paths: paths)
+            try setupStore.importCurrentAuth(label: "Personal")
+            let personalKey = try require(setupStore.registry.activeAccountKey, "personal missing-token current auth key")
+
+            let businessAuth = sampleAuthJSON(
+                accessToken: "access-b",
+                accountID: "acct-workspace-2",
+                principalID: "principal-2",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-2",
+                    "chatgpt_plan_type": "team",
+                ])
+            )
+            try businessAuth.write(to: paths.activeAuthPath)
+            try setupStore.importCurrentAuth(label: "Business")
+            _ = try require(setupStore.registry.activeAccountKey, "business missing-token current auth key")
+
+            let missingTokenAuth = sampleAuthJSON(
+                accessToken: nil,
+                accountID: "acct-workspace-3",
+                principalID: "principal-3",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-3",
+                    "chatgpt_account_id": "acct-workspace-3",
+                    "chatgpt_plan_type": "enterprise",
+                ])
+            )
+            try missingTokenAuth.write(to: paths.activeAuthPath)
+            let activeAuthBeforeSwitch = try Data(contentsOf: paths.activeAuthPath)
+            let registryBytesBeforeSwitch = try Data(contentsOf: paths.registryPath)
+
+            let writer = FailingWriter()
+            let store = try CodexAccountStore(paths: paths, writer: writer)
+            let registryBeforeSwitch = try encodedRegistry(store.registry)
+
+            do {
+                try store.switchToAccount(personalKey)
+                expect(false, "missing-token current auth fails before replace")
+            } catch CodexAccountError.inconsistentSwitchState {
+                expect(true, "missing-token current auth fails before replace")
+            } catch {
+                expect(false, "missing-token current auth keeps switch semantics stable: \(error)")
+            }
+
+            expect(
+                try Data(contentsOf: paths.activeAuthPath) == activeAuthBeforeSwitch,
+                "missing-token current auth preserves active auth bytes"
+            )
+            expect(
+                try Data(contentsOf: paths.registryPath) == registryBytesBeforeSwitch,
+                "missing-token current auth preserves registry bytes"
+            )
+            expect(try encodedRegistry(store.registry) == registryBeforeSwitch, "missing-token current auth preserves in-memory registry")
+            expect(writer.writeCount == 0, "missing-token current auth performs zero writer calls")
+        } catch {
+            expect(false, "missing-token current auth fail-before-replace: \(error)")
+        }
+
+        do {
+            let root = try makeTempRoot()
+            let paths = CodexAccountPaths(root: root)
+            try FileManager.default.createDirectory(at: paths.codexDirectory, withIntermediateDirectories: true)
+            try authJSON.write(to: paths.activeAuthPath)
+
+            let setupStore = try CodexAccountStore(paths: paths)
+            try setupStore.importCurrentAuth(label: "Personal")
+            let personalKey = try require(setupStore.registry.activeAccountKey, "personal low-confidence current auth key")
+
+            let businessAuth = sampleAuthJSON(
+                accessToken: "access-b",
+                accountID: "acct-workspace-2",
+                principalID: "principal-2",
+                idToken: makeJWT([
+                    "email": "jared@example.com",
+                    "chatgpt_user_id": "user-1",
+                    "chatgpt_account_id": "acct-workspace-2",
+                    "chatgpt_plan_type": "team",
+                ])
+            )
+            try businessAuth.write(to: paths.activeAuthPath)
+            try setupStore.importCurrentAuth(label: "Business")
+            _ = try require(setupStore.registry.activeAccountKey, "business low-confidence current auth key")
+
+            let lowConfidenceAuth = sampleAuthJSON(
+                accessToken: "access-low",
+                accountID: nil,
+                principalID: nil,
+                idToken: makeJWT([:])
+            )
+            try lowConfidenceAuth.write(to: paths.activeAuthPath)
+            let activeAuthBeforeSwitch = try Data(contentsOf: paths.activeAuthPath)
+            let registryBytesBeforeSwitch = try Data(contentsOf: paths.registryPath)
+
+            let writer = FailingWriter()
+            let store = try CodexAccountStore(paths: paths, writer: writer)
+            let registryBeforeSwitch = try encodedRegistry(store.registry)
+
+            do {
+                try store.switchToAccount(personalKey)
+                expect(false, "low-confidence current auth fails before replace")
+            } catch CodexAccountError.inconsistentSwitchState {
+                expect(true, "low-confidence current auth fails before replace")
+            } catch {
+                expect(false, "low-confidence current auth keeps switch semantics stable: \(error)")
+            }
+
+            expect(
+                try Data(contentsOf: paths.activeAuthPath) == activeAuthBeforeSwitch,
+                "low-confidence current auth preserves active auth bytes"
+            )
+            expect(
+                try Data(contentsOf: paths.registryPath) == registryBytesBeforeSwitch,
+                "low-confidence current auth preserves registry bytes"
+            )
+            expect(try encodedRegistry(store.registry) == registryBeforeSwitch, "low-confidence current auth preserves in-memory registry")
+            expect(writer.writeCount == 0, "low-confidence current auth performs zero writer calls")
+        } catch {
+            expect(false, "low-confidence current auth fail-before-replace: \(error)")
+        }
+
         return failures
     }
 
@@ -390,6 +578,16 @@ enum CodexAccountTests {
             .appendingPathComponent("codex-account-tests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         return url
+    }
+
+    private static func encodedRegistry(_ registry: CodexAccountRegistry) throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            try container.encode(date.timeIntervalSinceReferenceDate)
+        }
+        return try encoder.encode(registry)
     }
 
     private static func sampleAuthJSON(

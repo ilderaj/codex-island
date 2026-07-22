@@ -27,18 +27,11 @@ final class ChatGPTHostController {
     func terminateApplication(at target: ChatGPTHostTarget) async -> ChatGPTHostTerminationResult {
         let targetURL = target.applicationURL.resolvingSymlinksInPath().standardizedFileURL
         let runningURLs = await runtime.runningApplicationURLs()
-        guard runningURLs.contains(where: {
-            $0.resolvingSymlinksInPath().standardizedFileURL == targetURL
-        }) else {
+        guard runningURLs.contains(where: { $0.resolvingSymlinksInPath().standardizedFileURL == targetURL }) else {
             return .notRunning
         }
-
-        guard await runtime.requestTermination(applicationAt: targetURL) else {
-            return .refused
-        }
-        return await runtime.waitForTermination(applicationAt: targetURL, timeout: terminationTimeout)
-            ? .terminated
-            : .timedOut
+        guard await runtime.requestTermination(applicationAt: targetURL) else { return .refused }
+        return await runtime.waitForTermination(applicationAt: targetURL, timeout: terminationTimeout) ? .terminated : .timedOut
     }
 
     func launchApplication(at target: ChatGPTHostTarget) async throws {
@@ -53,22 +46,20 @@ final class SystemChatGPTHostRuntime: ChatGPTHostRuntime {
 
     func requestTermination(applicationAt appURL: URL) async -> Bool {
         let targetURL = appURL.resolvingSymlinksInPath().standardizedFileURL
-        guard let application = NSWorkspace.shared.runningApplications.first(where: {
+        guard let app = NSWorkspace.shared.runningApplications.first(where: {
             $0.bundleURL?.resolvingSymlinksInPath().standardizedFileURL == targetURL
-        }) else {
-            return false
-        }
-        return application.terminate()
+        }) else { return false }
+        return app.terminate()
     }
 
     func waitForTermination(applicationAt appURL: URL, timeout: TimeInterval) async -> Bool {
         let targetURL = appURL.resolvingSymlinksInPath().standardizedFileURL
         let deadline = Date().addingTimeInterval(timeout)
         while Date() < deadline {
-            let stillRunning = NSWorkspace.shared.runningApplications.contains {
+            let running = NSWorkspace.shared.runningApplications.contains {
                 $0.bundleURL?.resolvingSymlinksInPath().standardizedFileURL == targetURL
             }
-            if !stillRunning { return true }
+            if !running { return true }
             try? await Task.sleep(nanoseconds: 100_000_000)
         }
         return !NSWorkspace.shared.runningApplications.contains {
@@ -77,9 +68,6 @@ final class SystemChatGPTHostRuntime: ChatGPTHostRuntime {
     }
 
     func launch(applicationAt appURL: URL) async throws {
-        _ = try await NSWorkspace.shared.openApplication(
-            at: appURL,
-            configuration: NSWorkspace.OpenConfiguration()
-        )
+        _ = try await NSWorkspace.shared.openApplication(at: appURL, configuration: NSWorkspace.OpenConfiguration())
     }
 }

@@ -14,18 +14,32 @@ struct PanelHeader: View {
     @ObservedObject private var codexAccounts = CodexAccountStore.shared
 
     var body: some View {
+        let hasAccountTags = !codexAccounts.registry.accounts.isEmpty
+
         HStack(spacing: 0) {
             let claudeOn = visibility.claudeVisible
             let codexOn = visibility.codexVisible
             providerTitle(name: "Claude", tag: usageStore.claude.plan?.uppercased(),
-                          color: IslandColor.claude, alignment: .leading)
+                          color: IslandColor.claude, alignment: .leading) {
+                EmptyView()
+            }
                 .opacity(claudeOn ? 1 : 0)
                 .animation(.openMorph, value: claudeOn)
                 .accessibilityHidden(!claudeOn)
             Color.clear.frame(width: notch.width)
             providerTitle(name: "Codex", tag: usageStore.codex.plan?.uppercased(),
-                          detail: activeCodexAccountLabel,
-                          color: IslandColor.codex, alignment: .trailing)
+                          color: IslandColor.codex, alignment: .trailing) {
+                // Codex-only rate-limit reset credits, pinned to the Codex
+                // title so the badge unambiguously belongs to Codex — its old
+                // footer-center spot read as panel-global. Account-level like
+                // the plan tag, so it rides along on every screen.
+                HStack(spacing: 5) {
+                    if hasAccountTags {
+                        CodexAccountTags(store: codexAccounts)
+                    }
+                    CodexResetStatus(compact: hasAccountTags)
+                }
+            }
                 .opacity(codexOn ? 1 : 0)
                 .animation(.openMorph, value: codexOn)
                 .accessibilityHidden(!codexOn)
@@ -37,12 +51,12 @@ struct PanelHeader: View {
     }
 
     @ViewBuilder
-    private func providerTitle(
+    private func providerTitle<Accessory: View>(
         name: String,
         tag: String?,
-        detail: String? = nil,
         color: Color,
-        alignment: HorizontalAlignment
+        alignment: HorizontalAlignment,
+        @ViewBuilder accessory: () -> Accessory
     ) -> some View {
         // Push past where the overlay logo lands: 9 leading + 20 logo + 8 gap.
         let logoOffset: CGFloat = 9 + 20 + 8
@@ -65,13 +79,7 @@ struct PanelHeader: View {
                                 RoundedRectangle(cornerRadius: 3)
                                     .strokeBorder(.white.opacity(0.08), lineWidth: 0.5)
                             )
-                )
-            }
-            if let detail {
-                Text(detail)
-                    .font(Typography.micro)
-                    .foregroundStyle(.white.opacity(0.48))
-                    .lineLimit(1)
+                    )
             }
         }
 
@@ -82,19 +90,15 @@ struct PanelHeader: View {
             }
             .frame(maxWidth: .infinity)
         } else {
-            HStack {
+            HStack(spacing: 6) {
                 Spacer(minLength: 0)
-                content.padding(.trailing, logoOffset)
+                accessory()
+                content
+                    .padding(.trailing, logoOffset)
+                    .layoutPriority(1)
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .frame(maxWidth: .infinity)
         }
-    }
-
-    private var activeCodexAccountLabel: String? {
-        guard let key = codexAccounts.registry.activeAccountKey,
-              let account = codexAccounts.registry.accounts.first(where: { $0.accountKey == key }) else {
-            return nil
-        }
-        return CodexAccountStore.displayLabel(for: account)
     }
 }

@@ -123,7 +123,6 @@ enum CodexAuthParser {
         return digest.prefix(byteCount).map { String(format: "%02x", $0) }.joined()
     }
 }
-
 enum CodexAuthError: LocalizedError {
     case missingAccessToken
 

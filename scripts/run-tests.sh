@@ -15,17 +15,33 @@ swiftc \
   -o "$OUT_DIR/resolve-usage-tests" \
   Sources/Model/UsageDisplayModeStore.swift \
   Sources/Usage/AppUsage.swift \
-  Sources/Usage/CodexResetCredits.swift \
+  Sources/Usage/ClaudeCredentials.swift \
   Sources/Usage/CodexAuthModels.swift \
   Sources/Usage/CodexAuthParser.swift \
   Sources/Usage/CodexAccountDataWriter.swift \
   Sources/Usage/CodexAccountStore.swift \
-  Sources/Usage/ClaudeCredentials.swift \
+  Sources/Usage/CodexResetCredits.swift \
   Sources/Usage/UsageFetcher.swift \
   Tests/CodexAccountTests.swift \
   Tests/ResolveUsageTests.swift
 
 CLAUDE_CODE_OAUTH_TOKEN="test-stub-token" "$OUT_DIR/resolve-usage-tests"
+
+mkdir -p "$OUT_DIR/codex-home"
+HOME="$OUT_DIR/codex-home" CFFIXED_USER_HOME="$OUT_DIR/codex-home" swiftc \
+  -parse-as-library \
+  -o "$OUT_DIR/codex-usage-window-tests" \
+  Sources/Model/UsageDisplayModeStore.swift \
+  Sources/Usage/AppUsage.swift \
+  Sources/Usage/ClaudeCredentials.swift \
+  Sources/Usage/CodexResetCredits.swift \
+  Sources/Usage/CodexAuthModels.swift \
+  Sources/Usage/CodexAuthParser.swift \
+  Sources/Usage/UsageFetcher.swift \
+  Tests/CodexUsageWindowContract.swift \
+  Tests/CodexUsageWindowUpstreamAdapter.swift
+
+HOME="$OUT_DIR/codex-home" CFFIXED_USER_HOME="$OUT_DIR/codex-home" "$OUT_DIR/codex-usage-window-tests"
 
 swiftc \
   -parse-as-library \
@@ -33,16 +49,26 @@ swiftc \
   -o "$OUT_DIR/chatgpt-host-tests" \
   Sources/Model/UsageDisplayModeStore.swift \
   Sources/Usage/AppUsage.swift \
+  Sources/Usage/ClaudeCredentials.swift \
   Sources/Usage/CodexResetCredits.swift \
   Sources/Usage/CodexAuthModels.swift \
   Sources/Usage/CodexAuthParser.swift \
   Sources/Usage/CodexAccountDataWriter.swift \
   Sources/Usage/CodexAccountStore.swift \
-  Sources/Usage/ClaudeCredentials.swift \
-  Sources/Usage/UsageFetcher.swift \
   Sources/Usage/ChatGPTHostPolicy.swift \
   Sources/Usage/ChatGPTHostController.swift \
   Sources/Usage/CodexAccountApplyCoordinator.swift \
+  Sources/Usage/UsageFetcher.swift \
   Tests/ChatGPTHostControllerTests.swift
 
 "$OUT_DIR/chatgpt-host-tests"
+
+swiftc \
+  -parse-as-library \
+  -o "$OUT_DIR/notch-height-tests" \
+  Sources/Model/NotchInfo.swift \
+  Sources/Model/IslandSpacingStore.swift \
+  Sources/Model/PreferenceStorage.swift \
+  Tests/NotchHeightTests.swift
+
+"$OUT_DIR/notch-height-tests"

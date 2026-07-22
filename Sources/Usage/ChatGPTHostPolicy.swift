@@ -11,13 +11,11 @@ struct ChatGPTHostTarget: Equatable {
         let executableURL = appURL.appendingPathComponent("Contents/MacOS/ChatGPT")
         let executableName = Bundle(url: appURL)?
             .object(forInfoDictionaryKey: "CFBundleExecutable") as? String
-
         guard appURL.lastPathComponent == "ChatGPT.app",
               executableName == "ChatGPT",
               FileManager.default.isExecutableFile(atPath: executableURL.path) else {
             throw ChatGPTHostError.identityMismatch
         }
-
         return ChatGPTHostTarget(applicationURL: appURL, executableURL: executableURL)
     }
 }
@@ -40,11 +38,5 @@ struct ChatGPTHostPolicy: ChatGPTHostTargetValidating {
 
 enum ChatGPTHostError: LocalizedError {
     case identityMismatch
-
-    var errorDescription: String? {
-        switch self {
-        case .identityMismatch:
-            return "ChatGPT host identity mismatch"
-        }
-    }
+    var errorDescription: String? { "ChatGPT host identity mismatch" }
 }

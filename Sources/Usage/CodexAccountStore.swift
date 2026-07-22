@@ -179,9 +179,21 @@ final class CodexAccountStore: ObservableObject {
     }
 
     private func unknownCurrentAuth(from data: Data?) throws -> (data: Data, context: CodexAuthContext)? {
-        guard let data,
-              let context = try? CodexAuthParser.parseAuth(data: data),
-              !registry.accounts.contains(where: { $0.accountKey == context.accountKey }) else {
+        guard let data else { return nil }
+
+        let context: CodexAuthContext
+        do {
+            context = try CodexAuthParser.parseAuth(data: data)
+        } catch {
+            throw CodexAccountError.inconsistentSwitchState
+        }
+
+        guard context.chatgptAccountId != nil
+                || context.identity.principalId != nil
+                || context.identity.chatgptUserId != nil else {
+            throw CodexAccountError.inconsistentSwitchState
+        }
+        guard !registry.accounts.contains(where: { $0.accountKey == context.accountKey }) else {
             return nil
         }
         return (data, context)

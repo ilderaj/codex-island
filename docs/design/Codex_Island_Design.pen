@@ -8533,45 +8533,10 @@
                                       "fill": "#FFFFFF73",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "Local snapshots in ~/.codex/accounts · active auth stays ~/.codex/auth.json",
+                                      "content": "2 local accounts · usage kept current",
                                       "fontFamily": "Inter",
                                       "fontSize": 10,
                                       "fontWeight": "500"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "frame",
-                                  "id": "y5wlNZ",
-                                  "name": "Active Account Picker",
-                                  "fill": "#FFFFFF12",
-                                  "cornerRadius": 6,
-                                  "gap": 6,
-                                  "padding": [
-                                    5,
-                                    8
-                                  ],
-                                  "alignItems": "center",
-                                  "children": [
-                                    {
-                                      "type": "text",
-                                      "id": "wVF5o",
-                                      "name": "Active Account Picker Label",
-                                      "fill": "#FFFFFFD9",
-                                      "content": "Personal",
-                                      "fontFamily": "Inter",
-                                      "fontSize": 11,
-                                      "fontWeight": "600"
-                                    },
-                                    {
-                                      "type": "icon",
-                                      "id": "WL9aO",
-                                      "name": "Active Account Picker Icon",
-                                      "width": 12,
-                                      "height": 12,
-                                      "icon": "chevron-down",
-                                      "library": "lucide",
-                                      "fill": "#FFFFFF8C"
                                     }
                                   ]
                                 }
@@ -8615,35 +8580,6 @@
                                           "name": "Import Current Auth Label",
                                           "fill": "#D7ECFF",
                                           "content": "Import Current Auth",
-                                          "fontFamily": "Inter",
-                                          "fontSize": 10,
-                                          "fontWeight": "600"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "frame",
-                                      "id": "TGE0U",
-                                      "name": "Action Switch Previous",
-                                      "width": "fill_container",
-                                      "fill": "#FFFFFF0F",
-                                      "cornerRadius": 5,
-                                      "stroke": "#FFFFFF14",
-                                      "strokeWidth": 1,
-                                      "gap": 5,
-                                      "padding": [
-                                        5,
-                                        8
-                                      ],
-                                      "justifyContent": "center",
-                                      "alignItems": "center",
-                                      "children": [
-                                        {
-                                          "type": "text",
-                                          "id": "z3nh2",
-                                          "name": "Switch Previous Label",
-                                          "fill": "#FFFFFFC7",
-                                          "content": "Switch Previous",
                                           "fontFamily": "Inter",
                                           "fontSize": 10,
                                           "fontWeight": "600"
@@ -8732,11 +8668,11 @@
                                 {
                                   "type": "frame",
                                   "id": "Udjmg",
-                                  "name": "Codex Account Row Personal",
+                                  "name": "Selectable Account Card Personal",
                                   "width": "fill_container",
-                                  "fill": "#5AA8F012",
+                                  "fill": "#FFFFFF07",
                                   "cornerRadius": 7,
-                                  "stroke": "#5AA8F040",
+                                  "stroke": "#FFFFFF10",
                                   "strokeWidth": 1,
                                   "gap": 10,
                                   "padding": [
@@ -8756,8 +8692,8 @@
                                         {
                                           "type": "ellipse",
                                           "id": "IvYQk",
-                                          "name": "Account Active Dot Personal",
-                                          "fill": "#5AA8F0",
+                                          "name": "Account Available Dot Personal",
+                                          "fill": "#FFFFFF2B",
                                           "width": 7,
                                           "height": 7
                                         }
@@ -8792,8 +8728,8 @@
                                             {
                                               "type": "frame",
                                               "id": "CIS68",
-                                              "name": "Active Badge",
-                                              "fill": "#5AA8F024",
+                                              "name": "Select Account Badge",
+                                              "fill": "#FFFFFF0F",
                                               "cornerRadius": 4,
                                               "padding": [
                                                 2,
@@ -8803,9 +8739,9 @@
                                                 {
                                                   "type": "text",
                                                   "id": "cp9oi",
-                                                  "name": "Active Badge Label",
-                                                  "fill": "#D7ECFF",
-                                                  "content": "Active",
+                                                  "name": "Select Account Badge Label",
+                                                  "fill": "#FFFFFFA3",
+                                                  "content": "Select",
                                                   "fontFamily": "Inter",
                                                   "fontSize": 9,
                                                   "fontWeight": "700"
@@ -8845,11 +8781,11 @@
                                 {
                                   "type": "frame",
                                   "id": "ZFTFX",
-                                  "name": "Codex Account Row Business",
+                                  "name": "Active Account Card Business",
                                   "width": "fill_container",
-                                  "fill": "#FFFFFF07",
+                                  "fill": "#5AA8F012",
                                   "cornerRadius": 7,
-                                  "stroke": "#FFFFFF10",
+                                  "stroke": "#5AA8F040",
                                   "strokeWidth": 1,
                                   "gap": 10,
                                   "padding": [
@@ -8870,7 +8806,7 @@
                                           "type": "ellipse",
                                           "id": "HfnVv",
                                           "name": "Account Active Dot Business",
-                                          "fill": "#FFFFFF2B",
+                                          "fill": "#5AA8F0",
                                           "width": 7,
                                           "height": 7
                                         }
@@ -8901,6 +8837,29 @@
                                               "fontFamily": "Inter",
                                               "fontSize": 12,
                                               "fontWeight": "600"
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "RZXyU",
+                                              "name": "Active Account Badge",
+                                              "fill": "#5AA8F024",
+                                              "cornerRadius": 4,
+                                              "padding": [
+                                                2,
+                                                5
+                                              ],
+                                              "children": [
+                                                {
+                                                  "type": "text",
+                                                  "id": "dbHb1",
+                                                  "name": "Active Account Badge Label",
+                                                  "fill": "#D7ECFF",
+                                                  "content": "Active",
+                                                  "fontFamily": "Inter",
+                                                  "fontSize": 9,
+                                                  "fontWeight": "700"
+                                                }
+                                              ]
                                             }
                                           ]
                                         },
@@ -9099,124 +9058,84 @@
       "name": "Codex Account Switching",
       "clip": true,
       "width": 1420,
-      "height": 980,
+      "height": 1320,
       "fill": "#F4F4EF",
-      "layout": "none",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 36,
       "children": [
         {
-          "type": "text",
-          "id": "fPcuj",
-          "x": 36,
-          "y": 36,
-          "name": "Account Switching Eyebrow",
-          "fill": "#5C616B",
-          "content": "CODEX ACCOUNT FLOW",
-          "fontFamily": "Inter",
-          "fontSize": 11,
-          "fontWeight": "600",
-          "letterSpacing": 0.18
-        },
-        {
-          "type": "text",
-          "id": "Pw6A3",
-          "x": 36,
-          "y": 60,
-          "name": "Account Switching Title",
-          "fill": "#131418",
-          "content": "Codex Account Switching",
-          "fontFamily": "Inter",
-          "fontSize": 28,
-          "fontWeight": "600"
-        },
-        {
-          "type": "text",
-          "id": "Jz7JM",
-          "x": 36,
-          "y": 104,
-          "name": "Account Switching Body",
-          "fill": "#5C616B",
-          "textGrowth": "fixed-width",
-          "width": 1120,
-          "content": "Expanded notch is the comparison and selection surface. The selected account is not activated until the user explicitly confirms a ChatGPT relaunch.",
-          "lineHeight": 1.45,
-          "fontFamily": "Inter",
-          "fontSize": 14,
-          "fontWeight": "normal"
-        },
-        {
           "type": "frame",
-          "id": "gGjrv",
-          "x": 36,
-          "y": 174,
-          "name": "Account Rail Card",
-          "width": 416,
-          "height": 738,
-          "fill": "#FFFFFF",
-          "cornerRadius": 18,
-          "stroke": "#D6D9DF",
-          "strokeWidth": 1,
-          "layout": "none",
+          "id": "prsjk",
+          "name": "Account Switching Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
           "children": [
             {
               "type": "text",
-              "id": "zG4OJ",
-              "x": 20,
-              "y": 20,
-              "name": "Account Rail Eyebrow",
+              "id": "Cfn6G",
+              "name": "Account Switching Eyebrow",
               "fill": "#5C616B",
-              "content": "1 · BROWSE",
+              "content": "CODEX ACCOUNT FLOW · REVIEW",
               "fontFamily": "Inter",
-              "fontSize": 10,
+              "fontSize": 11,
               "fontWeight": "600",
-              "letterSpacing": 0.2
+              "letterSpacing": 0.18
             },
             {
               "type": "text",
-              "id": "F54QBs",
-              "x": 20,
-              "y": 42,
-              "name": "Account Rail Title",
+              "id": "dyCqY",
+              "name": "Account Switching Title",
               "fill": "#131418",
-              "content": "Account rail",
+              "content": "Direct account switching, one confirmation",
               "fontFamily": "Inter",
-              "fontSize": 18,
+              "fontSize": 28,
               "fontWeight": "600"
             },
             {
               "type": "text",
-              "id": "FIiWt",
-              "x": 20,
-              "y": 74,
-              "name": "Account Rail Body",
+              "id": "FIIj1",
+              "name": "Account Switching Summary",
               "fill": "#5C616B",
               "textGrowth": "fixed-width",
-              "width": 376,
-              "content": "Compare locally saved accounts without changing active auth.",
+              "width": "fill_container",
+              "content": "Settings cards and compact notch tags select the target immediately. When ChatGPT is running, its native quit prompt is the only confirmation before any auth or registry write.",
               "lineHeight": 1.45,
               "fontFamily": "Inter",
-              "fontSize": 13,
+              "fontSize": 14,
               "fontWeight": "normal"
-            },
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "D9sEGm",
+          "name": "Direct Switching Entry Surfaces",
+          "width": "fill_container",
+          "height": 420,
+          "gap": 24,
+          "children": [
             {
               "type": "frame",
-              "id": "cwJYf",
-              "x": 20,
-              "y": 144,
-              "name": "Account Rail Stage",
-              "width": 376,
-              "height": 520,
-              "fill": "#050507",
-              "cornerRadius": 16,
-              "layout": "none",
+              "id": "egn5e",
+              "name": "Settings Direct Card Selection",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 8,
+              "stroke": "#D6D9DF",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 20,
               "children": [
                 {
                   "type": "text",
-                  "id": "VA04s",
-                  "x": 16,
-                  "y": 16,
-                  "name": "Account Rail Provider",
-                  "fill": "#FFFFFF57",
-                  "content": "CODEX · 3 ACCOUNTS",
+                  "id": "BgqPK",
+                  "name": "Settings Surface Eyebrow",
+                  "fill": "#5C616B",
+                  "content": "SETTINGS · PROVIDERS",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "600",
@@ -9224,297 +9143,613 @@
                 },
                 {
                   "type": "text",
-                  "id": "fWwC4",
-                  "x": 287,
-                  "y": 16,
-                  "name": "Account Rail Refresh",
-                  "fill": "#FFFFFF57",
-                  "content": "Updated now",
+                  "id": "u2Fy6K",
+                  "name": "Settings Surface Title",
+                  "fill": "#131418",
+                  "content": "Select the whole account card",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "qmEXj",
+                  "name": "Settings Surface Copy",
+                  "fill": "#5C616B",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "The active account stays explicit; any inactive card is the next action.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "k5U7Y4",
+                  "name": "Settings Account Card Stage",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#050507",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "AF79c",
+                      "name": "Settings Codex Provider Header",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "gWGLf",
+                          "name": "Settings Codex Provider Dot",
+                          "fill": "#5AA8F0",
+                          "width": 8,
+                          "height": 8
+                        },
+                        {
+                          "type": "text",
+                          "id": "y3PqG",
+                          "name": "Settings Codex Provider Name",
+                          "fill": "#FFFFFFEB",
+                          "content": "Codex",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UUPS2",
+                          "name": "Settings Codex Plan Badge",
+                          "fill": "#FFFFFF0F",
+                          "cornerRadius": 4,
+                          "padding": [
+                            2,
+                            5
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "JOyYZ",
+                              "name": "Settings Codex Plan Label",
+                              "fill": "#FFFFFF8C",
+                              "content": "TEAM",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 9,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yfy1V",
+                      "name": "Settings Account Card List",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "y42Wl",
+                          "name": "Selectable Personal Account Card",
+                          "width": "fill_container",
+                          "fill": "#FFFFFF07",
+                          "cornerRadius": 7,
+                          "stroke": "#FFFFFF14",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": [
+                            10,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "Z14xPH",
+                              "name": "Personal Available Dot",
+                              "fill": "#FFFFFF38",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "frame",
+                              "id": "i2fD1o",
+                              "name": "Personal Account Copy",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 3,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "J1P1Z",
+                                  "name": "Personal Account Name",
+                                  "fill": "#FFFFFFEB",
+                                  "content": "Personal",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "eoYKw",
+                                  "name": "Personal Account Usage",
+                                  "fill": "#FFFFFF66",
+                                  "content": "5h 58% left · week 63% left · PRO",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 10,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "u79bd4",
+                              "name": "Select Personal Action",
+                              "fill": "#FFFFFF0F",
+                              "cornerRadius": 5,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "qY6yV",
+                                  "name": "Select Personal Label",
+                                  "fill": "#FFFFFFA3",
+                                  "content": "Select",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xCDyJ",
+                          "name": "Active Business Account Card",
+                          "width": "fill_container",
+                          "fill": "#5AA8F012",
+                          "cornerRadius": 7,
+                          "stroke": "#5AA8F05C",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "padding": [
+                            10,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "o1xLO8",
+                              "name": "Business Active Dot",
+                              "fill": "#5AA8F0",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "frame",
+                              "id": "isSid",
+                              "name": "Business Account Copy",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 3,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "sj6QN",
+                                  "name": "Business Account Name",
+                                  "fill": "#FFFFFFEB",
+                                  "content": "Business",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "QuFk5",
+                                  "name": "Business Account Usage",
+                                  "fill": "#FFFFFF66",
+                                  "content": "5h 94% left · week 99% left · TEAM",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 10,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "WwBR9",
+                              "name": "Active Business Badge",
+                              "fill": "#5AA8F024",
+                              "cornerRadius": 5,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "UR9z7",
+                                  "name": "Active Business Label",
+                                  "fill": "#D7ECFF",
+                                  "content": "Active",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "cZyq5",
+              "name": "Notch Compact Account Tags",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "#FFFFFF",
+              "cornerRadius": 8,
+              "stroke": "#D6D9DF",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "RsBlH",
+                  "name": "Notch Surface Eyebrow",
+                  "fill": "#5C616B",
+                  "content": "NOTCH · CODEX HEADER",
                   "fontFamily": "Inter",
                   "fontSize": 10,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 10,
-                  "id": "lIQob",
-                  "x": 16,
-                  "y": 52,
-                  "name": "Account Row Jared · Work",
-                  "fill": "#377DFF24",
-                  "width": 344,
-                  "height": 118,
-                  "stroke": "#5C91FF",
-                  "strokeWidth": 1
+                  "fontWeight": "600",
+                  "letterSpacing": 0.18
                 },
                 {
                   "type": "text",
-                  "id": "Ix8KK",
-                  "x": 28,
-                  "y": 68,
-                  "name": "Account Name Jared · Work",
-                  "fill": "#FFFFFF",
-                  "content": "Jared · Work",
+                  "id": "WxNLB",
+                  "name": "Notch Surface Title",
+                  "fill": "#131418",
+                  "content": "Switch from compact account tags",
                   "fontFamily": "Inter",
-                  "fontSize": 13,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 5,
-                  "id": "Nxpd3",
-                  "x": 280,
-                  "y": 65,
-                  "name": "Account Badge Jared · Work",
-                  "fill": "#377DFF",
-                  "width": 64,
-                  "height": 22
-                },
-                {
-                  "type": "text",
-                  "id": "M1HTeY",
-                  "x": 288,
-                  "y": 71,
-                  "name": "Account Badge Text Jared · Work",
-                  "fill": "#FFFFFF",
-                  "content": "ACTIVE",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 9,
+                  "fontSize": 18,
                   "fontWeight": "600"
                 },
                 {
                   "type": "text",
-                  "id": "NawYG",
-                  "x": 28,
-                  "y": 112,
-                  "name": "Account Five Hour Jared · Work",
-                  "fill": "#FFFFFF",
-                  "content": "5h 72%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 14,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "bcryt",
-                  "x": 150,
-                  "y": 112,
-                  "name": "Account Week Jared · Work",
-                  "fill": "#FFFFFF8A",
-                  "content": "Week 41%",
-                  "fontFamily": "IBM Plex Mono",
+                  "id": "Ir0QR",
+                  "name": "Notch Surface Copy",
+                  "fill": "#5C616B",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Two accounts stay one click away; overflow appears only when the list grows.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "normal"
                 },
                 {
-                  "type": "rectangle",
-                  "cornerRadius": 3,
-                  "id": "F12fba",
-                  "x": 28,
-                  "y": 140,
-                  "name": "Account Progress Track Jared · Work",
-                  "fill": "#FFFFFF14",
-                  "width": 288,
-                  "height": 5
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 3,
-                  "id": "D4Xj8L",
-                  "x": 28,
-                  "y": 140,
-                  "name": "Account Progress Value Jared · Work",
-                  "fill": "#5C91FF",
-                  "width": 207,
-                  "height": 5
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 10,
-                  "id": "n7r5W",
-                  "x": 16,
-                  "y": 190,
-                  "name": "Account Row Jared · Personal",
-                  "fill": "#FFFFFF08",
-                  "width": 344,
-                  "height": 118,
-                  "stroke": "#FFFFFF12",
-                  "strokeWidth": 1
-                },
-                {
-                  "type": "text",
-                  "id": "Z6RJe",
-                  "x": 28,
-                  "y": 206,
-                  "name": "Account Name Jared · Personal",
-                  "fill": "#FFFFFF",
-                  "content": "Jared · Personal",
-                  "fontFamily": "Inter",
-                  "fontSize": 13,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 5,
-                  "id": "U25nJ",
-                  "x": 280,
-                  "y": 203,
-                  "name": "Account Badge Jared · Personal",
-                  "fill": "#FFFFFF12",
-                  "width": 64,
-                  "height": 22
-                },
-                {
-                  "type": "text",
-                  "id": "g50vD",
-                  "x": 288,
-                  "y": 209,
-                  "name": "Account Badge Text Jared · Personal",
-                  "fill": "#FFFFFF",
-                  "content": "PLUS",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 9,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "ovjKC",
-                  "x": 28,
-                  "y": 250,
-                  "name": "Account Five Hour Jared · Personal",
-                  "fill": "#FFFFFF",
-                  "content": "5h 24%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 14,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "EAGW6",
-                  "x": 150,
-                  "y": 250,
-                  "name": "Account Week Jared · Personal",
-                  "fill": "#FFFFFF8A",
-                  "content": "Week 18%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 3,
-                  "id": "SDIdW",
-                  "x": 28,
-                  "y": 278,
-                  "name": "Account Progress Track Jared · Personal",
-                  "fill": "#FFFFFF14",
-                  "width": 288,
-                  "height": 5
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 3,
-                  "id": "Wc3E6",
-                  "x": 28,
-                  "y": 278,
-                  "name": "Account Progress Value Jared · Personal",
-                  "fill": "#66D8C0",
-                  "width": 69,
-                  "height": 5
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 10,
-                  "id": "BtJQ7",
-                  "x": 16,
-                  "y": 328,
-                  "name": "Account Row Sandbox",
-                  "fill": "#FFFFFF08",
-                  "width": 344,
-                  "height": 118,
-                  "stroke": "#FFFFFF12",
-                  "strokeWidth": 1
-                },
-                {
-                  "type": "text",
-                  "id": "u8tqIn",
-                  "x": 28,
-                  "y": 344,
-                  "name": "Account Name Sandbox",
-                  "fill": "#FFFFFF",
-                  "content": "Sandbox",
-                  "fontFamily": "Inter",
-                  "fontSize": 13,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 5,
-                  "id": "KbQtQ",
-                  "x": 280,
-                  "y": 341,
-                  "name": "Account Badge Sandbox",
-                  "fill": "#FFFFFF12",
-                  "width": 64,
-                  "height": 22
-                },
-                {
-                  "type": "text",
-                  "id": "CCVwH",
-                  "x": 288,
-                  "y": 347,
-                  "name": "Account Badge Text Sandbox",
-                  "fill": "#FFFFFF",
-                  "content": "TEAM",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 9,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "HwCBb",
-                  "x": 28,
-                  "y": 388,
-                  "name": "Account Five Hour Sandbox",
-                  "fill": "#FFFFFF",
-                  "content": "5h 61%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 14,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "aFmcm",
-                  "x": 150,
-                  "y": 388,
-                  "name": "Account Week Sandbox",
-                  "fill": "#FFFFFF8A",
-                  "content": "Week 33%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 3,
-                  "id": "sWF7I",
-                  "x": 28,
-                  "y": 416,
-                  "name": "Account Progress Track Sandbox",
-                  "fill": "#FFFFFF14",
-                  "width": 288,
-                  "height": 5
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 3,
-                  "id": "njhc1",
-                  "x": 28,
-                  "y": 416,
-                  "name": "Account Progress Value Sandbox",
-                  "fill": "#66D8C0",
-                  "width": 176,
-                  "height": 5
+                  "type": "frame",
+                  "id": "Y22nd",
+                  "name": "Notch Account Tag Stage",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#2A2E35",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "padding": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yepC3",
+                      "name": "Compact Codex Notch",
+                      "width": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 14,
+                      "stroke": "#FFFFFF12",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 14,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hY4E4",
+                          "name": "Notch Codex Header",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "w3lITF",
+                              "name": "Notch Codex Identity",
+                              "width": "fill_container",
+                              "gap": 7,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ellipse",
+                                  "id": "J3ofy9",
+                                  "name": "Notch Codex Dot",
+                                  "fill": "#5AA8F0",
+                                  "width": 8,
+                                  "height": 8
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Q6enET",
+                                  "name": "Notch Codex Name",
+                                  "fill": "#FFFFFFEB",
+                                  "content": "Codex",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Sti6f",
+                              "name": "Notch Personal Account Tag",
+                              "fill": "#FFFFFF0F",
+                              "cornerRadius": 6,
+                              "stroke": "#FFFFFF14",
+                              "strokeWidth": 1,
+                              "gap": 5,
+                              "padding": [
+                                5,
+                                8
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "jkhWb",
+                                  "name": "Notch Personal Account Label",
+                                  "fill": "#FFFFFFA3",
+                                  "content": "Personal",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "CSgPx",
+                              "name": "Notch Active Business Tag",
+                              "fill": "#5AA8F024",
+                              "cornerRadius": 6,
+                              "stroke": "#5AA8F05C",
+                              "strokeWidth": 1,
+                              "gap": 5,
+                              "padding": [
+                                5,
+                                8
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "ellipse",
+                                  "id": "uMZDF",
+                                  "name": "Notch Business Active Dot",
+                                  "fill": "#5AA8F0",
+                                  "width": 6,
+                                  "height": 6
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "ZaGsE",
+                                  "name": "Notch Business Account Label",
+                                  "fill": "#D7ECFF",
+                                  "content": "Business",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 10,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yMDoa",
+                              "name": "Notch Account Overflow",
+                              "width": 26,
+                              "height": 26,
+                              "fill": "#FFFFFF0A",
+                              "cornerRadius": 6,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "XUElY",
+                                  "name": "Notch Account Overflow Icon",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "ellipsis",
+                                  "library": "lucide",
+                                  "fill": "#FFFFFF8C"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "GMRCI",
+                          "name": "Notch Usage Metrics",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "M53Ewc",
+                              "name": "Notch Five Hour Metric",
+                              "width": "fill_container",
+                              "fill": "#FFFFFF07",
+                              "cornerRadius": 7,
+                              "layout": "vertical",
+                              "gap": 3,
+                              "padding": [
+                                9,
+                                10
+                              ],
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "LYQic",
+                                  "name": "Notch Five Hour Topline",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "HZ5zF",
+                                      "name": "Notch Five Hour Label",
+                                      "fill": "#FFFFFF66",
+                                      "content": "5h",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 10,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "qQEph",
+                                      "name": "Notch Five Hour Value",
+                                      "fill": "#FFFFFFEB",
+                                      "content": "94% left",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "vkmWn",
+                                  "name": "Notch Five Hour Reset",
+                                  "fill": "#FFFFFF57",
+                                  "content": "resets in 4h",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 9,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Gb1L5",
+                              "name": "Notch Weekly Metric",
+                              "width": "fill_container",
+                              "fill": "#FFFFFF07",
+                              "cornerRadius": 7,
+                              "layout": "vertical",
+                              "gap": 3,
+                              "padding": [
+                                9,
+                                10
+                              ],
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "s2RKU",
+                                  "name": "Notch Weekly Topline",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "I8yD1U",
+                                      "name": "Notch Weekly Label",
+                                      "fill": "#FFFFFF66",
+                                      "content": "week",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 10,
+                                      "fontWeight": "600"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "G95DQ",
+                                      "name": "Notch Weekly Value",
+                                      "fill": "#FFFFFFEB",
+                                      "content": "99% left",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "vn3U3",
+                                  "name": "Notch Weekly Reset",
+                                  "fill": "#FFFFFF57",
+                                  "content": "resets in 6d",
+                                  "fontFamily": "IBM Plex Mono",
+                                  "fontSize": 9,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gzFla",
+                          "name": "Notch Sync Footer",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "fIFTw",
+                              "name": "Notch Active Account Status",
+                              "fill": "#5AA8F0",
+                              "content": "Business active",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "IkZ10",
+                              "name": "Notch Sync Status",
+                              "fill": "#FFFFFF66",
+                              "content": "Synced 16s ago",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 10,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -9522,279 +9757,553 @@
         },
         {
           "type": "frame",
-          "id": "Z1tda7",
-          "x": 502,
-          "y": 174,
-          "name": "Selected Account Card",
-          "width": 416,
-          "height": 738,
-          "fill": "#FFFFFF",
-          "cornerRadius": 18,
-          "stroke": "#D6D9DF",
-          "strokeWidth": 1,
-          "layout": "none",
+          "id": "x3ia8G",
+          "name": "Confirmation First Execution Contract",
+          "width": "fill_container",
+          "height": 260,
+          "layout": "vertical",
+          "gap": 10,
           "children": [
             {
-              "type": "text",
-              "id": "p1BfoU",
-              "x": 20,
-              "y": 20,
-              "name": "Selected Account Eyebrow",
-              "fill": "#5C616B",
-              "content": "2 · SELECT",
-              "fontFamily": "Inter",
-              "fontSize": 10,
-              "fontWeight": "600",
-              "letterSpacing": 0.2
-            },
-            {
-              "type": "text",
-              "id": "F8qxt",
-              "x": 20,
-              "y": 42,
-              "name": "Selected Account Title",
-              "fill": "#131418",
-              "content": "Review the switch",
-              "fontFamily": "Inter",
-              "fontSize": 18,
-              "fontWeight": "600"
-            },
-            {
-              "type": "text",
-              "id": "xX6f0",
-              "x": 20,
-              "y": 74,
-              "name": "Selected Account Body",
-              "fill": "#5C616B",
-              "textGrowth": "fixed-width",
-              "width": 376,
-              "content": "Selection is staged. The active account remains unchanged until confirmation.",
-              "lineHeight": 1.45,
-              "fontFamily": "Inter",
-              "fontSize": 13,
-              "fontWeight": "normal"
+              "type": "frame",
+              "id": "jKYt3",
+              "name": "Execution Contract Heading",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eXGQW",
+                  "name": "Execution Contract Copy",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "tweec",
+                      "name": "Execution Contract Title",
+                      "fill": "#131418",
+                      "content": "Confirmation-first execution",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "O4YMRa",
+                      "name": "Execution Contract Subtitle",
+                      "fill": "#5C616B",
+                      "content": "No auth or registry write occurs until the host has exited.",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "R3Aw2w",
+                  "name": "Single Confirmation Badge",
+                  "fill": "#F5A52418",
+                  "cornerRadius": 6,
+                  "stroke": "#F5A52455",
+                  "strokeWidth": 1,
+                  "gap": 6,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "H4Zcu",
+                      "name": "Single Confirmation Badge Icon",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "shield-check",
+                      "library": "lucide",
+                      "fill": "#B46F00"
+                    },
+                    {
+                      "type": "text",
+                      "id": "zCVnm",
+                      "name": "Single Confirmation Badge Label",
+                      "fill": "#8A5700",
+                      "content": "ONE NATIVE PROMPT",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "frame",
-              "id": "Dv7A1",
-              "x": 20,
-              "y": 144,
-              "name": "Selected Account Stage",
-              "width": 376,
-              "height": 520,
-              "fill": "#050507",
-              "cornerRadius": 16,
-              "layout": "none",
+              "id": "n8Wfv",
+              "name": "Execution Steps",
+              "width": "fill_container",
+              "height": "fill_container",
+              "gap": 12,
               "children": [
                 {
-                  "type": "text",
-                  "id": "qV7Mm",
-                  "x": 16,
-                  "y": 16,
-                  "name": "Selected Current Label",
-                  "fill": "#FFFFFF57",
-                  "content": "CURRENT ACTIVE · Jared · Work",
-                  "fontFamily": "Inter",
-                  "fontSize": 10,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.18
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 12,
-                  "id": "O4YHGC",
-                  "x": 16,
-                  "y": 50,
-                  "name": "Selected Account Target",
-                  "fill": "#377DFF24",
-                  "width": 344,
-                  "height": 212,
-                  "stroke": "#5C91FF",
-                  "strokeWidth": 1
-                },
-                {
-                  "type": "text",
-                  "id": "oQVlR",
-                  "x": 30,
-                  "y": 68,
-                  "name": "Selected Account Name",
+                  "type": "frame",
+                  "id": "L4xAW",
+                  "name": "Step 1 Select Target",
+                  "width": "fill_container",
+                  "height": "fill_container",
                   "fill": "#FFFFFF",
-                  "content": "Jared · Personal",
-                  "fontFamily": "Inter",
-                  "fontSize": 16,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 5,
-                  "id": "R38swR",
-                  "x": 279,
-                  "y": 64,
-                  "name": "Selected Account Pending Badge",
-                  "fill": "#377DFF",
-                  "width": 67,
-                  "height": 22
-                },
-                {
-                  "type": "text",
-                  "id": "PRyUB",
-                  "x": 287,
-                  "y": 70,
-                  "name": "Selected Account Pending Text",
-                  "fill": "#FFFFFF",
-                  "content": "PENDING",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 9,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "TkWKb",
-                  "x": 30,
-                  "y": 101,
-                  "name": "Selected Account Snapshot",
-                  "fill": "#FFFFFFA3",
-                  "textGrowth": "fixed-width",
-                  "width": 280,
-                  "content": "Local snapshot is ready. No auth file has changed.",
-                  "lineHeight": 1.4,
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
                   "cornerRadius": 8,
-                  "id": "MDgYH",
-                  "x": 30,
-                  "y": 151,
-                  "name": "Selected Metric Tile 5H REMAINING",
-                  "fill": "#05050766",
-                  "width": 144,
-                  "height": 78
+                  "stroke": "#D6D9DF",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kt1gw",
+                      "name": "Step 1 Eyebrow",
+                      "fill": "#5AA8F0",
+                      "content": "01 · SELECT",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "O5HegW",
+                      "name": "Step 1 Title",
+                      "fill": "#131418",
+                      "content": "Choose Personal",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zV31S",
+                      "name": "Selected Target Preview",
+                      "width": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 6,
+                      "gap": 8,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "TTcrm",
+                          "name": "Selected Target Dot",
+                          "fill": "#5AA8F0",
+                          "width": 7,
+                          "height": 7
+                        },
+                        {
+                          "type": "frame",
+                          "id": "W8Xgy",
+                          "name": "Selected Target Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wKN5r",
+                              "name": "Selected Target Name",
+                              "fill": "#FFFFFFEB",
+                              "content": "Personal",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "DefCB",
+                              "name": "Selected Target State",
+                              "fill": "#FFFFFF66",
+                              "content": "Target selected",
+                              "fontFamily": "Inter",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "FaEvY",
+                      "name": "Step 1 Rule",
+                      "fill": "#5C616B",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Selection alone does not mutate auth.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "id": "X43CPe",
-                  "x": 40,
-                  "y": 163,
-                  "name": "Selected Metric Label 5H REMAINING",
-                  "fill": "#FFFFFF57",
-                  "content": "5H REMAINING",
-                  "fontFamily": "Inter",
-                  "fontSize": 9,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.14
-                },
-                {
-                  "type": "text",
-                  "id": "tZpjy",
-                  "x": 40,
-                  "y": 183,
-                  "name": "Selected Metric Value 5H REMAINING",
+                  "type": "frame",
+                  "id": "jalZj",
+                  "name": "Step 2 Native Host Confirmation",
+                  "width": "fill_container",
+                  "height": "fill_container",
                   "fill": "#FFFFFF",
-                  "content": "76%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 22,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "rectangle",
                   "cornerRadius": 8,
-                  "id": "r0Fjf",
-                  "x": 187,
-                  "y": 151,
-                  "name": "Selected Metric Tile WEEK REMAINING",
-                  "fill": "#05050766",
-                  "width": 144,
-                  "height": 78
+                  "stroke": "#F5A52466",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yQnO1",
+                      "name": "Step 2 Eyebrow",
+                      "fill": "#B46F00",
+                      "content": "02 · CONFIRM",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "KowKk",
+                      "name": "Step 2 Title",
+                      "fill": "#131418",
+                      "content": "ChatGPT asks once",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R8KwlU",
+                      "name": "Native ChatGPT Quit Prompt",
+                      "width": "fill_container",
+                      "fill": "#171A20",
+                      "cornerRadius": 7,
+                      "stroke": "#FFFFFF1A",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 7,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "mCkHp",
+                          "name": "Native Prompt Title Row",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "DNPld",
+                              "name": "Native Prompt Alert Icon",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "triangle-alert",
+                              "library": "lucide",
+                              "fill": "#F5A524"
+                            },
+                            {
+                              "type": "text",
+                              "id": "TL220",
+                              "name": "Native Prompt Title",
+                              "fill": "#FFFFFFEB",
+                              "content": "Quit ChatGPT?",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TSuLj",
+                          "name": "Native Prompt Actions",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "scmr8",
+                              "name": "Native Prompt Cancel",
+                              "fill": "#FFFFFF0F",
+                              "cornerRadius": 5,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "p60CHQ",
+                                  "name": "Native Prompt Cancel Label",
+                                  "fill": "#FFFFFFA3",
+                                  "content": "Cancel",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FeT2Z",
+                              "name": "Native Prompt Quit",
+                              "fill": "#5AA8F0",
+                              "cornerRadius": 5,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "nqOZA",
+                                  "name": "Native Prompt Quit Label",
+                                  "fill": "#FFFFFF",
+                                  "content": "Quit",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "D5gK2q",
+                      "name": "Step 2 Rule",
+                      "fill": "#5C616B",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "This replaces the app confirmation sheet.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "id": "X1CXe",
-                  "x": 197,
-                  "y": 163,
-                  "name": "Selected Metric Label WEEK REMAINING",
-                  "fill": "#FFFFFF57",
-                  "content": "WEEK REMAINING",
-                  "fontFamily": "Inter",
-                  "fontSize": 9,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.14
-                },
-                {
-                  "type": "text",
-                  "id": "Xymv6",
-                  "x": 197,
-                  "y": 183,
-                  "name": "Selected Metric Value WEEK REMAINING",
+                  "type": "frame",
+                  "id": "YhXKC",
+                  "name": "Step 3 Local Transaction",
+                  "width": "fill_container",
+                  "height": "fill_container",
                   "fill": "#FFFFFF",
-                  "content": "82%",
-                  "fontFamily": "IBM Plex Mono",
-                  "fontSize": 22,
-                  "fontWeight": "600"
+                  "cornerRadius": 8,
+                  "stroke": "#D6D9DF",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "K5ADy",
+                      "name": "Step 3 Eyebrow",
+                      "fill": "#5AA8F0",
+                      "content": "03 · SWITCH",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AWFHw",
+                      "name": "Step 3 Title",
+                      "fill": "#131418",
+                      "content": "Switch after host exit",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "IgOpg",
+                      "name": "Local Switching Progress",
+                      "width": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 7,
+                      "layout": "vertical",
+                      "gap": 7,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "uTuOy",
+                          "name": "Local Switching Topline",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "YSIjl",
+                              "name": "Local Switching Spinner",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "loader-circle",
+                              "library": "lucide",
+                              "fill": "#5AA8F0"
+                            },
+                            {
+                              "type": "text",
+                              "id": "SnTYQ",
+                              "name": "Local Switching Label",
+                              "fill": "#FFFFFFEB",
+                              "content": "Switching to Personal…",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "jZKgo",
+                          "name": "Local Switching Detail",
+                          "fill": "#FFFFFF66",
+                          "content": "auth snapshot → registry",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "b6rf9G",
+                      "name": "Step 3 Rule",
+                      "fill": "#5C616B",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Transactional write; failure restores Business.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "id": "d61xl",
-                  "x": 16,
-                  "y": 296,
-                  "name": "Selected Switch Note",
-                  "fill": "#FFFFFF8A",
-                  "textGrowth": "fixed-width",
-                  "width": 344,
-                  "content": "Usage stays visible; active auth changes only after confirmation.",
-                  "lineHeight": 1.45,
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 9,
-                  "id": "QERvG",
-                  "x": 16,
-                  "y": 365,
-                  "name": "Selected Switch Action",
-                  "fill": "#377DFF",
-                  "width": 344,
-                  "height": 46
-                },
-                {
-                  "type": "icon",
-                  "id": "c4kZXC",
-                  "x": 75,
-                  "y": 381,
-                  "name": "Selected Switch Icon",
-                  "width": 14,
-                  "height": 14,
-                  "icon": "refresh-cw",
-                  "library": "lucide",
-                  "fill": "#FFFFFF"
-                },
-                {
-                  "type": "text",
-                  "id": "F6wVf",
-                  "x": 99,
-                  "y": 379,
-                  "name": "Selected Switch Action Text",
+                  "type": "frame",
+                  "id": "oJzuL",
+                  "name": "Step 4 Relaunch And Verify",
+                  "width": "fill_container",
+                  "height": "fill_container",
                   "fill": "#FFFFFF",
-                  "content": "Switch & relaunch ChatGPT",
-                  "fontFamily": "Inter",
-                  "fontSize": 13,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "R1sCaD",
-                  "x": 76,
-                  "y": 437,
-                  "name": "Selected Cancel Hint",
-                  "fill": "#FFFFFF57",
-                  "content": "Back to accounts",
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
+                  "cornerRadius": 8,
+                  "stroke": "#D6D9DF",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kUKlI",
+                      "name": "Step 4 Eyebrow",
+                      "fill": "#238A5A",
+                      "content": "04 · VERIFY",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "pVszG",
+                      "name": "Step 4 Title",
+                      "fill": "#131418",
+                      "content": "Relaunch, then verify",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZbbB1",
+                      "name": "Host Auth Verification",
+                      "width": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 7,
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "T76dF",
+                          "name": "Host Verification Topline",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "JbEhP",
+                              "name": "Host Verification Spinner",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "loader-circle",
+                              "library": "lucide",
+                              "fill": "#3DD68C"
+                            },
+                            {
+                              "type": "text",
+                              "id": "SeWzQ",
+                              "name": "Host Verification Label",
+                              "fill": "#FFFFFFEB",
+                              "content": "Checking Personal auth…",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "usH3U",
+                          "name": "Host Verification Detail",
+                          "fill": "#FFFFFF66",
+                          "content": "Host open · auth reload unverified",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "o83x5",
+                      "name": "Step 4 Rule",
+                      "fill": "#5C616B",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Claim success only after fresh usage succeeds.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 }
               ]
             }
@@ -9802,245 +10311,604 @@
         },
         {
           "type": "frame",
-          "id": "NQnsQ",
-          "x": 968,
-          "y": 174,
-          "name": "Relaunch Confirmation Card",
-          "width": 416,
-          "height": 738,
-          "fill": "#FFFFFF",
-          "cornerRadius": 18,
-          "stroke": "#D6D9DF",
-          "strokeWidth": 1,
-          "layout": "none",
+          "id": "H5yeYW",
+          "name": "Switch Recovery States",
+          "width": "fill_container",
+          "height": 340,
+          "layout": "vertical",
+          "gap": 10,
           "children": [
             {
-              "type": "text",
-              "id": "t0siH",
-              "x": 20,
-              "y": 20,
-              "name": "Relaunch Confirmation Eyebrow",
-              "fill": "#5C616B",
-              "content": "3 · CONFIRM",
-              "fontFamily": "Inter",
-              "fontSize": 10,
-              "fontWeight": "600",
-              "letterSpacing": 0.2
-            },
-            {
-              "type": "text",
-              "id": "tHX1z",
-              "x": 20,
-              "y": 42,
-              "name": "Relaunch Confirmation Title",
-              "fill": "#131418",
-              "content": "Apply to ChatGPT",
-              "fontFamily": "Inter",
-              "fontSize": 18,
-              "fontWeight": "600"
-            },
-            {
-              "type": "text",
-              "id": "CinET",
-              "x": 20,
-              "y": 74,
-              "name": "Relaunch Confirmation Body",
-              "fill": "#5C616B",
-              "textGrowth": "fixed-width",
-              "width": 376,
-              "content": "A deliberate confirmation guards the auth mutation and host interruption.",
-              "lineHeight": 1.45,
-              "fontFamily": "Inter",
-              "fontSize": 13,
-              "fontWeight": "normal"
-            },
-            {
               "type": "frame",
-              "id": "mb6mP",
-              "x": 20,
-              "y": 144,
-              "name": "Relaunch Confirmation Stage",
-              "width": 376,
-              "height": 520,
-              "fill": "#050507",
-              "cornerRadius": 16,
-              "layout": "none",
+              "id": "BShMg",
+              "name": "Recovery States Header",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 3,
               "children": [
                 {
                   "type": "text",
-                  "id": "P4P70Z",
-                  "x": 16,
-                  "y": 16,
-                  "name": "Confirmation State Label",
-                  "fill": "#FFFFFF57",
-                  "content": "READY TO APPLY",
+                  "id": "p3eWi",
+                  "name": "Recovery States Title",
+                  "fill": "#131418",
+                  "content": "Recovery states stay truthful",
                   "fontFamily": "Inter",
-                  "fontSize": 10,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.18
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 14,
-                  "id": "zhaM4",
-                  "x": 16,
-                  "y": 50,
-                  "name": "Relaunch Confirmation Dialog",
-                  "fill": "#171A20",
-                  "width": 344,
-                  "height": 324,
-                  "stroke": "#FFFFFF1A",
-                  "strokeWidth": 1
-                },
-                {
-                  "type": "icon",
-                  "id": "CNKF8",
-                  "x": 32,
-                  "y": 70,
-                  "name": "Relaunch Confirmation Icon",
-                  "width": 18,
-                  "height": 18,
-                  "icon": "triangle-alert",
-                  "library": "lucide",
-                  "fill": "#F2B84B"
+                  "fontSize": 18,
+                  "fontWeight": "600"
                 },
                 {
                   "type": "text",
-                  "id": "kwVuP",
-                  "x": 58,
-                  "y": 69,
-                  "name": "Relaunch Confirmation Heading",
+                  "id": "NcOUq",
+                  "name": "Recovery States Subtitle",
+                  "fill": "#5C616B",
+                  "content": "Every stop point states what changed, what did not, and the safe next action.",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "w7nLN",
+              "name": "Recovery State Cards",
+              "width": "fill_container",
+              "height": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jIi63",
+                  "name": "Cancelled Switch State",
+                  "width": "fill_container",
+                  "height": "fill_container",
                   "fill": "#FFFFFF",
-                  "content": "Switch to Jared · Personal?",
-                  "fontFamily": "Inter",
-                  "fontSize": 15,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "ZOHnL",
-                  "x": 32,
-                  "y": 109,
-                  "name": "Relaunch Confirmation Copy",
-                  "fill": "#FFFFFFA3",
-                  "textGrowth": "fixed-width",
-                  "width": 296,
-                  "content": "Codex Island will preserve the current local auth, activate this account, then quit and reopen ChatGPT from its verified app path.",
-                  "lineHeight": 1.45,
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
                   "cornerRadius": 8,
-                  "id": "U5tEG",
-                  "x": 32,
-                  "y": 206,
-                  "name": "Relaunch Confirmation Notice",
-                  "fill": "#FFFFFF0A",
-                  "width": 296,
-                  "height": 52
+                  "stroke": "#D6D9DF",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ar1Fg",
+                      "name": "Cancelled State Header",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "v8Dt3O",
+                          "name": "Cancelled State Icon Container",
+                          "width": 28,
+                          "height": 28,
+                          "fill": "#FFFFFF",
+                          "cornerRadius": 6,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "pOr7v",
+                              "name": "Cancelled State Icon",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "circle-x",
+                              "library": "lucide",
+                              "fill": "#5C616B"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Ya6gJ",
+                          "name": "Cancelled State Title Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "iOfF0",
+                              "name": "Cancelled State Title",
+                              "fill": "#131418",
+                              "content": "Switch cancelled",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "IioFg",
+                              "name": "Cancelled State Caption",
+                              "fill": "#5C616B",
+                              "content": "Native prompt dismissed",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fsvPu",
+                      "name": "Cancelled State Product Surface",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 7,
+                      "layout": "vertical",
+                      "gap": 9,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "TfW5B",
+                          "name": "Cancelled State Status",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "lU3TE",
+                              "name": "Cancelled Active Account Dot",
+                              "fill": "#5AA8F0",
+                              "width": 7,
+                              "height": 7
+                            },
+                            {
+                              "type": "text",
+                              "id": "LS3gr",
+                              "name": "Cancelled Active Account",
+                              "fill": "#FFFFFFEB",
+                              "content": "Business remains active",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "L8TkU9",
+                          "name": "Cancelled No auth write",
+                          "fill": "#FFFFFF66",
+                          "content": "✓ No auth write",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "x3H87B",
+                          "name": "Cancelled No registry write",
+                          "fill": "#FFFFFF66",
+                          "content": "✓ No registry write",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "idgEc",
+                          "name": "Cancelled ChatGPT remains open",
+                          "fill": "#FFFFFF66",
+                          "content": "✓ ChatGPT remains open",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "type": "icon",
-                  "id": "n8tkV",
-                  "x": 44,
-                  "y": 225,
-                  "name": "Relaunch Confirmation Notice Icon",
-                  "width": 14,
-                  "height": 14,
-                  "icon": "shield-check",
-                  "library": "lucide",
-                  "fill": "#66D8C0"
-                },
-                {
-                  "type": "text",
-                  "id": "erKRX",
-                  "x": 68,
-                  "y": 218,
-                  "name": "Relaunch Confirmation Notice Text",
-                  "fill": "#FFFFFFB8",
-                  "textGrowth": "fixed-width",
-                  "width": 240,
-                  "content": "Current auth can be restored if the switch fails.",
-                  "lineHeight": 1.35,
-                  "fontFamily": "Inter",
-                  "fontSize": 11,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 8,
-                  "id": "uJmsq",
-                  "x": 32,
-                  "y": 282,
-                  "name": "Relaunch Confirmation Cancel",
-                  "fill": "#FFFFFF0F",
-                  "width": 136,
-                  "height": 44
-                },
-                {
-                  "type": "text",
-                  "id": "L0KrmI",
-                  "x": 78,
-                  "y": 296,
-                  "name": "Relaunch Confirmation Cancel Text",
-                  "fill": "#FFFFFFB8",
-                  "content": "Cancel",
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "rectangle",
-                  "cornerRadius": 8,
-                  "id": "dCi3G",
-                  "x": 176,
-                  "y": 282,
-                  "name": "Relaunch Confirmation Apply",
-                  "fill": "#377DFF",
-                  "width": 152,
-                  "height": 44
-                },
-                {
-                  "type": "icon",
-                  "id": "B6j4i",
-                  "x": 191,
-                  "y": 297,
-                  "name": "Relaunch Confirmation Apply Icon",
-                  "width": 13,
-                  "height": 13,
-                  "icon": "refresh-cw",
-                  "library": "lucide",
-                  "fill": "#FFFFFF"
-                },
-                {
-                  "type": "text",
-                  "id": "NjFHj",
-                  "x": 212,
-                  "y": 296,
-                  "name": "Relaunch Confirmation Apply Text",
+                  "type": "frame",
+                  "id": "L8Jqp",
+                  "name": "Local Switch Failure State",
+                  "width": "fill_container",
+                  "height": "fill_container",
                   "fill": "#FFFFFF",
-                  "content": "Switch & relaunch",
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "600"
+                  "cornerRadius": 8,
+                  "stroke": "#E5484D55",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mzZOE",
+                      "name": "Local Failure Header",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "DDr7Z",
+                          "name": "Local Failure Icon Container",
+                          "width": 28,
+                          "height": 28,
+                          "fill": "#E5484D14",
+                          "cornerRadius": 6,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "U3cEVs",
+                              "name": "Local Failure Icon",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "shield-alert",
+                              "library": "lucide",
+                              "fill": "#E5484D"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "KcKQ2",
+                          "name": "Local Failure Title Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "XEJKV",
+                              "name": "Local Failure Title",
+                              "fill": "#131418",
+                              "content": "Original account restored",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "C3y2l",
+                              "name": "Local Failure Caption",
+                              "fill": "#5C616B",
+                              "content": "Local transaction failed",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "x8VswI",
+                      "name": "Local Failure Product Surface",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 7,
+                      "layout": "vertical",
+                      "gap": 9,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "A10mSK",
+                          "name": "Local Failure Status",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "z9YPO",
+                              "name": "Local Failure Restored Icon",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "rotate-ccw",
+                              "library": "lucide",
+                              "fill": "#3DD68C"
+                            },
+                            {
+                              "type": "text",
+                              "id": "OC0nE",
+                              "name": "Local Failure Restored Label",
+                              "fill": "#FFFFFFEB",
+                              "content": "Business auth restored",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "NOSk9",
+                          "name": "Local Failure Host Status",
+                          "fill": "#FFFFFF66",
+                          "content": "ChatGPT relaunches with Business",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "m36W6",
+                          "name": "Local Failure Retry Action",
+                          "width": "fill_container",
+                          "fill": "#FFFFFF0F",
+                          "cornerRadius": 5,
+                          "padding": [
+                            6,
+                            9
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "jC3wh",
+                              "name": "Local Failure Retry Label",
+                              "fill": "#FFFFFFA3",
+                              "content": "Try again",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "id": "BYvzg",
-                  "x": 16,
-                  "y": 407,
-                  "name": "Relaunch Confirmation Footnote",
-                  "fill": "#FFFFFF57",
-                  "textGrowth": "fixed-width",
-                  "width": 344,
-                  "content": "Only the confirmed action may interrupt ChatGPT.",
-                  "lineHeight": 1.4,
-                  "fontFamily": "Inter",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
+                  "type": "frame",
+                  "id": "icqgq",
+                  "name": "Host Launch Failure State",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 8,
+                  "stroke": "#F5A52466",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bt86b",
+                      "name": "Host Launch Failure Header",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Wi2f1",
+                          "name": "Host Launch Failure Icon Container",
+                          "width": 28,
+                          "height": 28,
+                          "fill": "#F5A52418",
+                          "cornerRadius": 6,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "hhGoN",
+                              "name": "Host Launch Failure Icon",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "triangle-alert",
+                              "library": "lucide",
+                              "fill": "#B46F00"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EEkye",
+                          "name": "Host Launch Failure Title Copy",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ZA8ee",
+                              "name": "Host Launch Failure Title",
+                              "fill": "#131418",
+                              "content": "ChatGPT did not reopen",
+                              "fontFamily": "Inter",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "O3zHv",
+                              "name": "Host Launch Failure Caption",
+                              "fill": "#5C616B",
+                              "content": "Manual recovery available",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "i3K8bf",
+                      "name": "Host Launch Failure Product Surface",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "fill": "#050507",
+                      "cornerRadius": 7,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NZogG",
+                          "name": "Launch Failure Local account Row",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Zlp8k",
+                              "name": "Launch Failure Local account Label",
+                              "fill": "#FFFFFF66",
+                              "content": "Local account",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "RG20q",
+                              "name": "Launch Failure Local account Value",
+                              "fill": "#5AA8F0",
+                              "content": "Personal",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NvtGz",
+                          "name": "Launch Failure ChatGPT Row",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "INkuC",
+                              "name": "Launch Failure ChatGPT Label",
+                              "fill": "#FFFFFF66",
+                              "content": "ChatGPT",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "uaCUL",
+                              "name": "Launch Failure ChatGPT Value",
+                              "fill": "#F5A524",
+                              "content": "Closed",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qOmwA",
+                          "name": "Launch Failure Auth reload Row",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "G04tY5",
+                              "name": "Launch Failure Auth reload Label",
+                              "fill": "#FFFFFF66",
+                              "content": "Auth reload",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Tzrso",
+                              "name": "Launch Failure Auth reload Value",
+                              "fill": "#F5A524",
+                              "content": "Unverified",
+                              "fontFamily": "IBM Plex Mono",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "r7lKc",
+                          "name": "Host Launch Failure Actions",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "eXfsK",
+                              "name": "Restore Previous Account Action",
+                              "width": "fill_container",
+                              "fill": "#FFFFFF0F",
+                              "cornerRadius": 5,
+                              "padding": [
+                                6,
+                                8
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "AxgFU",
+                                  "name": "Restore Previous Account Label",
+                                  "fill": "#FFFFFFA3",
+                                  "content": "Restore Business",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "vds3E",
+                              "name": "Retry Host Launch Action",
+                              "width": "fill_container",
+                              "fill": "#5AA8F0",
+                              "cornerRadius": 5,
+                              "padding": [
+                                6,
+                                8
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "MataP",
+                                  "name": "Retry Host Launch Label",
+                                  "fill": "#FFFFFF",
+                                  "content": "Retry launch",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 9,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }

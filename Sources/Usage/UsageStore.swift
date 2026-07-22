@@ -9,6 +9,7 @@ final class UsageStore: ObservableObject {
 
     @Published var claude: AppUsage = .empty
     @Published var codex: AppUsage = .empty
+    @Published var codexResetCredits: CodexResetCredits = .empty
     @Published var lastUpdated: Date?
     @Published var loading = false
     /// Set while a `claude auth login` flow is in progress (spawned + still
@@ -19,7 +20,6 @@ final class UsageStore: ObservableObject {
     @Published var claudeReauthInProgress = false
 
     private var refreshTask: Task<Void, Never>?
-    private var codexResetCreditsTask: Task<Void, Never>?
     private var reauthPollTask: Task<Void, Never>?
     private var pollTimer: Timer?
     private var intervalCancellable: AnyCancellable?
@@ -74,25 +74,26 @@ final class UsageStore: ObservableObject {
                     resetAt: now.addingTimeInterval(4 * 86400 + 18 * 3600),
                     error: nil
                 ),
-                plan: "pro",
-                codexResetCredits: CodexResetCreditsSnapshot(
-                    credits: [
-                        CodexResetCredit(
-                            status: "available",
-                            title: "Reset",
-                            grantedAt: now.addingTimeInterval(-86_400),
-                            expiresAt: now.addingTimeInterval(3 * 3_600 + 20 * 60)
-                        ),
-                        CodexResetCredit(
-                            status: "available",
-                            title: "Reset",
-                            grantedAt: now.addingTimeInterval(-86_400),
-                            expiresAt: nil
-                        ),
-                    ],
-                    availableCount: 2,
-                    updatedAt: now
-                )
+                plan: "pro"
+            )
+            self.codexResetCredits = CodexResetCredits(
+                availableCount: 2,
+                credits: [
+                    CodexResetCredit(
+                        id: "demo-reset-1",
+                        status: "available",
+                        expiresAt: now.addingTimeInterval(3 * 86400 + 4 * 3600),
+                        title: "One free rate limit reset",
+                        description: "Thanks for using Codex! You've been granted one free rate limit reset."
+                    ),
+                    CodexResetCredit(
+                        id: "demo-reset-2",
+                        status: "available",
+                        expiresAt: now.addingTimeInterval(9 * 86400 + 3600),
+                        title: "One free rate limit reset",
+                        description: "Thanks for using Codex! You've been granted one free rate limit reset."
+                    )
+                ]
             )
             self.lastUpdated = now
             return
@@ -100,16 +101,16 @@ final class UsageStore: ObservableObject {
 
         loading = true
         refreshTask?.cancel()
-        codexResetCreditsTask?.cancel()
-        let codexContext = try? CodexAuthParser.readActiveContext()
         refreshTask = Task {
-            async let codexResult = UsageStore.fetchCodexForRefresh(context: codexContext)
+            async let codexResult = UsageFetcher.fetchCodex()
+            async let codexResetCreditsResult = UsageFetcher.fetchCodexResetCredits()
             let coolingDown = claudeCooldownUntil.map { Date() < $0 } ?? false
             var cl: AppUsage?
             if !coolingDown {
                 cl = await UsageFetcher.fetchClaude()
             }
             let c = await codexResult
+            let codexResetCredits = await codexResetCreditsResult
 
             // Cancellation = network monitor saw the path come up while we
             // were mid-flight on a dead one. The fetched values are the
@@ -129,24 +130,8 @@ final class UsageStore: ObservableObject {
             // permanently even after the network recovers.
             if !UsageStore.isErrorOnly(c) || UsageStore.isErrorOnly(self.codex) {
                 self.codex = c
+                CodexAccountStore.shared.updateActiveUsage(c)
             }
-            if !UsageStore.isErrorOnly(c), let codexContext {
-                let expectedAccountKey = codexContext.accountKey
-                codexResetCreditsTask = Task { [weak self] in
-                    let resetCredits = await UsageFetcher.fetchCodexResetCredits(context: codexContext)
-                    if Task.isCancelled { return }
-                    await MainActor.run {
-                        guard let self else { return }
-                        guard (try? CodexAuthParser.readActiveContext().accountKey) == expectedAccountKey else {
-                            return
-                        }
-                        var updated = self.codex
-                        updated.codexResetCredits = resetCredits
-                        self.codex = updated
-                    }
-                }
-            }
-            CodexAccountStore.shared.updateActiveUsage(c)
             if let cl {
                 if UsageStore.isRateLimited(cl) {
                     self.claudeCooldownUntil = Date().addingTimeInterval(UsageStore.rateLimitCooldown)
@@ -154,9 +139,18 @@ final class UsageStore: ObservableObject {
                 } else {
                     self.claudeCooldownUntil = nil
                 }
-                if !UsageStore.isErrorOnly(cl) || UsageStore.isErrorOnly(self.claude) {
+                // A terminal auth failure (expired token / missing scope)
+                // REPLACES a stale good value — otherwise the panel freezes on
+                // numbers we can no longer refresh with no signal to the user.
+                // Transient errors (429/network) still fall through to the
+                // retention rule above.
+                if !UsageStore.isErrorOnly(cl) || UsageStore.isErrorOnly(self.claude)
+                    || ClaudeCredentials.isTerminalAuthFailure(cl) {
                     self.claude = cl
                 }
+            }
+            if let codexResetCredits {
+                self.codexResetCredits = codexResetCredits
             }
 
             // Record this poll's readings so the SparkChart can plot real
@@ -175,13 +169,6 @@ final class UsageStore: ObservableObject {
     private static func isErrorOnly(_ u: AppUsage) -> Bool {
         u.fiveHour.error != nil && u.weekly.error != nil
             && u.fiveHour.usedPercent == 0 && u.weekly.usedPercent == 0
-    }
-
-    private static func fetchCodexForRefresh(context: CodexAuthContext?) async -> AppUsage {
-        if let context {
-            return await UsageFetcher.fetchCodex(context: context)
-        }
-        return await UsageFetcher.fetchCodex()
     }
 
     /// True when the fetch resolved to the rate-limited error (both windows
@@ -249,6 +236,9 @@ final class UsageStore: ObservableObject {
             for _ in 0..<24 {
                 try? await Task.sleep(nanoseconds: 5_000_000_000)
                 if Task.isCancelled { return }
+                // The whole point of this loop is to catch the keychain item
+                // `claude auth login` just rewrote — never serve the cache.
+                ClaudeCredentials.clearCache()
                 let cl = await UsageFetcher.fetchClaude()
                 if Task.isCancelled { return }
                 if cl.fiveHour.error == nil || cl.weekly.error == nil {
@@ -280,8 +270,6 @@ final class UsageStore: ObservableObject {
     }
 
     func stopAutoRefresh() {
-        codexResetCreditsTask?.cancel()
-        codexResetCreditsTask = nil
         pollTimer?.invalidate()
         pollTimer = nil
         intervalCancellable?.cancel()

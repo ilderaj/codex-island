@@ -14,41 +14,24 @@ struct UsageView: View {
     @ObservedObject private var store = UsageStore.shared
     @ObservedObject private var pref = StylePref.shared
     @ObservedObject private var visibility = ProviderVisibilityStore.shared
-    @ObservedObject private var accountApply = CodexAccountApplyCoordinator.shared
-    @State private var accountRoute: CodexAccountRailRoute = .summary
 
     private var style: ChartStyle { pref.style }
 
     var body: some View {
-        if accountRoute == .summary {
-            usageSummary
-        } else {
-            CodexAccountRail(
-                store: .shared,
-                coordinator: accountApply,
-                route: $accountRoute
-            )
-        }
-    }
-
-    private var usageSummary: some View {
         let claudeOn = visibility.claudeVisible
         let codexOn = visibility.codexVisible
 
-        return HStack(spacing: 0) {
+        HStack(spacing: 0) {
             switch (claudeOn, codexOn) {
             case (true, true):
                 ChartsBlock(color: IslandColor.claude, usage: store.claude,
-                            style: style, seed: 1, provider: .claude,
-                            onOpenAccounts: nil)
+                            style: style, seed: 1, provider: .claude)
                 hairline
                 ChartsBlock(color: IslandColor.codex, usage: store.codex,
-                            style: style, seed: 3, provider: .codex,
-                            onOpenAccounts: { accountRoute = .accounts })
+                            style: style, seed: 3, provider: .codex)
             case (true, false):
                 ChartsBlock(color: IslandColor.claude, usage: store.claude,
-                            style: style, seed: 1, provider: .claude,
-                            onOpenAccounts: nil)
+                            style: style, seed: 1, provider: .claude)
                 hairline
                 PerModelBreakdown(provider: .claude, metric: .tokens)
                     .frame(maxWidth: .infinity, alignment: .top)
@@ -61,8 +44,7 @@ struct UsageView: View {
                     .transition(breakdownTransition)
                 hairline
                 ChartsBlock(color: IslandColor.codex, usage: store.codex,
-                            style: style, seed: 3, provider: .codex,
-                            onOpenAccounts: { accountRoute = .accounts })
+                            style: style, seed: 3, provider: .codex)
             case (false, false):
                 BothHiddenPlaceholder()
                     .transition(.opacity)
@@ -99,95 +81,73 @@ struct ChartsBlock: View {
     let style: ChartStyle
     let seed: Int
     let provider: AlertEngine.Provider
-    let onOpenAccounts: (() -> Void)?
-    @ObservedObject private var codexAccounts = CodexAccountStore.shared
 
-    /// Treat the block as needing re-auth when both windows are stuck on the
-    /// scope-insufficient sentinel. Either tile alone could be a transient
-    /// per-window failure, but matching pair = the underlying token genuinely
-    /// lacks the required scope.
+    /// Treat the block as needing re-auth when both windows are stuck on a
+    /// reauth-actionable sentinel — an expired token (401) or a missing scope
+    /// (403). Either tile alone could be a transient per-window failure, but a
+    /// matching pair = the underlying token is genuinely unusable.
     private var needsReauth: Bool {
-        usage.fiveHour.error == ClaudeCredentials.reauthRequiredMessage
-            && usage.weekly.error == ClaudeCredentials.reauthRequiredMessage
+        ClaudeCredentials.isTerminalAuthFailure(usage)
     }
 
     var body: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 18) {
-                ChartTile(style: style, color: color, labelKey: "5h",
-                          window: usage.fiveHour, seed: seed,
-                          provider: provider, windowKind: .fiveHour)
-                ChartTile(style: style, color: color, labelKey: "week",
-                          window: usage.weekly, seed: seed + 1,
-                          provider: provider, windowKind: .weekly)
-            }
-            if needsReauth && ClaudeCredentials.canPromptReauth() {
-                ReauthButton()
-            }
-            if provider == .codex, let presentation = usage.codexResetCredits?.presentation() {
-                ResetCreditsSummaryRow(presentation: presentation)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            if provider == .codex, let onOpenAccounts {
-                Button(action: onOpenAccounts) {
-                    HStack(spacing: 5) {
-                        Text(activeAccountLabel)
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 8, weight: .semibold))
-                    }
-                    .font(Typography.micro.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.65))
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(.white.opacity(0.05))
-                    )
+        Group {
+            if needsReauth {
+                // Dead token: the sparkline tiles carry no live data, so
+                // replace them with a single centered prompt. Swapping (not
+                // appending a button row) keeps the panel within its fixed
+                // 188pt height instead of overflowing into the footer.
+                // Same swap vocabulary as a chart-style change — the tiles
+                // and the prompt trade places in one 220ms morph instead of
+                // teleporting when a poll flips the auth state.
+                ReauthState(color: color, usage: usage)
+                    .transition(.chartSwap.animation(.chartSwap))
+            } else {
+                HStack(spacing: 18) {
+                    ChartTile(style: style, color: color, labelKey: "5h",
+                              window: usage.fiveHour, seed: seed,
+                              provider: provider, windowKind: .fiveHour)
+                    ChartTile(style: style, color: color, labelKey: "week",
+                              window: usage.weekly, seed: seed + 1,
+                              provider: provider, windowKind: .weekly)
                 }
-                .buttonStyle(.plain)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .transition(.chartSwap.animation(.chartSwap))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.horizontal, 12)
     }
-
-    private var activeAccountLabel: String {
-        guard let key = codexAccounts.registry.activeAccountKey,
-              let account = codexAccounts.registry.accounts.first(where: { $0.accountKey == key }) else {
-            return L10n.tr("Accounts")
-        }
-        return CodexAccountStore.displayLabel(for: account)
-    }
 }
 
-struct ResetCreditsSummaryRow: View {
-    let presentation: CodexResetCreditsPresentation
+/// Shown in place of the sparkline tiles when the Claude token can no longer
+/// be used — expired (401) or missing the scope the usage endpoint now
+/// requires (403). Both windows carry a reauth-actionable sentinel; the dead
+/// numbers would only mislead, so this centered prompt takes their place. When
+/// a `claude` binary is discoverable it offers one-click re-auth; otherwise it
+/// shows the exact manual command from the sentinel.
+struct ReauthState: View {
+    let color: Color
+    let usage: AppUsage
 
     var body: some View {
-        HStack(spacing: 6) {
-            Circle()
-                .fill(IslandColor.codex)
-                .frame(width: 5, height: 5)
-            Text(L10n.tr(presentation.title))
-                .font(Typography.micro.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.55))
-            Text(presentation.summary)
-                .font(Typography.chip)
-                .foregroundStyle(.white.opacity(0.72))
+        VStack(spacing: 10) {
+            Image(systemName: "key.slash")
+                .font(.system(size: 20, weight: .regular))
+                .foregroundStyle(color.opacity(0.85))
+            if ClaudeCredentials.canPromptReauth() {
+                Text(L10n.tr("Claude session expired"))
+                    .font(Typography.label)
+                    .foregroundStyle(.white.opacity(0.55))
+                ReauthButton()
+            } else {
+                Text(usage.fiveHour.error ?? ClaudeCredentials.tokenExpiredMessage)
+                    .font(Typography.label)
+                    .foregroundStyle(.white.opacity(0.55))
+                    .multilineTextAlignment(.center)
+            }
         }
-        .lineLimit(1)
-        .padding(.horizontal, 6)
-        .padding(.vertical, 3)
-        .background(
-            RoundedRectangle(cornerRadius: 6)
-                .fill(.white.opacity(0.04))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 6)
-                        .strokeBorder(.white.opacity(0.06), lineWidth: 0.5)
-                }
-        )
-        .accessibilityLabel("\(L10n.tr(presentation.title)), \(presentation.summary)")
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .padding(.horizontal, 8)
     }
 }
 
@@ -214,9 +174,11 @@ struct ReauthButton: View {
                 )
                 .contentShape(RoundedRectangle(cornerRadius: 5))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableButtonStyle(scale: 0.97))
         .disabled(store.claudeReauthInProgress)
         .onHover { hovered = $0 }
+        .animation(.hoverFade, value: hovered)
+        .animation(.hoverFade, value: store.claudeReauthInProgress)
     }
 }
 
@@ -283,16 +245,10 @@ struct ChartTile: View {
         // OAuth call lands. Hide it so the tile reads as a passive
         // window-context cue (the "5h"/"week" header label communicates the
         // window type) instead of looking broken. Real errors still surface.
+        // A terminal auth failure is handled by ReauthState (which replaces
+        // the tiles entirely), so any error reaching a tile here is a genuine
+        // per-window caption worth showing verbatim.
         if let err = window.error, err != "no data" {
-            // Suppress the scope-insufficient text when the inline re-auth
-            // button is going to appear below the tiles — otherwise the same
-            // remediation hint reads twice (caption + button label). Users
-            // without a discoverable `claude` binary still get the raw text
-            // so they know the manual fix.
-            if err == ClaudeCredentials.reauthRequiredMessage,
-               ClaudeCredentials.canPromptReauth() {
-                return ""
-            }
             return err
         }
         return ""
@@ -304,10 +260,6 @@ struct ChartTile: View {
             return "↻ " + Duration.compact(delta)
         }
         if let err = window.error, err != "no data" {
-            if err == ClaudeCredentials.reauthRequiredMessage,
-               ClaudeCredentials.canPromptReauth() {
-                return ""
-            }
             return err
         }
         return ""
