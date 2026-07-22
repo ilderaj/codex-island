@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct CodexResetStatus: View {
+    var compact = false
+
     @ObservedObject private var usageStore = UsageStore.shared
     @ObservedObject private var visibility = ProviderVisibilityStore.shared
 
@@ -33,15 +35,15 @@ struct CodexResetStatus: View {
     }
 
     private var badge: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: compact ? 4 : 6) {
             Image(systemName: "arrow.counterclockwise")
                 .font(Typography.caption)
                 .foregroundStyle(IslandColor.codex.opacity(badgeHovered || showPopover ? 1 : 0.8))
-            Text(resetAvailabilityText)
+            Text(compact ? String(usageStore.codexResetCredits.availableCount) : resetAvailabilityText)
                 .font(Typography.caption)
                 .foregroundStyle(.white.opacity(badgeHovered || showPopover ? 0.85 : 0.55))
         }
-        .padding(.horizontal, 6)
+        .padding(.horizontal, compact ? 5 : 6)
         .padding(.vertical, 3)
         .background(
             RoundedRectangle(cornerRadius: 5)

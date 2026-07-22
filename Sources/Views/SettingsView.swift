@@ -19,6 +19,7 @@ struct SettingsView: View {
     @ObservedObject private var spacing = IslandSpacingStore.shared
     @ObservedObject private var usageDisplay = UsageDisplayModeStore.shared
     @ObservedObject private var targetDisplay = IslandTargetDisplayStore.shared
+    @ObservedObject private var codexAccounts = CodexAccountStore.shared
     @ObservedObject private var appLanguage = AppLanguageStore.shared
     @ObservedObject private var usage = UsageStore.shared
     @ObservedObject private var cost = CostStore.shared
@@ -515,6 +516,7 @@ struct SettingsView: View {
                     }
                 }
             }
+            CodexAccountsBlock(store: codexAccounts)
         }
         .padding(.horizontal, 14)
         .padding(.top, 18)

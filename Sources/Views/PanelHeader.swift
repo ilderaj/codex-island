@@ -11,8 +11,11 @@ struct PanelHeader: View {
     let notch: NotchInfo
     @ObservedObject private var visibility = ProviderVisibilityStore.shared
     @ObservedObject private var usageStore = UsageStore.shared
+    @ObservedObject private var codexAccounts = CodexAccountStore.shared
 
     var body: some View {
+        let hasAccountTags = !codexAccounts.registry.accounts.isEmpty
+
         HStack(spacing: 0) {
             let claudeOn = visibility.claudeVisible
             let codexOn = visibility.codexVisible
@@ -30,7 +33,12 @@ struct PanelHeader: View {
                 // title so the badge unambiguously belongs to Codex — its old
                 // footer-center spot read as panel-global. Account-level like
                 // the plan tag, so it rides along on every screen.
-                CodexResetStatus()
+                HStack(spacing: 5) {
+                    if hasAccountTags {
+                        CodexAccountTags(store: codexAccounts)
+                    }
+                    CodexResetStatus(compact: hasAccountTags)
+                }
             }
                 .opacity(codexOn ? 1 : 0)
                 .animation(.openMorph, value: codexOn)
@@ -82,10 +90,13 @@ struct PanelHeader: View {
             }
             .frame(maxWidth: .infinity)
         } else {
-            HStack(spacing: 10) {
+            HStack(spacing: 6) {
                 Spacer(minLength: 0)
                 accessory()
-                content.padding(.trailing, logoOffset)
+                content
+                    .padding(.trailing, logoOffset)
+                    .layoutPriority(1)
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .frame(maxWidth: .infinity)
         }

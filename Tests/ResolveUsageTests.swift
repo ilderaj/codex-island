@@ -183,6 +183,8 @@ struct ResolveUsageTests {
         expect(ClaudeCredentials.reauthRequiredMessage == "re-login: claude /login", "reauthRequiredMessage literal is stable")
         expect(ClaudeCredentials.tokenExpiredMessage == "token expired — run claude", "tokenExpiredMessage literal is stable")
 
+        failures += await CodexAccountTests.run()
+
         if failures > 0 {
             print("\(failures) failure(s)")
             exit(1)

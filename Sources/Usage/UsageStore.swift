@@ -130,6 +130,7 @@ final class UsageStore: ObservableObject {
             // permanently even after the network recovers.
             if !UsageStore.isErrorOnly(c) || UsageStore.isErrorOnly(self.codex) {
                 self.codex = c
+                CodexAccountStore.shared.updateActiveUsage(c)
             }
             if let cl {
                 if UsageStore.isRateLimited(cl) {

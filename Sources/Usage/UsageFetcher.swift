@@ -7,12 +7,19 @@ enum UsageFetcher {
     /// the access_token from ~/.codex/auth.json. The endpoint is reliable
     /// and rarely rate-limited, so this is the easy half of the integration.
     static func fetchCodex() async -> AppUsage {
-        guard let token = readCodexAccessToken() else {
+        guard let context = try? CodexAuthParser.readActiveContext() else {
             return errorPair("no codex auth")
         }
+        return await fetchCodex(context: context)
+    }
+
+    static func fetchCodex(context: CodexAuthContext) async -> AppUsage {
 
         var req = URLRequest(url: URL(string: "https://chatgpt.com/backend-api/wham/usage")!)
-        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.setValue("Bearer \(context.accessToken)", forHTTPHeaderField: "Authorization")
+        if let accountID = context.chatgptAccountId {
+            req.setValue(accountID, forHTTPHeaderField: "ChatGPT-Account-Id")
+        }
 
         do {
             let (data, response) = try await URLSession.shared.data(for: req)
@@ -32,11 +39,22 @@ enum UsageFetcher {
                   let rl = obj["rate_limit"] as? [String: Any] else {
                 return errorPair("parse error")
             }
-            return AppUsage(
-                fiveHour: parseCodexWindow(rl["primary_window"]),
-                weekly: parseCodexWindow(rl["secondary_window"]),
-                plan: obj["plan_type"] as? String
-            )
+            var fiveHour = WindowUsage.unknown
+            var weekly = WindowUsage.unknown
+
+            for rawWindow in [rl["primary_window"], rl["secondary_window"]] {
+                guard let parsed = parseCodexWindow(rawWindow) else { continue }
+                switch parsed.duration {
+                case 18_000:
+                    fiveHour = parsed.usage
+                case 604_800:
+                    weekly = parsed.usage
+                default:
+                    continue
+                }
+            }
+
+            return AppUsage(fiveHour: fiveHour, weekly: weekly, plan: obj["plan_type"] as? String)
         } catch {
             return errorPair(error.localizedDescription)
         }
@@ -58,11 +76,14 @@ enum UsageFetcher {
         return token
     }
 
-    private static func parseCodexWindow(_ obj: Any?) -> WindowUsage {
-        guard let d = obj as? [String: Any] else { return .unknown }
+    private static func parseCodexWindow(_ obj: Any?) -> (duration: Int, usage: WindowUsage)? {
+        guard let d = obj as? [String: Any],
+              let duration = (d["limit_window_seconds"] as? NSNumber)?.intValue
+        else { return nil }
         let used = (d["used_percent"] as? Double) ?? 0
         let resetAt = (d["reset_at"] as? Double).map { Date(timeIntervalSince1970: $0) }
-        return WindowUsage(usedPercent: used / 100, resetAt: resetAt, error: nil)
+        let normalized = min(1, max(0, used / 100))
+        return (duration, WindowUsage(usedPercent: normalized, resetAt: resetAt, error: nil))
     }
 
     static func fetchCodexResetCredits() async -> CodexResetCredits? {
